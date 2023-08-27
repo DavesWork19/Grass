@@ -1,0 +1,14 @@
+.team {
+  text-align: left;
+}
+.percentage {
+  text-align: right;
+}
+
+.conferences {
+  border-bottom: solid;
+}
+.weeklyPercentData {
+  border: solid;
+  color: slategray;
+}

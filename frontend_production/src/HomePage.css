@@ -1,0 +1,42 @@
+.matchupText {
+  font-size: 150%;
+}
+footer {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  font-size: xx-small;
+}
+
+.AFCTable {
+  border: solid;
+  border-radius: 7px;
+  background-color: OrangeRed;
+}
+.AFCHeader {
+  font-size: 150%;
+}
+.NFCHeader {
+  font-size: 150%;
+}
+.NFCTable {
+  border: solid;
+  border-radius: 7px;
+  background-color: Royalblue;
+}
+.Division {
+  border: solid;
+  background-color: lightgrey;
+  width: 75%;
+}
+.Division th {
+  border: solid;
+}
+.Division td {
+  text-align: left;
+  border: solid;
+}
+
+.weekTable {
+  border-color: black;
+  background-color: lightgrey;
+}
