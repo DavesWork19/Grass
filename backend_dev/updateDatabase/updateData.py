@@ -1,3 +1,4 @@
+import sys
 import requests
 from bs4 import BeautifulSoup
 import mysql.connector
@@ -9,7 +10,10 @@ import time
 from Legends import *
 
 
-
+#For each team
+#Go to website and scrape all data for given team
+#Find previous week if its not a by week
+#Save weeks data to database
 class storeTeamData:
 
     def __init__(self, table, week, year):
@@ -120,7 +124,7 @@ class storeTeamData:
             mycursor.execute(insertData)
             mydb.commit()
 
-    def retrieveTeamDataFromWWW(self, team):
+    def getLastWeekTeamData(self, team):
 
         URL = f"https://www.pro-football-reference.com/teams/{team}/{self.year}/gamelog/"
         # HEADERS = {
@@ -163,7 +167,7 @@ class storeTeamData:
 
     def storeAllTeamsData(self):
         for num, team in enumerate(self.teams):
-            teamDF = self.retrieveTeamDataFromWWW(team)
+            teamDF = self.getLastWeekTeamData(team)
 
             print(f"{num}. {team} updated.")
 
@@ -437,7 +441,7 @@ class getUpcomingWeekData:
 
 
 
-week = 13
+week = int(sys.argv[1])
 year = 2022
 table = "NFLRegularSeasons"
 startOfWeek = '2022-11-30'
