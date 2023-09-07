@@ -172,7 +172,10 @@ class storeTeamData:
             print(f"{num}. {team} updated.")
 
 
-
+#For each game in a week
+#Go to website and scrape all data (all games in a week)
+#Find all weather data for each game that week
+#Save data to database
 class updateWeatherData:
 
     def __init__(self, table, week, year):
