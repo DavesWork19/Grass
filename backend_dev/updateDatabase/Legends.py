@@ -171,60 +171,52 @@ def getTeamFromSmallName(team):
 
 
 def getChannel(channel):
-    if channel == 'ESPN':
+    if channel == 'tbd':
         return 0
-    elif channel == 'CBS':
+    if channel == 'ABC':
         return 1
-    elif channel == 'NBC':
+    elif (channel == 'NBC') or (channel == 'nbc'):
         return 2
-    elif channel == 'NBC':
+    elif (channel == 'CBS') or (channel == 'cbs'):
         return 3
-    elif channel == 'FOX':
+    elif (channel == 'FOX') or (channel == 'fox'):
         return 4
     elif (channel == 'PRIME VIDEO') or (channel == 'AMAZON'):
         return 5
-    else:
+    if (channel == 'ESPN') or (channel == 'espn') or (channel == 'ESPN+'):
         return 6
+    elif (channel == 'NFL') or (channel == 'NFLN') or (channel == 'nfln') or (channel == 'NFLNetwork') or (channel == 'NFL NET') or (channel == 'nflnetwork') or (channel == 'NFL Network') or (channel == 'NFL NETWORK'):
+        return 7
 
 
 def getTemp(temp):
-    if temp == 'DOME':
+    if temp < 33:
         return 0
-    elif temp < 40:
+    elif temp < 41:
         return 1
-    elif (temp >= 40) and (temp < 80):
+    elif temp < 56:
         return 2
-    elif temp >= 80:
+    elif temp < 70:
         return 3
+    elif temp < 86:
+        return 4
     else:
-        return 4
-
-def getSky(sky):
-    if sky == 'DOME':
-        return 0
-    elif sky == 'Clear':
-        return 1
-    elif sky == 'Cloudy':
-        return 2
-    elif sky == 'Foggy':
-        return 3
-    elif sky == 'Rain':
-        return 4
-    elif sky == 'Overcast':
         return 5
-    elif sky == 'Snow':
+
+def getWeather(weather):
+    if weather == 'Clear':
+        return 0
+    elif weather == 'Dry':
+        return 1
+    elif weather == 'Foggy':
+        return 2
+    elif (weather == 'Breezy And Humid') or (weather == 'Humid') or (weather == 'Humid And Mostly Cloudy') or (weather == 'Humid And Overcast') or (weather == 'Humid And Partly Cloudy'):
+        return 3
+    elif (weather == 'Rain') or (weather == 'Drizzle') or (weather == 'Possible Drizzle') or (weather == 'Heavy Rain') or (weather == 'Light Rain') or (weather == 'Possible Light Rain') or (weather == 'Light Rain And Windy') or (weather == 'Rain And Windy'):
+        return 4
+    elif (weather == 'Snow') or (weather == 'Flurries') or (weather == 'Possible Flurries') or (weather == 'Heavy Snow') or (weather == 'Light Sleet') or (weather == 'Light Snow') or (weather == 'Light Snow And Windy'):
+        return 5
+    elif (weather == 'Overcast') or (weather == 'Mostly Cloudy') or (weather == 'Partly Cloudy') or (weather == 'Windy And Overcast') or (weather == 'Windy And Partly Cloudy'):
         return 6
-    elif sky == 'Drizzle':
-        return 7
-    elif sky == 'Dry':
-        return 8
-    elif sky == 'Flurries':
-        return 9
-    elif sky == 'Humid':
-        return 10
-    elif sky == 'Sleet':
-        return 11
-    elif sky == 'Windy':
-        return 12
     else:
-        return 13
+        return weather
