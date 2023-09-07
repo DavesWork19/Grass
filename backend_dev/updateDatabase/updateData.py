@@ -273,7 +273,23 @@ class updateGamblingData:
         self.table = table
         self.year = year
 
-    def getDF(self, startWeek):
+    def saveData(self, column, data):
+        insertValues = (
+            f"UPDATE {self.table} "
+            f"SET {column} = {data} "
+            f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
+        )
+        mycursor.execute(insertValues)
+        mydb.commit()
+        insertValues = (
+            f"UPDATE {self.table} "
+            f"SET {column} = {data} "
+            f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
+        )
+        mycursor.execute(insertValues)
+        mydb.commit()
+
+    def getDF(self, startOfWeek):
         URL = f"https://www.aussportsbetting.com/data/historical-nfl-results-and-odds-data/"
         # HEADERS = {
         #     'User-Agent': 'Safari/537.36',
@@ -290,18 +306,26 @@ class updateGamblingData:
         excel = startUrl + href
 
         excelContent = requests.get(excel).content
+        
+        #Warning error -> read_excel is auto changing string datetimes to datetimes
+        #String datetimes will stay strings instead of changing to datetimes
+        #Update string datetimes to datetimes
         df = pd.read_excel(excelContent)
 
-        startOfWeek = startWeek
         df = df[df['Date'] > np.array(np.datetime64(startOfWeek))]
-        df = df[['Home Team','Away Team','Neutral Venue?','Home Line Open','Home Line Close','Total Score Open','Total Score Close']]
+        df = df[['Home Team','Away Team','Neutral Venue?','Home Line Open','Home Line Min','Home Line Max','Home Line Close','Total Score Open','Total Score Min','Total Score Max','Total Score Close']]
 
         df['Neutral Venue?'] = df['Neutral Venue?'].fillna(0)
         df['Neutral Venue?'] = df['Neutral Venue?'].replace('Y',1)
 
         return df
 
-    def addColumn(self, name, column, homeTeams, awayTeams):
+    def addColumn(self, df):
+        
+
+    def doit(self, startWeek):
+        df = self.getDF(startWeek)
+        
         mydb = mysql.connector.connect(
             host="127.0.0.1",
             user="davidcarney",
@@ -311,62 +335,57 @@ class updateGamblingData:
 
         mycursor = mydb.cursor()
 
-        if name == "GameLines":
-            for columnData,homeTeam,awayTeam in zip(column, homeTeams, awayTeams):
-                insertValues = (
-                    f"UPDATE {self.table} "
-                    f"SET {name} = {columnData} "
-                    f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
-                )
+        for index, row in df.iterrows():
+            homeTeam, awayTeam, neutralVenue, homeLineOpen, homeLineMin, homeLineMax, homeLineClose, totalScoreOpen, totalScoreMin, totalScoreMax, totalScoreClose = row
+            homeLineClose = float(homeLineClose)
+            homeFavored = 0
+            awayFavored = 0
+            if homeLineClose < 0:
+                homeFavored = 1
+            elif homeLineClose > 0:
+                awayFavored = 1
 
-                mycursor.execute(insertValues)
-                mydb.commit()
+            gameLine = homeLineClose - float(homeLineOpen)
+            minMaxLine = float(homeLineMax) - float(homeLineMin)
+            if gameLine < 0:
+                gameLine = -gameLine
+            totalScoreLine = float(totalScoreClose) - float(totalScoreOpen)
+            if totalScoreLine < 0:
+                totalScoreLine = -totalScoreLine
+            minMaxTotalScoreLine = float(totalScoreMax) - float(totalScoreMin)
 
-                insertValues = (
-                    f"UPDATE {self.table} "
-                    f"SET {name} = {-columnData} "
-                    f"WHERE (HomeTeam = {getTeam(awayTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
-                )
+            print(gameLine, minMaxLine, totalScoreLine, minMaxTotalScoreLine, homeFavored, awayFavored)
+            #Save gameLine
+            saveData('gameLine', gameLine)
+            
+            #Save minMaxLine
+            saveData('minMaxLine', minMaxLine)
 
-                mycursor.execute(insertValues)
-                mydb.commit()
+            #Save totalScoreLine
+            saveData('totalScoreLine', totalScoreLine)
 
+            #Save minMaxTotalScoreLine
+            saveData('minMaxTotalScoreLine', minMaxTotalScoreLine)
 
-        elif (name == "NeutralVenue") or (name == "TotalScore"):
-            for columnData,homeTeam,awayTeam in zip(column, homeTeams, awayTeams):
-                insertValues = (
-                    f"UPDATE {self.table} "
-                    f"SET {name} = {columnData} "
-                    f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
-                )
+            #Save favored data
+            insertValues = (
+                f"UPDATE {self.table} "
+                f"SET favored = {homeFavored} "
+                f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
+            )
+            mycursor.execute(insertValues)
+            mydb.commit()
+            insertValues = (
+                f"UPDATE {self.table} "
+                f"SET favored = {awayFavored}"
+                f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
+            )
+            mycursor.execute(insertValues)
+            mydb.commit()
+            
+        print(f"Updated gambling data.")
 
-                mycursor.execute(insertValues)
-                mydb.commit()
-
-                insertValues = (
-                    f"UPDATE {self.table} "
-                    f"SET {name} = {columnData} "
-                    f"WHERE (HomeTeam = {getTeam(awayTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
-                )
-
-                mycursor.execute(insertValues)
-                mydb.commit()
-
-    def doit(self, startWeek):
-        df = self.getDF(startWeek)
-
-        totalScore = df['Total Score Close'] - df['Total Score Open']
-        homeLine = df['Home Line Close'] - df['Home Line Open']
-        neutralVenue = df['Neutral Venue?']
-        homeTeams = df['Home Team']
-        awayTeams = df['Away Team']
-
-        names = ['GameLines','NeutralVenue','TotalScore']
-        namesList = [homeLine,neutralVenue,totalScore]
-
-        for name,column in zip(names,namesList):
-            self.addColumn(name, column, homeTeams, awayTeams)
-            print(f"Updated {name}.")
+        
 
 
 
