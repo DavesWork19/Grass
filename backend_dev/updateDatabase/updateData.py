@@ -177,8 +177,8 @@ class updateWeatherData:
 
     def __init__(self, table, week, year):
         self.table = table
-        self.year = year
         self.week = week
+        self.year = year
 
     def addData(self, data, homeTeam, awayTeam):
         mydb = mysql.connector.connect(
@@ -210,46 +210,53 @@ class updateWeatherData:
             mydb.commit()
 
     def getWeatherByWeek(self):
-        URL = f"http://www.nflweather.com/en/week/{self.year}/week-{self.week}/"
+        URL = f"https://www.nflweather.com/week/{self.year}/week-{self.week}"
         HEADERS = {
             'User-Agent': 'Safari/537.36',
         }
         page = requests.get(URL, headers=HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
-        moreSoup = soup.find("table")
-        evenMoreSoup = moreSoup.find("tbody")
-        rows = evenMoreSoup.find_all("tr")
+        moreSoup = soup.find('div', class_='container-game-box')
+
+        matchUp = moreSoup.div 
+        while matchUp != None:
+            matchUpData1 = matchUp.div
+            #dateAndTime = matchUpData1.div.text.strip()
+
+            matchUpData2 = matchUpData1.next_sibling.next_sibling
+            awayTeam, at, homeTeam = matchUpData2.find_all('span')
+            awayTeam = awayTeam.text
+            homeTeam = homeTeam.text
+            
+            matchUpData3 = matchUpData2.next_sibling.next_sibling
+            weatherData = matchUpData3.div.div.next_sibling.next_sibling
+            temp, weather = weatherData.find_all('span')
+            temp = getTemp(int(temp.text.split(' ')[0]))
+            weather = getWeather(weather.text)
+
+            windDataContainer = weatherData.next_sibling.next_sibling
+            windData = windDataContainer.find_all('span')
+            windDataLength = len(windData)
+            wind = 0
+            if windDataLength == 3:
+                wind = windData[1].text.split(' ')[0]
+
+            channelData = windDataContainer.next_sibling.next_sibling
+            channels = channelData.find_all('span')
+            channelsLength = len(channels)
+            channel = 0
+            if channelsLength == 2:
+                channel = channels[1].text
+                if ',' in channel:
+                    channel = channel.split(',')[0]
+                channel = getChannel(channel)
 
 
-        for row in rows:
-            homeTeam = row.find_all("td",{"class":"team-name text-center"})[1].text.strip()
-            awayTeam = row.find_all("td",{"class":"team-name text-center"})[0].text.strip()
-            data = row.find_all("td",{"class":"text-center"})
-            channel = data[3].text
-            weather = data[5].text.strip()
-            wind = data[6].text
-            wind = wind.split(' ')[0][:-1]
-
-
-            if weather == 'DOME':
-                temp = 'DOME'
-                sky = 'DOME'
-            else:
-                weatherList = row.find_all("td",{"class":"text-center"})[5].text.strip().split(' ')
-                temp = weatherList[0]
-                temp = int(temp[:-1])
-                sky = weatherList[-1]
-
-
-            finalChannel = getChannel(channel)
-
-            finalTemp = getTemp(temp)
-
-            finalSky = getSky(sky)
-
-
-            data = {'Channel':finalChannel,'Temp':finalTemp,'Sky':finalSky,'Wind':wind}
+            data = {'Channel':channel,'Temp':temp,'Weather':weather,'Wind':wind}
+            print(data)
             self.addData(data, homeTeam, awayTeam)
+
+            matchUp = matchUp.next_sibling.next_sibling
 
     def doit(self):
         self.getWeatherByWeek()
