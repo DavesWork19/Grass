@@ -266,7 +266,10 @@ class updateWeatherData:
         print(f"Saved Week: {self.week} for Year: {self.year}")
 
 
-
+#For each game after given date
+#Go to website and store data from excel sheet into pandas df
+#Find all gambling data for each game after week start
+#Save data to database
 class updateGamblingData:
 
     def __init__(self, table, year):
@@ -475,14 +478,14 @@ year = 2022
 table = "NFLRegularSeasons"
 startOfWeek = '2022-11-30'
 
-storeDataObj = storeTeamData(table, week, year)
-storeDataObj.storeAllTeamsData()
+# storeDataObj = storeTeamData(table, week, year)
+# storeDataObj.storeAllTeamsData()
 
-storeWeatherObj = updateWeatherData(table, week, year)
-storeWeatherObj.doit()
+# storeWeatherObj = updateWeatherData(table, week, year)
+# storeWeatherObj.doit()
 
-storeGamblingObj = updateGamblingData(table, year)
-storeGamblingObj.doit(startOfWeek)
+# storeGamblingObj = updateGamblingData(table, year)
+# storeGamblingObj.doit(startOfWeek)
 
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
 storeUpcomingWeekData.getData()
