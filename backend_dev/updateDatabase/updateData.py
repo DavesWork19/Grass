@@ -484,14 +484,14 @@ year = 2023
 table = "NFLRegularSeasons"
 startOfWeek = '2022-11-30'
 
-# storeDataObj = storeTeamData(table, week, year)
-# storeDataObj.storeAllTeamsData()
+storeDataObj = storeTeamData(table, week, year)
+storeDataObj.storeAllTeamsData()
 
-# storeWeatherObj = updateWeatherData(table, week, year)
-# storeWeatherObj.doit()
+storeWeatherObj = updateWeatherData(table, week, year)
+storeWeatherObj.doit()
 
-# storeGamblingObj = updateGamblingData(table, year)
-# storeGamblingObj.doit(startOfWeek)
+storeGamblingObj = updateGamblingData(table, year)
+storeGamblingObj.doit(startOfWeek)
 
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
 storeUpcomingWeekData.getWeatherByWeek()
