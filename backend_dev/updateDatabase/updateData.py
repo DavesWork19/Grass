@@ -323,9 +323,6 @@ class updateGamblingData:
 
         return df
 
-    def addColumn(self, df):
-        
-
     def doit(self, startWeek):
         df = self.getDF(startWeek)
         
@@ -396,85 +393,94 @@ class getUpcomingWeekData:
     def __init__(self, week, year):
         self.week = week + 1
         self.year = year
+  
+    def getWeatherByWeek(self):
+        upcomingWeekBackendFilename = "../updateMatchups/upcomingWeekData.txt"
+        upcomingWeekFrontendFilename = '../../frontend_production/src/upcomingWeekData.js'
+        upcomingWeekBackendFile = open(upcomingWeekBackendFilename, "w")
+        upcomingWeekFrontendFile = open(upcomingWeekFrontendFilename, 'w')
+        upcomingWeekFrontendFile.write('export const upcomingWeekData = [\n')
 
-    def getData(self):
-        filename = "../updateMatchups/upcomingWeekData.txt"
-        filenameFrontend = "../frontend/src/upcomingWeekData.txt"
-        file = open(filename, "w")
-        frontendFile = open(filenameFrontend, "w")
-
-
-        URL = f"http://www.nflweather.com/en/week/{self.year}/week-{self.week}/"
+        URL = f"https://www.nflweather.com/week/{self.year}/week-{self.week}"
         HEADERS = {
             'User-Agent': 'Safari/537.36',
         }
         page = requests.get(URL, headers=HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
-        moreSoup = soup.find("table")
-        evenMoreSoup = moreSoup.find("tbody")
-        rows = evenMoreSoup.find_all("tr")
+        moreSoup = soup.find('div', class_='container-game-box')
 
+        matchUp = moreSoup.div 
+        while matchUp != None:
+            matchUpData1 = matchUp.div
+            dateAndTime = matchUpData1.div.text.strip()
 
-        for row in rows:
-            teams = row.find_all("td",{"class":"team-name text-center"})
+            matchUpData2 = matchUpData1.next_sibling.next_sibling
+            awayTeam, at, homeTeam = matchUpData2.find_all('span')
+            awayTeam = awayTeam.text
+            homeTeam = homeTeam.text
+            
+            matchUpData3 = matchUpData2.next_sibling.next_sibling
+            weatherData = matchUpData3.div.div.next_sibling.next_sibling
+            temp, weather = weatherData.find_all('span')
+            temp = int(temp.text.split(' ')[0])
+            weather = weather.text
 
-            awayTeam = teams[0].text.strip()
-            homeTeam = teams[1].text.strip()
+            windDataContainer = weatherData.next_sibling.next_sibling
+            windData = windDataContainer.find_all('span')
+            windDataLength = len(windData)
+            wind = 0
+            if windDataLength == 3:
+                wind = windData[1].text.split(' ')[0]
 
-            data = row.find_all("td",{"class":"text-center"})
+            channelData = windDataContainer.next_sibling.next_sibling
+            channels = channelData.find_all('span')
+            channelsLength = len(channels)
+            channel = 0
+            if channelsLength == 2:
+                channel = channels[1].text
+                if ',' in channel:
+                    channel = channel.split(',')[0]
+                channel = getChannel(channel)
 
-            date = data[2].text.strip().split(' ')[0] + f'/{self.year}'
-            date = datetime.strptime(date, '%m/%d/%Y')
-            date = date.strftime('%A')[:3]
+            upcomingWeekBackendFile.write(homeTeam)
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(awayTeam)
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(dateAndTime)
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{channel}')
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{getTemp(temp)}')
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{getWeather(weather)}')
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{wind}')
+            upcomingWeekBackendFile.write("\n")
 
-            channel = data[3].text
-            weather = data[5].text.strip()
-            wind = data[6].text
-            wind = wind.split(' ')[0][:-1]
+            upcomingWeekFrontendFile.write("'")
+            upcomingWeekFrontendFile.write(dateAndTime)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(awayTeam)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(homeTeam)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(f'{temp}')
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(weather)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(f'{wind}')
+            upcomingWeekFrontendFile.write("',")
+            upcomingWeekFrontendFile.write('\n')
 
-            if weather == 'DOME':
-                temp = 'DOME'
-                sky = 'DOME'
-                wind = 0
+            matchUp = matchUp.next_sibling.next_sibling
 
-            else:
-                weatherList = row.find_all("td",{"class":"text-center"})[5].text.strip().split(' ')
-                temp = weatherList[0]
-                temp = int(temp[:-1])
-                sky = weatherList[-1]
-
-            finalChannel = getChannel(channel)
-            finalTemp = getTemp(temp)
-            finalSky = getSky(sky)
-
-            file.write(homeTeam)
-            file.write("_")
-            file.write(awayTeam)
-            file.write("_")
-            file.write(date)
-            file.write("_")
-            file.write(f"{finalChannel}")
-            file.write("_")
-            file.write(f"{finalTemp}")
-            file.write("_")
-            file.write(f"{finalSky}")
-            file.write("_")
-            file.write(f"{wind}")
-            file.write("\n")
-
-            frontendFile.write(awayTeam)
-            frontendFile.write("_")
-            frontendFile.write(homeTeam)
-            frontendFile.write("_")
-            frontendFile.write(date)
-            frontendFile.write("\n")
-
-        file.close()
-
+        upcomingWeekFrontendFile.write('];')
+        upcomingWeekBackendFile.close()
+        upcomingWeekFrontendFile.close()
 
 
 week = int(sys.argv[1])
-year = 2022
+year = 2023
 table = "NFLRegularSeasons"
 startOfWeek = '2022-11-30'
 
@@ -488,4 +494,4 @@ startOfWeek = '2022-11-30'
 # storeGamblingObj.doit(startOfWeek)
 
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
-storeUpcomingWeekData.getData()
+storeUpcomingWeekData.getWeatherByWeek()
