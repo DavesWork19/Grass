@@ -31,9 +31,9 @@ def getOT(ot):
 
 def getAt(at):
     if at == '@':
-        return 1
-    else:
         return 0
+    else:
+        return 1
 
 
 def getTeam(team):
@@ -169,6 +169,73 @@ def getTeamFromSmallName(team):
     elif 'sfo' == team:
         return 31
 
+def getTeamSmallNameFromTeam(team):
+    if team == 0:
+        return 'buf'
+    elif team == 1:
+        return 'mia'
+    elif team == 2:
+        return 'nwe'
+    elif team == 3:
+        return 'nyj'
+    elif team == 4:
+        return 'cin'
+    elif team == 5:
+        return 'cle'
+    elif team == 6:
+        return 'pit'
+    elif team == 7:
+        return 'rav'
+    elif team == 8:
+        return 'clt'
+    elif team == 9:
+        return 'htx'
+    elif team == 10:
+        return 'jax'
+    elif team == 11:
+        return 'oti'
+    elif team == 12:
+        return 'den'
+    elif team == 13:
+        return 'kan'
+    elif team == 14:
+        return 'rai'
+    elif team == 15:
+        return 'sdg'
+    elif team == 16:
+        return 'dal'
+    elif team == 17:
+        return 'nyg'
+    elif team == 18:
+        return 'phi'
+    elif team == 19:
+        return 'was'
+    elif team == 20:
+        return 'chi'
+    elif team == 21:
+        return 'det'
+    elif team == 22:
+        return 'gnb'
+    elif team == 23:
+        return 'min'
+    elif team == 24:
+        return 'atl'
+    elif team == 25:
+        return 'car'
+    elif team == 26:
+        return 'nor'
+    elif team == 27:
+        return 'tam'
+    elif team == 28:
+        return 'crd'
+    elif team == 29:
+        return 'ram'
+    elif team == 30:
+        return 'sea'
+    elif team == 31:
+        return 'sfo'
+
+
 
 def getChannel(channel):
     if channel == 'tbd':
@@ -204,19 +271,49 @@ def getTemp(temp):
         return 5
 
 def getWeather(weather):
-    if weather == 'Clear':
+    if weather == 'Dry':
         return 0
-    elif weather == 'Dry':
+    elif weather == 'Clear':
         return 1
-    elif weather == 'Foggy':
+    elif 'Humid' in weather:
         return 2
-    elif (weather == 'Breezy And Humid') or (weather == 'Humid') or (weather == 'Humid And Mostly Cloudy') or (weather == 'Humid And Overcast') or (weather == 'Humid And Partly Cloudy'):
+    elif ('Fog' in weather) or ('Foggy' in weather):
         return 3
-    elif (weather == 'Rain') or (weather == 'Drizzle') or (weather == 'Possible Drizzle') or (weather == 'Heavy Rain') or (weather == 'Light Rain') or (weather == 'Possible Light Rain') or (weather == 'Light Rain And Windy') or (weather == 'Rain And Windy'):
+    elif ('Overcast' in weather) or ('Cloudy' in weather):
         return 4
-    elif (weather == 'Snow') or (weather == 'Flurries') or (weather == 'Possible Flurries') or (weather == 'Heavy Snow') or (weather == 'Light Sleet') or (weather == 'Light Snow') or (weather == 'Light Snow And Windy'):
+    elif ('Rain' in weather) or ('Drizzle' in weather) or ('Thunderstorms' in weather):
         return 5
-    elif (weather == 'Overcast') or (weather == 'Mostly Cloudy') or (weather == 'Partly Cloudy') or (weather == 'Windy And Overcast') or (weather == 'Windy And Partly Cloudy'):
+    elif ('Snow' in weather) or ('Flurries' in weather) or ('Sleet' in weather):
         return 6
     else:
         return weather
+
+def getTime(time, am_pm):
+    if am_pm == 'AM':
+        if time == 9:
+            return 0
+        elif time == 10:
+            return 1
+    else:
+        if time == 12:
+            return 2
+        elif time == 1:
+            return 3
+        elif time == 2:
+            return 4
+        elif time == 3:
+            return 5
+        elif time == 4:
+            return 6
+        elif time == 5:
+            return 7
+        elif time == 7:
+            return 8
+        elif time == 8:
+            return 9
+        elif time == 9:
+            return 10
+        elif time == 10:
+            return 11
+
+

@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import time
+import random
 
 from Legends import *
 
@@ -134,12 +135,12 @@ class storeTeamData:
         proxies = {
         'http': 'http://172.67.191.62:80'
         }
-        time.sleep(47)
+        time.sleep(37)
         page = requests.get(URL, proxies=proxies)
         #page = requests.get(URL)
-        time.sleep(10)
+        time.sleep(random.choice([7,12,19]))
         soup = BeautifulSoup(page.content, 'html.parser')
-        time.sleep(10)
+        time.sleep(random.choice([7,12,19]))
         moreSoup = soup.find('table', id=f'gamelog{self.year}')
 
         df = pd.read_html(str(moreSoup))[0]
@@ -183,7 +184,7 @@ class updateWeatherData:
         self.week = week
         self.year = year
 
-    def addData(self, data, homeTeam, awayTeam):
+    def addData(self, data, awayTeam, homeTeam):
         mydb = mysql.connector.connect(
             host="127.0.0.1",
             user="davidcarney",
@@ -192,12 +193,11 @@ class updateWeatherData:
             )
 
         mycursor = mydb.cursor()
-
-        for column in data:
+        for column in data:            
             insertValues = (
                 f"UPDATE {self.table} "
                 f"SET {column} = {data[column]} "
-                f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
+                f"WHERE (HomeTeam = {homeTeam}) and (OppTeam = {awayTeam}) and (Week = {self.week}) and (Year = {self.year})"
             )
 
             mycursor.execute(insertValues)
@@ -206,7 +206,7 @@ class updateWeatherData:
             insertValues = (
                 f"UPDATE {self.table} "
                 f"SET {column} = {data[column]} "
-                f"WHERE (HomeTeam = {getTeam(awayTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
+                f"WHERE (HomeTeam = {homeTeam}) and (OppTeam = {homeTeam}) and (Week = {self.week}) and (Year = {self.year})"
             )
 
             mycursor.execute(insertValues)
@@ -219,24 +219,33 @@ class updateWeatherData:
         }
         page = requests.get(URL, headers=HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
+        time.sleep(3)
         moreSoup = soup.find('div', class_='container-game-box')
+        dates = []
 
         matchUp = moreSoup.div 
         while matchUp != None:
             matchUpData1 = matchUp.div
-            #dateAndTime = matchUpData1.div.text.strip()
+            dateAndTime = matchUpData1.div.text.strip().split(' ')
+            dates.append(dateAndTime[0])
+            hour = int(dateAndTime[1].split(':')[0])
+            am_pm = dateAndTime[2]
+            timeCode = getTime(hour,am_pm)
 
+            time.sleep(1)
             matchUpData2 = matchUpData1.next_sibling.next_sibling
             awayTeam, at, homeTeam = matchUpData2.find_all('span')
-            awayTeam = awayTeam.text
-            homeTeam = homeTeam.text
-            
+            awayTeam = getTeam(awayTeam.text)
+            homeTeam = getTeam(homeTeam.text)
+
+            time.sleep(1)
             matchUpData3 = matchUpData2.next_sibling.next_sibling
             weatherData = matchUpData3.div.div.next_sibling.next_sibling
             temp, weather = weatherData.find_all('span')
             temp = getTemp(int(temp.text.split(' ')[0]))
             weather = getWeather(weather.text)
 
+            time.sleep(1)
             windDataContainer = weatherData.next_sibling.next_sibling
             windData = windDataContainer.find_all('span')
             windDataLength = len(windData)
@@ -244,6 +253,7 @@ class updateWeatherData:
             if windDataLength == 3:
                 wind = windData[1].text.split(' ')[0]
 
+            time.sleep(1)
             channelData = windDataContainer.next_sibling.next_sibling
             channels = channelData.find_all('span')
             channelsLength = len(channels)
@@ -255,44 +265,56 @@ class updateWeatherData:
                 channel = getChannel(channel)
 
 
-            data = {'Channel':channel,'Temp':temp,'Weather':weather,'Wind':wind}
-            print(data)
-            self.addData(data, homeTeam, awayTeam)
-
+            data = {'Time':timeCode,'Channel':channel,'Temp':temp,'Weather':weather,'Wind':wind}
+            self.addData(data, awayTeam, homeTeam)
+            
             matchUp = matchUp.next_sibling.next_sibling
+        return dates[0]
 
     def doit(self):
-        self.getWeatherByWeek()
+        startOfWeek = self.getWeatherByWeek()
         print(f"Saved Week: {self.week} for Year: {self.year}")
+        return startOfWeek
 
 
 #For each game after given date
 #Go to website and store data from excel sheet into pandas df
 #Find all gambling data for each game after week start
-#Save data to database
+#Save data to database  
 class updateGamblingData:
 
     def __init__(self, table, year):
         self.table = table
         self.year = year
 
-    def saveData(self, column, data):
+    def saveData(self, column, data, awayTeam, homeTeam):
+        mydb = mysql.connector.connect(
+            host="127.0.0.1",
+            user="davidcarney",
+            password="Sinorrabb1t",
+            database="NFL"
+            )
+
+        mycursor = mydb.cursor()
+        homeTeamCode = getTeam(homeTeam)
+        awayTeamCode = getTeam(awayTeam)
+
         insertValues = (
             f"UPDATE {self.table} "
             f"SET {column} = {data} "
-            f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
+            f"WHERE (HomeTeam = {homeTeamCode}) and (OppTeam = {awayTeamCode}) and (Year = {self.year})"
         )
         mycursor.execute(insertValues)
         mydb.commit()
         insertValues = (
             f"UPDATE {self.table} "
             f"SET {column} = {data} "
-            f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
+            f"WHERE (Team = '{getTeamSmallNameFromTeam(awayTeamCode)}') and (HomeTeam = {homeTeamCode}) and (Year = {self.year})"
         )
         mycursor.execute(insertValues)
         mydb.commit()
 
-    def getDF(self, startOfWeek):
+    def doit(self, startOfWeek):
         URL = f"https://www.aussportsbetting.com/data/historical-nfl-results-and-odds-data/"
         # HEADERS = {
         #     'User-Agent': 'Safari/537.36',
@@ -315,16 +337,12 @@ class updateGamblingData:
         #Update string datetimes to datetimes
         df = pd.read_excel(excelContent)
 
-        df = df[df['Date'] > np.array(np.datetime64(startOfWeek))]
-        df = df[['Home Team','Away Team','Neutral Venue?','Home Line Open','Home Line Min','Home Line Max','Home Line Close','Total Score Open','Total Score Min','Total Score Max','Total Score Close']]
+        df = df[df['Date'] > startOfWeek]
+        df = df[['Date','Home Team','Away Team','Neutral Venue?','Home Line Open','Home Line Min','Home Line Max','Home Line Close','Total Score Open','Total Score Min','Total Score Max','Total Score Close']]
 
         df['Neutral Venue?'] = df['Neutral Venue?'].fillna(0)
         df['Neutral Venue?'] = df['Neutral Venue?'].replace('Y',1)
 
-        return df
-
-    def doit(self, startWeek):
-        df = self.getDF(startWeek)
         
         mydb = mysql.connector.connect(
             host="127.0.0.1",
@@ -336,7 +354,9 @@ class updateGamblingData:
         mycursor = mydb.cursor()
 
         for index, row in df.iterrows():
-            homeTeam, awayTeam, neutralVenue, homeLineOpen, homeLineMin, homeLineMax, homeLineClose, totalScoreOpen, totalScoreMin, totalScoreMax, totalScoreClose = row
+            date, homeTeam, awayTeam, neutralVenue, homeLineOpen, homeLineMin, homeLineMax, homeLineClose, totalScoreOpen, totalScoreMin, totalScoreMax, totalScoreClose = row
+            date = date.strftime('%Y-%m-%d')
+            date = date.split('-')[0]
             homeLineClose = float(homeLineClose)
             homeFavored = 0
             awayFavored = 0
@@ -354,31 +374,32 @@ class updateGamblingData:
                 totalScoreLine = -totalScoreLine
             minMaxTotalScoreLine = float(totalScoreMax) - float(totalScoreMin)
 
-            print(gameLine, minMaxLine, totalScoreLine, minMaxTotalScoreLine, homeFavored, awayFavored)
             #Save gameLine
-            saveData('gameLine', gameLine)
+            self.saveData('gameLine', gameLine, awayTeam, homeTeam)
             
             #Save minMaxLine
-            saveData('minMaxLine', minMaxLine)
+            self.saveData('minMaxLine', minMaxLine, awayTeam, homeTeam)
 
             #Save totalScoreLine
-            saveData('totalScoreLine', totalScoreLine)
+            self.saveData('totalScoreLine', totalScoreLine, awayTeam, homeTeam)
 
             #Save minMaxTotalScoreLine
-            saveData('minMaxTotalScoreLine', minMaxTotalScoreLine)
+            self.saveData('minMaxTotalScoreLine', minMaxTotalScoreLine, awayTeam, homeTeam)
 
+            homeTeamCode = getTeam(homeTeam)
+            awayTeamCode = getTeam(awayTeam)
             #Save favored data
             insertValues = (
                 f"UPDATE {self.table} "
                 f"SET favored = {homeFavored} "
-                f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(awayTeam)}) and (Year = {self.year})"
+                f"WHERE (HomeTeam = {homeTeamCode}) and (OppTeam = {awayTeamCode}) and (Year = {self.year})"
             )
             mycursor.execute(insertValues)
             mydb.commit()
             insertValues = (
                 f"UPDATE {self.table} "
-                f"SET favored = {awayFavored}"
-                f"WHERE (HomeTeam = {getTeam(homeTeam)}) and (OppTeam = {getTeam(homeTeam)}) and (Year = {self.year})"
+                f"SET favored = {awayFavored} "
+                f"WHERE (Team = '{getTeamSmallNameFromTeam(awayTeamCode)}') and (HomeTeam = {homeTeamCode}) and (Year = {self.year})"
             )
             mycursor.execute(insertValues)
             mydb.commit()
@@ -481,17 +502,21 @@ class getUpcomingWeekData:
 
 week = int(sys.argv[1])
 year = 2023
-table = "NFLRegularSeasons"
-startOfWeek = '2022-11-30'
+table = 'productionNFL'
 
 storeDataObj = storeTeamData(table, week, year)
 storeDataObj.storeAllTeamsData()
 
 storeWeatherObj = updateWeatherData(table, week, year)
-storeWeatherObj.doit()
+startOfWeek = storeWeatherObj.doit()
+
+month, day, year = startOfWeek.split('/')
+year = '20' + year
+
+resetStartOfWeek = f'{year}-{month}-{day}'
 
 storeGamblingObj = updateGamblingData(table, year)
-storeGamblingObj.doit(startOfWeek)
+storeGamblingObj.doit(resetStartOfWeek)
 
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
 storeUpcomingWeekData.getWeatherByWeek()
