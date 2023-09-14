@@ -434,6 +434,13 @@ class getUpcomingWeekData:
         while matchUp != None:
             matchUpData1 = matchUp.div
             dateAndTime = matchUpData1.div.text.strip()
+            dateAndTime = dateAndTime.split(' ')
+            day = datetime.strptime(dateAndTime[0], '%m/%d/%y')
+            dayCode = getDay(day.strftime('%A')[:3])
+
+            hour = int(dateAndTime[1].split(':')[0])
+            am_pm = dateAndTime[2]
+            timeCode = getTime(hour,am_pm)
 
             matchUpData2 = matchUpData1.next_sibling.next_sibling
             awayTeam, at, homeTeam = matchUpData2.find_all('span')
@@ -461,13 +468,17 @@ class getUpcomingWeekData:
                 channel = channels[1].text
                 if ',' in channel:
                     channel = channel.split(',')[0]
+                elif ' ' in channel:
+                    channel = channel.split(' ')[0]
                 channel = getChannel(channel)
 
-            upcomingWeekBackendFile.write(homeTeam)
-            upcomingWeekBackendFile.write("_")
             upcomingWeekBackendFile.write(awayTeam)
             upcomingWeekBackendFile.write("_")
-            upcomingWeekBackendFile.write(dateAndTime)
+            upcomingWeekBackendFile.write(homeTeam)
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{timeCode}')
+            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write(f'{dayCode}')
             upcomingWeekBackendFile.write("_")
             upcomingWeekBackendFile.write(f'{channel}')
             upcomingWeekBackendFile.write("_")
@@ -479,7 +490,7 @@ class getUpcomingWeekData:
             upcomingWeekBackendFile.write("\n")
 
             upcomingWeekFrontendFile.write("'")
-            upcomingWeekFrontendFile.write(dateAndTime)
+            upcomingWeekFrontendFile.write(f'{dateAndTime}')
             upcomingWeekFrontendFile.write('_')
             upcomingWeekFrontendFile.write(awayTeam)
             upcomingWeekFrontendFile.write('_')
