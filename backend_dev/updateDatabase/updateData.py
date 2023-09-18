@@ -39,7 +39,94 @@ class storeTeamData:
             else:
                 yardsPerPoint = 0
 
-            insertData = (
+            if row[4] == 0:
+                insertData = (
+                        f"INSERT INTO {self.table} "
+                        f"("
+                        f"Week, "
+                        f"Day, "
+                        f"WinLoss, "
+                        f"OT, "
+                        f"At, "
+                        f"OppTeam, "
+                        f"Tm, "
+                        f"Opp, "
+                        f"Cmp, "
+                        f"AttPassing, "
+                        f"YdsPassing, "
+                        f"TDPassing, "
+                        f"Interceptions, "
+                        f"Sk, "
+                        f"YdsLossFromSacks, "
+                        f"YPerAPassing, "
+                        f"NYPerA, "
+                        f"CmpPerc, "
+                        f"Rate, "
+                        f"AttRushing, "
+                        f"YdsRushing, "
+                        f"YPerARushing, "
+                        f"TDRushing, "
+                        f"FGM, "
+                        f"FGA, "
+                        f"XPM, "
+                        f"XPA, "
+                        f"Pnt, "
+                        f"YdsPunting, "
+                        f"ThirdDConv, "
+                        f"ThirdDAtt, "
+                        f"FourthDConv, "
+                        f"FourthDAtt, "
+                        f"ToP, "
+                        f"Year, "
+                        f"Team, "
+                        f"YardsPerPoint, "
+                        f"HomeTeam "
+                        f") "
+                        f"VALUES ("
+                        f"{row[0]},"
+                        f"{row[1]},"
+                        f"{row[2]},"
+                        f"{row[3]},"
+                        f"{row[4]},"
+                        f"{row[5]},"
+                        f"{row[6]},"
+                        f"{row[7]},"
+                        f"{row[8]},"
+                        f"{row[9]},"
+                        f"{row[10]},"
+                        f"{row[11]},"
+                        f"{row[12]},"
+                        f"{row[13]},"
+                        f"{row[14]},"
+                        f"{row[15]},"
+                        f"{row[16]},"
+                        f"{row[17]},"
+                        f"{row[18]},"
+                        f"{row[19]},"
+                        f"{row[20]},"
+                        f"{row[21]},"
+                        f"{row[22]},"
+                        f"{row[23]},"
+                        f"{row[24]},"
+                        f"{row[25]},"
+                        f"{row[26]},"
+                        f"{row[27]},"
+                        f"{row[28]},"
+                        f"{row[29]},"
+                        f"{row[30]},"
+                        f"{row[31]},"
+                        f"{row[32]},"
+                        f"{row[33]},"
+                        f"{self.year},"
+                        f"'{team}',"
+                        f"{yardsPerPoint},"
+                        f"{row[5]}"
+                        f")"
+                )
+                mycursor.execute(insertData)
+                mydb.commit()
+            else:
+                insertData = (
                     f"INSERT INTO {self.table} "
                     f"("
                     f"Week, "
@@ -121,9 +208,9 @@ class storeTeamData:
                     f"{yardsPerPoint},"
                     f"{getTeamFromSmallName(team)}"
                     f")"
-            )
-            mycursor.execute(insertData)
-            mydb.commit()
+                )
+                mycursor.execute(insertData)
+                mydb.commit()
 
     def getLastWeekTeamData(self, team):
 
@@ -206,8 +293,8 @@ class updateWeatherData:
             insertValues = (
                 f"UPDATE {self.table} "
                 f"SET {column} = {data[column]} "
-                f"WHERE (HomeTeam = {homeTeam}) and (OppTeam = {homeTeam}) and (Week = {self.week}) and (Year = {self.year})"
-            )
+                f"WHERE (Team = '{getTeamSmallNameFromTeam(awayTeam)}') and (HomeTeam = {homeTeam}) and (Week = {self.week}) and (Year = {self.year})"
+                )
 
             mycursor.execute(insertValues)
             mydb.commit()
@@ -258,10 +345,12 @@ class updateWeatherData:
             channels = channelData.find_all('span')
             channelsLength = len(channels)
             channel = 0
-            if channelsLength == 2:
+            if channelsLength > 1:
                 channel = channels[1].text
                 if ',' in channel:
                     channel = channel.split(',')[0]
+                elif ' ' in channel:
+                    channel = channel.split(' ')[0]
                 channel = getChannel(channel)
 
 
@@ -464,7 +553,7 @@ class getUpcomingWeekData:
             channels = channelData.find_all('span')
             channelsLength = len(channels)
             channel = 0
-            if channelsLength == 2:
+            if channelsLength > 1:
                 channel = channels[1].text
                 if ',' in channel:
                     channel = channel.split(',')[0]
@@ -522,6 +611,11 @@ storeWeatherObj = updateWeatherData(table, week, year)
 startOfWeek = storeWeatherObj.doit()
 
 month, day, year = startOfWeek.split('/')
+if day == 1:
+    month = int(month) - 1
+    day = '28'
+else:
+    day = int(day) - 1
 year = '20' + year
 
 resetStartOfWeek = f'{year}-{month}-{day}'
