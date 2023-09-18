@@ -8,6 +8,7 @@ from datetime import datetime
 import time
 import random
 
+from theBot2 import theBot
 from Legends import *
 
 
@@ -25,10 +26,10 @@ class storeTeamData:
 
     def storeDataToMySQL(self, team, df):
         mydb = mysql.connector.connect(
-        host="127.0.0.1",
-        user="davidcarney",
-        password="Sinorrabb1t",
-        database="NFL"
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NFL'
         )
 
         mycursor = mydb.cursor()
@@ -214,7 +215,7 @@ class storeTeamData:
 
     def getLastWeekTeamData(self, team):
 
-        URL = f"https://www.pro-football-reference.com/teams/{team}/{self.year}/gamelog/"
+        URL = f'https://www.pro-football-reference.com/teams/{team}/{self.year}/gamelog/'
         # HEADERS = {
         #     'User-Agent': 'Safari/605.15',
         # }
@@ -257,7 +258,7 @@ class storeTeamData:
         for num, team in enumerate(self.teams):
             teamDF = self.getLastWeekTeamData(team)
 
-            print(f"{num}. {team} updated.")
+            print(f'{num}. {team} updated.')
 
 
 #For each game in a week
@@ -273,10 +274,10 @@ class updateWeatherData:
 
     def addData(self, data, awayTeam, homeTeam):
         mydb = mysql.connector.connect(
-            host="127.0.0.1",
-            user="davidcarney",
-            password="Sinorrabb1t",
-            database="NFL"
+            host='127.0.0.1',
+            user='davidcarney',
+            password='Sinorrabb1t',
+            database='NFL'
             )
 
         mycursor = mydb.cursor()
@@ -300,7 +301,7 @@ class updateWeatherData:
             mydb.commit()
 
     def getWeatherByWeek(self):
-        URL = f"https://www.nflweather.com/week/{self.year}/week-{self.week}"
+        URL = f'https://www.nflweather.com/week/{self.year}/week-{self.week}'
         HEADERS = {
             'User-Agent': 'Safari/537.36',
         }
@@ -362,7 +363,7 @@ class updateWeatherData:
 
     def doit(self):
         startOfWeek = self.getWeatherByWeek()
-        print(f"Saved Week: {self.week} for Year: {self.year}")
+        print(f'Saved Week: {self.week} for Year: {self.year}')
         return startOfWeek
 
 
@@ -378,10 +379,10 @@ class updateGamblingData:
 
     def saveData(self, column, data, awayTeam, homeTeam):
         mydb = mysql.connector.connect(
-            host="127.0.0.1",
-            user="davidcarney",
-            password="Sinorrabb1t",
-            database="NFL"
+            host='127.0.0.1',
+            user='davidcarney',
+            password='Sinorrabb1t',
+            database='NFL'
             )
 
         mycursor = mydb.cursor()
@@ -404,7 +405,7 @@ class updateGamblingData:
         mydb.commit()
 
     def doit(self, startOfWeek):
-        URL = f"https://www.aussportsbetting.com/data/historical-nfl-results-and-odds-data/"
+        URL = f'https://www.aussportsbetting.com/data/historical-nfl-results-and-odds-data/'
         # HEADERS = {
         #     'User-Agent': 'Safari/537.36',
         # }
@@ -434,10 +435,10 @@ class updateGamblingData:
 
         
         mydb = mysql.connector.connect(
-            host="127.0.0.1",
-            user="davidcarney",
-            password="Sinorrabb1t",
-            database="NFL"
+            host='127.0.0.1',
+            user='davidcarney',
+            password='Sinorrabb1t',
+            database='NFL'
             )
 
         mycursor = mydb.cursor()
@@ -493,25 +494,28 @@ class updateGamblingData:
             mycursor.execute(insertValues)
             mydb.commit()
             
-        print(f"Updated gambling data.")
+        print(f'Updated gambling data.')
 
         
 
 
-
+#For each game in a week
+#Go to website and scrape all data (all games in a week)
+#Find all data for each game that week
+#Write data to frontend and backend files
 class getUpcomingWeekData:
     def __init__(self, week, year):
         self.week = week + 1
         self.year = year
   
     def getWeatherByWeek(self):
-        upcomingWeekBackendFilename = "../updateMatchups/upcomingWeekData.txt"
+        upcomingWeekBackendFilename = 'upcomingWeekData.txt'
         upcomingWeekFrontendFilename = '../../frontend_production/src/upcomingWeekData.js'
-        upcomingWeekBackendFile = open(upcomingWeekBackendFilename, "w")
+        upcomingWeekBackendFile = open(upcomingWeekBackendFilename, 'w')
         upcomingWeekFrontendFile = open(upcomingWeekFrontendFilename, 'w')
         upcomingWeekFrontendFile.write('export const upcomingWeekData = [\n')
 
-        URL = f"https://www.nflweather.com/week/{self.year}/week-{self.week}"
+        URL = f'https://www.nflweather.com/week/{self.year}/week-{self.week}'
         HEADERS = {
             'User-Agent': 'Safari/537.36',
         }
@@ -562,24 +566,30 @@ class getUpcomingWeekData:
                 channel = getChannel(channel)
 
             upcomingWeekBackendFile.write(awayTeam)
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(homeTeam)
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{timeCode}')
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{dayCode}')
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{channel}')
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{getTemp(temp)}')
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{getWeather(weather)}')
-            upcomingWeekBackendFile.write("_")
+            upcomingWeekBackendFile.write('_')
             upcomingWeekBackendFile.write(f'{wind}')
-            upcomingWeekBackendFile.write("\n")
+            upcomingWeekBackendFile.write('\n')
 
             upcomingWeekFrontendFile.write("'")
-            upcomingWeekFrontendFile.write(f'{dateAndTime}')
+            upcomingWeekFrontendFile.write(f'{dateAndTime[0]}')
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(f'{dateAndTime[1]}')
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(f'{dateAndTime[2]}')
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(f'{dateAndTime[3]}')
             upcomingWeekFrontendFile.write('_')
             upcomingWeekFrontendFile.write(awayTeam)
             upcomingWeekFrontendFile.write('_')
@@ -598,6 +608,150 @@ class getUpcomingWeekData:
         upcomingWeekFrontendFile.write('];')
         upcomingWeekBackendFile.close()
         upcomingWeekFrontendFile.close()
+
+        print('Updated upcoming week data')
+
+
+
+
+
+#Predict winner loser and their scores
+class getPredictions:
+    def __init__(self, week, year):
+        self.week = week
+        self.year = year
+
+    def teamService(self, columnName, teamNumber, time, day, at, oppTeamNumber, channel, temp, weather, wind):
+        mydb = mysql.connector.connect(
+            host='127.0.0.1',
+            user='davidcarney',
+            password='Sinorrabb1t',
+            database='NFL'
+            )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute(f"SELECT * FROM productionNFL WHERE HomeTeam = '{teamNumber}' and Year > 2017")
+
+        teamData = mycursor.fetchall()
+        dfColumns = ['id','Week','Day','WinLoss','OT','At','OppTeam','Tm','Opp','Cmp','AttPassing','YdsPassing','TDPassing','Interceptions','Sk','YdsLossFromSacks','YPerAPassing','NYPerA','CmpPerc','Rate','AttRushing','YdsRushing','YPerARushing','TDRushing','FGM','FGA','XPM','XPA','Pnt','YdsPunting','ThirdDConv','ThirdDAtt','FourthDConv','FourthDAtt','ToP','Year','Team','YardsPerPoint','HomeTeam','Time','Channel','Temp','Weather','Wind','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','favored']
+        teamDF = pd.DataFrame(teamData, columns = dfColumns)
+
+        upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
+        upcomingWeekColumns = ['Week','Time','Day','At','OppTeam','Wind','Temp','Weather','Channel','Year']
+        upcomingWeekDF = pd.DataFrame(upcomingWeekData, columns = upcomingWeekColumns)
+
+        model = theBot(teamDF, upcomingWeekDF, columnName)
+        model.adjustDF()
+
+        #Run theBot code 3 times to keep adding to existing upcoming week DF
+        predictions1 = model.useCode()
+        predictions2 = model.useCode()
+        predictions3 = model.useCode()
+
+
+        return predictions1,predictions2,predictions3
+
+    def updateMatchup(self, awayTeamName, homeTeamName, time, day, channel, temp, weather, wind, resultsFile):
+        homeTeamNumber = getTeam(homeTeamName)
+        awayTeamNumber = getTeam(awayTeamName)
+
+        homeWinLossOutcome = 0
+        awayWinLossOutcome = 0
+        homePointsOutcomeTm = []
+        awayPointsOutcomeTm = []
+        homePointsOutcomeOpp = []
+        awayPointsOutcomeOpp = []
+
+        for i in range(12):
+
+            homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService('WinLoss', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
+            awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService('WinLoss', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
+
+            homeWinLossOutcome = homeWinLossOutcome + ((homePredictions1WL[0] + homePredictions1WL[1]) / 2) + ((homePredictions2WL[0] + homePredictions2WL[1]) / 2) + ((homePredictions3WL[0] + homePredictions3WL[1]) / 2)
+            awayWinLossOutcome = awayWinLossOutcome + ((awayPredictions1WL[0] + awayPredictions1WL[1]) / 2) + ((awayPredictions2WL[0] + awayPredictions2WL[1]) / 2) + ((awayPredictions3WL[0] + awayPredictions3WL[1]) / 2)
+
+            homePredictions1TM, homePredictions2TM, homePredictions3TM = self.teamService('Tm', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
+            awayPredictions1TM, awayPredictions2TM, awayPredictions3TM = self.teamService('Tm', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
+
+            homePointsOutcomeTm.append((((homePredictions1TM[0] + homePredictions1TM[1]) / 2) + ((homePredictions2TM[0] + homePredictions2TM[1]) / 2) + ((homePredictions3TM[0] + homePredictions3TM[1]) / 2)) / 3)
+            awayPointsOutcomeTm.append((((awayPredictions1TM[0] + awayPredictions1TM[1]) / 2) + ((awayPredictions2TM[0] + awayPredictions2TM[1]) / 2) + ((awayPredictions3TM[0] + awayPredictions3TM[1]) / 2)) / 3)
+            
+            homePredictions1OPP, homePredictions2OPP, homePredictions3OPP = self.teamService('Opp', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
+            awayPredictions1OPP, awayPredictions2OPP, awayPredictions3OPP = self.teamService('Opp', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
+
+            homePointsOutcomeOpp.append((((homePredictions1OPP[0] + homePredictions1OPP[1]) / 2) + ((homePredictions2OPP[0] + homePredictions2OPP[1]) / 2) + ((homePredictions3OPP[0] + homePredictions3OPP[1]) / 2)) / 3)
+            awayPointsOutcomeOpp.append((((awayPredictions1OPP[0] + awayPredictions1OPP[1]) / 2) + ((awayPredictions2OPP[0] + awayPredictions2OPP[1]) / 2) + ((awayPredictions3OPP[0] + awayPredictions3OPP[1]) / 2)) / 3)
+
+
+        homePointsOutcomeTmAvg = sum(homePointsOutcomeTm) / len(homePointsOutcomeTm)
+        awayPointsOutcomeTmAvg = sum(awayPointsOutcomeTm) / len(awayPointsOutcomeTm)
+        homePointsOutcomeOppAvg = sum(homePointsOutcomeOpp) / len(homePointsOutcomeOpp)
+        awayPointsOutcomeOppAvg = sum(awayPointsOutcomeOpp) / len(awayPointsOutcomeOpp)
+        homePointsOutcomeAvg = int((homePointsOutcomeTmAvg + awayPointsOutcomeOppAvg) / 2)
+        awayPointsOutcomeAvg = int((awayPointsOutcomeTmAvg + homePointsOutcomeOppAvg) / 2) 
+        
+
+        if homeWinLossOutcome > awayWinLossOutcome:
+            percent = (1 - (awayWinLossOutcome / homeWinLossOutcome)) * 100   
+            resultsFile.write("'")         
+            resultsFile.write(homeTeamName)
+            resultsFile.write(',')
+            resultsFile.write(f'{homePointsOutcomeAvg}')
+            resultsFile.write(',')
+            resultsFile.write(awayTeamName)
+            resultsFile.write(',')
+            resultsFile.write(f'{awayPointsOutcomeAvg}')
+            resultsFile.write(',')
+            resultsFile.write(str(round(percent,2)))
+            resultsFile.write("',")
+            resultsFile.write('\n')
+
+        else:
+            percent = (1 - (homeWinLossOutcome / awayWinLossOutcome)) * 100
+            resultsFile.write("'")
+            resultsFile.write(awayTeamName)
+            resultsFile.write(',')
+            resultsFile.write(f'{awayPointsOutcomeAvg}')
+            resultsFile.write(',')
+            resultsFile.write(homeTeamName)
+            resultsFile.write(',')
+            resultsFile.write(f'{homePointsOutcomeAvg}')
+            resultsFile.write(',')
+            resultsFile.write(str(round(percent,2)))
+            resultsFile.write("',")
+            resultsFile.write('\n')
+    
+    def doit(self):
+        readFilename = 'upcomingWeekData.txt'
+        resultFilename = '../../frontend_production/src/pages/results.js'
+
+        readFile = open(readFilename, 'r')
+        resultsFile = open(resultFilename, 'w')
+        resultsFile.write('export const weeklyResults = [\n')
+
+        for matchup in readFile.readlines():
+
+            awayTeam, homeTeam, time, day, channel, temp, weather, wind = matchup.split('_')
+            wind = wind.strip()
+
+            self.updateMatchup(awayTeam, homeTeam, time, day, channel, temp, weather, wind, resultsFile)
+            
+
+        resultsFile.write('];')
+        readFile.close()
+        resultsFile.close()
+
+        print('All matchups have been predicted!')
+
+
+
+
+
+
+
+
+
 
 
 week = int(sys.argv[1])
@@ -625,3 +779,6 @@ storeGamblingObj.doit(resetStartOfWeek)
 
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
 storeUpcomingWeekData.getWeatherByWeek()
+
+predictions = getPredictions(week, year)
+predictions.doit()
