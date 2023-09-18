@@ -248,7 +248,7 @@ def getChannel(channel):
         return 3
     elif (channel == 'FOX') or (channel == 'fox'):
         return 4
-    elif (channel == 'PRIME VIDEO') or (channel == 'AMAZON'):
+    elif (channel == 'PRIME VIDEO') or (channel == 'AMAZON') or (channel == 'PRIME'):
         return 5
     if (channel == 'ESPN') or (channel == 'espn') or (channel == 'ESPN+'):
         return 6
