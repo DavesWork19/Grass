@@ -1,3 +1,92 @@
+'Lions,Chiefs,36.36'
+'Falcons,Panthers,10.81'
+'Bengals,Browns,58.09'
+'Jaguars,Colts,14.53'
+'Vikings,Buccaneers,78.38'
+'Saints,Titans,37.5'
+'49ers,Steelers,86.72'
+'Cardinals,Washington,22.21'
+'Ravens,Texans,91.67'
+'Packers,Bears,58.82'
+'Broncos,Raiders,3.61'
+'Eagles,Patriots,0.0'
+'Chargers,Dolphins,62.45'
+'Seahawks,Rams,82.3'
+'Cowboys,Giants,33.53'
+'Bills,Jets,87.13'
+
+'Chiefs,Lions,8.33',
+'Falcons,Panthers,16.2',
+'Browns,Bengals,21.96',
+'Jaguars,Colts,5.9',
+'Buccaneers,Vikings,23.08',
+'Saints,Titans,57.14',
+'49ers,Steelers,95.86',
+'Cardinals,Washington,6.4',
+'Ravens,Texans,72.49',
+'Packers,Bears,66.97',
+'Broncos,Raiders,85.48',
+'Eagles,Patriots,18.35',
+'Chargers,Dolphins,58.82',
+'Seahawks,Rams,63.81',
+'Cowboys,Giants,2.85',
+'Bills,Jets,16.67',
+
+'Chiefs,Lions,4.33', 0
+'Falcons,Panthers,21.14', 1
+'Bengals,Browns,50.75', 0
+'Jaguars,Colts,16.89', 1
+'Vikings,Buccaneers,15.4', 0
+'Titans,Saints,0.14', 0
+'49ers,Steelers,0.51', 1
+'Washington,Cardinals,10.04', 1
+'Ravens,Texans,67.52', 1
+'Bears,Packers,46.43', 0
+'Raiders,Broncos,16.14', 1
+'Patriots,Eagles,21.61', 0
+'Chargers,Dolphins,14.7', 0
+'Seahawks,Rams,5.51', 0
+'Cowboys,Giants,28.54', 1
+'Bills,Jets,11.13', 0
+
+'Chiefs,Lions,27.33',0
+'Falcons,Panthers,5.66',1
+'Bengals,Browns,13.79',0
+'Jaguars,Colts,32.7',1
+'Vikings,Buccaneers,33.87',0
+'Saints,Titans,22.0',1
+'49ers,Steelers,2.09',1
+'Cardinals,Washington,2.19',0
+'Ravens,Texans,68.61',1
+'Bears,Packers,72.68',0
+'Raiders,Broncos,12.2',1
+'Eagles,Patriots,16.44',1
+'Chargers,Dolphins,26.44',0
+'Rams,Seahawks,8.06',1
+'Cowboys,Giants,19.65',1
+'Bills,Jets,29.12',0
+
+
+
+
+'Chiefs,Lions,24.4,- 1', 0
+'Falcons,Panthers,2.56,+ 0',0
+'Bengals,Browns,22.7,+ 1',
+'Jaguars,Colts,24.99,- 2',
+'Buccaneers,Vikings,6.74,- 1',
+'Saints,Titans,32.75,+ 1',
+'Steelers,49ers,39.62,- 3',
+'Cardinals,Washington,16.55,+ 1',
+'Ravens,Texans,72.79,+ 0',
+'Bears,Packers,55.7,- 1',
+'Raiders,Broncos,40.47,- 0',
+'Patriots,Eagles,21.4,- 2',
+'Dolphins,Chargers,14.23,- 0',
+'Seahawks,Rams,11.87,+ 0',
+'Cowboys,Giants,27.64,- 0',
+'Bills,Jets,14.41,- 2',
+
+
 Saints,Cardinals,Saints,65.46
 Saints,Cardinals,Saints,76.35
 Saints,Cardinals,Saints,82.9
@@ -518,40 +607,3 @@ Week 1
 'Seahawks,23,Rams,23,9.2', 0
 'Cowboys,20,Giants,20,4.24', 1
 'Bills,21,Jets,19,11.19', 0
-
-WEEK 2
-
-'Eagles,22,Vikings,21,37.27',1
-'Falcons,23,Packers,21,32.68',1
-'Bills,23,Raiders,22,26.79',1
-'Bengals,24,Ravens,21,63.92',0
-'Lions,25,Seahawks,23,36.93',0
-'Chargers,21,Titans,22,1.49',0
-'Buccaneers,21,Bears,23,31.27',1
-'Chiefs,21,Jaguars,20,12.64',1
-'Colts,21,Texans,23,29.31',1
-'Rams,22,49ers,21,31.75',0
-'Giants,21,Cardinals,19,34.74',1
-'Cowboys,19,Jets,20,5.63',1
-'Broncos,17,Washington,18,16.12',0
-'Patriots,21,Dolphins,17,31.23',0
-'Saints,21,Panthers,21,23.43',1
-'Steelers,19,Browns,19,16.2',1
-
-WEEK 3
-'49ers,2.0,Giants,1.0,35.56',
-'Browns,2.0,Titans,1.0,27.58',
-'Lions,2.0,Falcons,1.0,8.97',
-'Packers,2.0,Saints,1.0,17.04',
-'Broncos,2.0,Dolphins,1.0,27.34',
-'Vikings,2.0,Chargers,1.0,5.44',
-'Jets,2.0,Patriots,1.0,3.51',
-'Bills,2.0,Washington,1.0,19.98',
-'Jaguars,2.0,Texans,1.0,34.12',
-'Ravens,2.0,Colts,1.0,19.92',
-'Seahawks,2.0,Panthers,1.0,0.31',
-'Chiefs,2.0,Bears,1.0,23.29',
-'Cardinals,2.0,Cowboys,1.0,38.92',
-'Raiders,2.0,Steelers,1.0,14.81',
-'Buccaneers,2.0,Eagles,1.0,50.24',
-'Bengals,2.0,Rams,1.0,14.67',

@@ -11,6 +11,7 @@ wholeFile = fileRead.readlines()
 groups = {'AFCNorth': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFCSouth': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFCEast': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFCWest': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFCNorth': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFCSouth': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFCEast': ['Cowboys', 'Giants', 'Eagles', 'Commanders'], 'NFCWest': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Commanders', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
 results = {'AFC':[0,0], 'AFCNorth':[0,0], 'AFCSouth':[0,0], 'AFCEast':[0,0], 'AFCWest':[0,0], 'NFC':[0,0], 'NFCNorth':[0,0], 'NFCSouth':[0,0], 'NFCEast':[0,0], 'NFCWest':[0,0]}
 week = 0
+year = 0
 
 for line in wholeFile:
     data = line.split(',')
@@ -81,7 +82,7 @@ for line in wholeFile:
                 elif homeTeam in groups['NFCWest']:
                     results['NFCWest'] = [results['NFCWest'][0]  + 100, results['NFCWest'][1] + 1]
 
-            results[f'Week {week}'] = [results[f'Week {week}'][0] + 100, results[f'Week {week}'][1] + 1]
+            results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 100, results[f'{year} Week {week}'][1] + 1]
 
         else:
             if awayTeam not in results:
@@ -143,11 +144,17 @@ for line in wholeFile:
                 elif homeTeam in groups['NFCWest']:
                     results['NFCWest'] = [results['NFCWest'][0]  + 0, results['NFCWest'][1] + 1]
 
-            results[f'Week {week}'] = [results[f'Week {week}'][0] + 0, results[f'Week {week}'][1] + 1]
+            results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 0, results[f'{year} Week {week}'][1] + 1]
 
     else:
-        week = data[0][:-1]
-        results[f'Week {week}'] = [0,0]
+        weekOrYear = data[0][:-1]
+        if weekOrYear == '2022':
+            year = 2022
+        elif weekOrYear == '2023':
+            year = 2023
+        else:
+            week = weekOrYear
+            results[f'{year} Week {week}'] = [0,0]
 
 
 
@@ -157,7 +164,7 @@ for team in results:
     finalResults[team] = round(results[team][0]/results[team][1],2)
 
 
-filenameWrite = "../frontend/src/percentages.json"
+filenameWrite = "./percentages.json"
 with open(filenameWrite, "w") as outfile:
     json.dump(finalResults, outfile)
 

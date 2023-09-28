@@ -208,7 +208,18 @@ const Matchups = () => {
   };
 
   return upcomingWeekData.map((data) => {
-    const [awayTeam, homeTeam, Day] = data.split('_');
+    const [
+      date,
+      time,
+      am_pm,
+      timeZone,
+      awayTeam,
+      homeTeam,
+      temp,
+      weather,
+      wind,
+    ] = data.split('_');
+
     return (
       <Link to={`${awayTeam}At${homeTeam}`}>
         <button className='btn btn-light mt-1 mb-5'>
