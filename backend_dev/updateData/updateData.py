@@ -786,27 +786,27 @@ week = int(sys.argv[1])
 year = 2023
 table = 'productionNFL'
 
-# storeDataObj = storeTeamData(table, week, year)
-# storeDataObj.storeAllTeamsData()
+storeDataObj = storeTeamData(table, week, year)
+storeDataObj.storeAllTeamsData()
 
-# storeWeatherObj = updateWeatherData(table, week, year)
-# startOfWeek = storeWeatherObj.doit()
+storeWeatherObj = updateWeatherData(table, week, year)
+startOfWeek = storeWeatherObj.doit()
 
-# month, day, year = startOfWeek.split('/')
-# if day == 1:
-#     month = int(month) - 1
-#     day = '28'
-# else:
-#     day = int(day) - 1
-# year = '20' + year
+month, day, year = startOfWeek.split('/')
+if day == 1:
+    month = int(month) - 1
+    day = '28'
+else:
+    day = int(day) - 1
+year = '20' + year
 
-# resetStartOfWeek = f'{year}-{month}-{day}'
+resetStartOfWeek = f'{year}-{month}-{day}'
 
-# storeGamblingObj = updateGamblingData(table, year)
-# storeGamblingObj.doit(resetStartOfWeek)
+storeGamblingObj = updateGamblingData(table, year)
+storeGamblingObj.doit(resetStartOfWeek)
 
-# storeUpcomingWeekData = getUpcomingWeekData(week, year)
-# storeUpcomingWeekData.getWeatherByWeek()
+storeUpcomingWeekData = getUpcomingWeekData(week, year)
+storeUpcomingWeekData.getWeatherByWeek()
 
 predictions = getPredictions(week, year)
 predictions.doit()
