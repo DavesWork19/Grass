@@ -10,10 +10,15 @@ const MatchupPage = () => {
 
   const results = weeklyResults.find(
     (element) =>
-      element.split(',')[0] === awayTeam || element.split(',')[1] === awayTeam
+      element.split(',')[0] === awayTeam || element.split(',')[2] === awayTeam
   );
-  const [finalResultsWinner, finalResultsLoser, finalResultsPercent] =
-    results.split(',');
+  const [
+    finalResultsWinner,
+    finalResultsWinnerPoints,
+    finalResultsLoser,
+    finalResultsLoserPoints,
+    finalResultsPercent,
+  ] = results.split(',');
 
   return (
     <div className='regularText'>

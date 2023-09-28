@@ -26,7 +26,8 @@ from sklearn.preprocessing import StandardScaler
 
 #Takes a single team DF and the upcomingWeekData and columns and returns if they will win this week
 class theBot:
-    def __init__(self, teamDF, upcomingWeekDF):
+    def __init__(self, teamDF, upcomingWeekDF, columnToPredict):
+        self.columnToPredict = columnToPredict
         self.df = teamDF
         #Single row DF of the predicted values for the upcoming week
         self.upcomingWeek = upcomingWeekDF
@@ -43,8 +44,8 @@ class theBot:
 
 
     #Adds new linear columns to newLinearColumns by checking p value OR correlation
-    def getCorrelatedColumns(self, corrColumn, pCutOff, corrCutOff, columnToPredict):
-        df = self.df.drop(columns=[columnToPredict])
+    def getCorrelatedColumns(self, corrColumn, pCutOff, corrCutOff):
+        df = self.df.drop(columns=[self.columnToPredict])
         newLinearColumns = []
 
         for col in df:
@@ -77,7 +78,7 @@ class theBot:
                     self.upcomingWeek[col] = np.round(value,1)
 
     #Predict all linearly correlated columns
-    def predictLinearValues(self, columnToPredict):
+    def predictLinearValues(self):
         linearList = self.upcomingWeek.columns.tolist()
         pCutOff = .05
         corrCutOff = .35
@@ -86,7 +87,7 @@ class theBot:
 
         for col in linearList:
             newColumnsToPredict = []
-            newLinearColumns = self.getCorrelatedColumns(col, pCutOff, corrCutOff, columnToPredict)
+            newLinearColumns = self.getCorrelatedColumns(col, pCutOff, corrCutOff)
 
 
             for newLinearValue in newLinearColumns:
@@ -96,23 +97,16 @@ class theBot:
 
             self.useLinR(newColumnsToPredict, scoreCutOff)
 
-
-
-
-
-
 #Iterates over each column in upcomingWeek DF checking if any are correlated (with pvalue)
 #to any other columns in the overall DF. If correlated (with pvalue) then send to
 #linear regression, and if the linear regression score is greater than the score provided
 #predict value in upcomingWeek DF
-
 #Then predict winloss with upcomingWeek DF
-
-    #Use SVM model on predicted values from Linear Regression
-    def scoreSVM(self, columnName):
+#Use SVM model on predicted values from Linear Regression
+    def scoreSVM(self):
         df = self.df
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -122,11 +116,11 @@ class theBot:
         return model.score(X_test, y_test)
 
     #Use DT model
-    def scoreDT(self, columnName):
+    def scoreDT(self):
         df = self.df
 
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -136,10 +130,10 @@ class theBot:
         return model.score(X_test, y_test)
 
     #Use KNN model
-    def scoreKNN(self, columnName):
+    def scoreKNN(self):
         df = self.df
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -160,11 +154,11 @@ class theBot:
         return model.score(X_test, y_test)
 
     #Find higest model score
-    def findScores(self, columnName):
+    def findScores(self):
 
-        svmScore = self.scoreSVM(columnName)
-        dtScore = self.scoreDT(columnName)
-        knnScore = self.scoreKNN(columnName)
+        svmScore = self.scoreSVM()
+        dtScore = self.scoreDT()
+        knnScore = self.scoreKNN()
 
         if (svmScore >= dtScore) and (svmScore >= knnScore):
             return 'SVM'
@@ -178,10 +172,9 @@ class theBot:
 
     #Predict SVM model
     def predictSVM(self):
-        columnName = 'WinLoss'
         df = self.df
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -191,14 +184,13 @@ class theBot:
         regression = svm.SVR()
         regression.fit(X_train, y_train)
 
-        return [classification.predict(self.upcomingWeek),regression.predict(self.upcomingWeek)]
+        return [classification.predict(self.upcomingWeek)[0],regression.predict(self.upcomingWeek)[0]]
 
     #Predict DT model
     def predictDT(self):
-        columnName = 'WinLoss'
         df = self.df
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -209,15 +201,14 @@ class theBot:
         regression = regression.fit(X_train, y_train)
 
 
-        return [classification.predict(self.upcomingWeek),regression.predict(self.upcomingWeek)]
+        return [classification.predict(self.upcomingWeek)[0],regression.predict(self.upcomingWeek)[0]]
 
     #Predict KNN model
     def predictKNN(self):
-        columnName = 'WinLoss'
         n_neighbors = 3
         df = self.df
         X = df[self.upcomingWeek.columns]
-        y = df[columnName]
+        y = df[self.columnToPredict]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19)
 
@@ -227,7 +218,7 @@ class theBot:
         regression = neighbors.KNeighborsRegressor(n_neighbors)
         regression = regression.fit(X_train, y_train)
 
-        return [classification.predict(self.upcomingWeek),regression.predict(self.upcomingWeek)]
+        return [classification.predict(self.upcomingWeek)[0],regression.predict(self.upcomingWeek)[0]]
 
     #Find model prediction
     def findPrediction(self, model):
@@ -242,10 +233,8 @@ class theBot:
 
 
     def useCode(self):
-        columnToPredict = 'WinLoss'
+        self.predictLinearValues()
 
-        self.predictLinearValues(columnToPredict)
-
-        highestModel = self.findScores(columnToPredict)
+        highestModel = self.findScores()
 
         return self.findPrediction(highestModel)

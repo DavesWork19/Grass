@@ -494,3 +494,64 @@ Buccaneers,49ers,33.81
 Seahawks,Panthers,97.13
 Chiefs,Broncos,88.31
 Patriots,Cardinals,22.11
+
+
+
+
+
+YEAR 2 BABAYYYYY 
+
+Week 1
+'Chiefs,26,Lions,25,1.04', 0
+'Panthers,21,Falcons,21,24.76', 0 
+'Bengals,21,Browns,22,24.87', 0 
+'Jaguars,22,Colts,21,25.58', 1
+'Vikings,24,Buccaneers,24,9.3', 0
+'Titans,21,Saints,20,3.57', 0
+'Steelers,21,49ers,18,33.66', 0
+'Cardinals,21,Washington,21,15.93', 0
+'Ravens,22,Texans,23,69.09', 1
+'Bears,19,Packers,19,41.91', 0
+'Raiders,20,Broncos,20,12.57', 1
+'Patriots,23,Eagles,20,44.0', 0
+'Chargers,19,Dolphins,19,48.97', 0
+'Seahawks,23,Rams,23,9.2', 0
+'Cowboys,20,Giants,20,4.24', 1
+'Bills,21,Jets,19,11.19', 0
+
+WEEK 2
+
+'Eagles,22,Vikings,21,37.27',1
+'Falcons,23,Packers,21,32.68',1
+'Bills,23,Raiders,22,26.79',1
+'Bengals,24,Ravens,21,63.92',0
+'Lions,25,Seahawks,23,36.93',0
+'Chargers,21,Titans,22,1.49',0
+'Buccaneers,21,Bears,23,31.27',1
+'Chiefs,21,Jaguars,20,12.64',1
+'Colts,21,Texans,23,29.31',1
+'Rams,22,49ers,21,31.75',0
+'Giants,21,Cardinals,19,34.74',1
+'Cowboys,19,Jets,20,5.63',1
+'Broncos,17,Washington,18,16.12',0
+'Patriots,21,Dolphins,17,31.23',0
+'Saints,21,Panthers,21,23.43',1
+'Steelers,19,Browns,19,16.2',1
+
+WEEK 3
+'49ers,2.0,Giants,1.0,35.56',
+'Browns,2.0,Titans,1.0,27.58',
+'Lions,2.0,Falcons,1.0,8.97',
+'Packers,2.0,Saints,1.0,17.04',
+'Broncos,2.0,Dolphins,1.0,27.34',
+'Vikings,2.0,Chargers,1.0,5.44',
+'Jets,2.0,Patriots,1.0,3.51',
+'Bills,2.0,Washington,1.0,19.98',
+'Jaguars,2.0,Texans,1.0,34.12',
+'Ravens,2.0,Colts,1.0,19.92',
+'Seahawks,2.0,Panthers,1.0,0.31',
+'Chiefs,2.0,Bears,1.0,23.29',
+'Cardinals,2.0,Cowboys,1.0,38.92',
+'Raiders,2.0,Steelers,1.0,14.81',
+'Buccaneers,2.0,Eagles,1.0,50.24',
+'Bengals,2.0,Rams,1.0,14.67',

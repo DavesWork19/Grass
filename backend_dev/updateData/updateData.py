@@ -17,7 +17,6 @@ from Legends import *
 #Find previous week if its not a by week
 #Save weeks data to database
 class storeTeamData:
-
     def __init__(self, table, week, year):
         self.teams = ['dal','tam','nor','atl','car','min','gnb','det','chi','ram','crd','sfo','sea','oti','clt','jax','kan','rai','sdg','den','phi','was','nyg','nyj','mia','nwe','buf','cin','pit','rav','cle','htx']
         self.table = table
@@ -223,12 +222,12 @@ class storeTeamData:
         proxies = {
         'http': 'http://172.67.191.62:80'
         }
-        time.sleep(37)
+        time.sleep(47)
         page = requests.get(URL, proxies=proxies)
         #page = requests.get(URL)
-        time.sleep(random.choice([7,12,19]))
+        time.sleep(random.choice([15,19,23]))
         soup = BeautifulSoup(page.content, 'html.parser')
-        time.sleep(random.choice([7,12,19]))
+        time.sleep(random.choice([15,19,23]))
         moreSoup = soup.find('table', id=f'gamelog{self.year}')
 
         df = pd.read_html(str(moreSoup))[0]
@@ -259,6 +258,8 @@ class storeTeamData:
             teamDF = self.getLastWeekTeamData(team)
 
             print(f'{num}. {team} updated.')
+        
+        print('All teams have been saved to database!')
 
 
 #For each game in a week
@@ -363,7 +364,7 @@ class updateWeatherData:
 
     def doit(self):
         startOfWeek = self.getWeatherByWeek()
-        print(f'Saved Week: {self.week} for Year: {self.year}')
+        print(f'Upcoming week (week : {self.week}) data has been saved to database!')
         return startOfWeek
 
 
@@ -494,7 +495,7 @@ class updateGamblingData:
             mycursor.execute(insertValues)
             mydb.commit()
             
-        print(f'Updated gambling data.')
+        print(f'Gambling data has been saved to database!')
 
         
 
@@ -514,6 +515,7 @@ class getUpcomingWeekData:
         upcomingWeekBackendFile = open(upcomingWeekBackendFilename, 'w')
         upcomingWeekFrontendFile = open(upcomingWeekFrontendFilename, 'w')
         upcomingWeekFrontendFile.write('export const upcomingWeekData = [\n')
+        upcomingWeekFrontendFile.write(f"'{self.week}',\n")
 
         URL = f'https://www.nflweather.com/week/{self.year}/week-{self.week}'
         HEADERS = {
@@ -609,7 +611,7 @@ class getUpcomingWeekData:
         upcomingWeekBackendFile.close()
         upcomingWeekFrontendFile.close()
 
-        print('Updated upcoming week data')
+        print(f'Upcoming week (week : {self.week}) data has been saved to upcomingWeekData file!')
 
 
 
@@ -631,14 +633,20 @@ class getPredictions:
 
         mycursor = mydb.cursor()
 
-        mycursor.execute(f"SELECT * FROM productionNFL WHERE HomeTeam = '{teamNumber}' and Year > 2017")
+        mycursor.execute(f"SELECT * FROM productionNFL WHERE Team = '{getTeamSmallNameFromTeam(teamNumber)}' and Year > 2016")
 
         teamData = mycursor.fetchall()
         dfColumns = ['id','Week','Day','WinLoss','OT','At','OppTeam','Tm','Opp','Cmp','AttPassing','YdsPassing','TDPassing','Interceptions','Sk','YdsLossFromSacks','YPerAPassing','NYPerA','CmpPerc','Rate','AttRushing','YdsRushing','YPerARushing','TDRushing','FGM','FGA','XPM','XPA','Pnt','YdsPunting','ThirdDConv','ThirdDAtt','FourthDConv','FourthDAtt','ToP','Year','Team','YardsPerPoint','HomeTeam','Time','Channel','Temp','Weather','Wind','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','favored']
         teamDF = pd.DataFrame(teamData, columns = dfColumns)
 
-        upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
-        upcomingWeekColumns = ['Week','Time','Day','At','OppTeam','Wind','Temp','Weather','Channel','Year']
+        upcomingWeekData = None
+        if at == 0:
+            upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year, oppTeamNumber]]
+            
+        else:
+            upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year, teamNumber]]
+        
+        upcomingWeekColumns = ['Week','Time','Day','At','OppTeam','Wind','Temp','Weather','Channel','Year','HomeTeam']
         upcomingWeekDF = pd.DataFrame(upcomingWeekData, columns = upcomingWeekColumns)
 
         model = theBot(teamDF, upcomingWeekDF, columnName)
@@ -656,14 +664,14 @@ class getPredictions:
         homeTeamNumber = getTeam(homeTeamName)
         awayTeamNumber = getTeam(awayTeamName)
 
-        homeWinLossOutcome = 0
-        awayWinLossOutcome = 0
-        homePointsOutcomeTm = []
-        awayPointsOutcomeTm = []
-        homePointsOutcomeOpp = []
-        awayPointsOutcomeOpp = []
+        homeWinLossOutcome = 1
+        awayWinLossOutcome = 1
+        homePointsOutcomeTm = [1,2]
+        awayPointsOutcomeTm = [1,2]
+        homePointsOutcomeOpp = [1,2]
+        awayPointsOutcomeOpp = [1,2]
 
-        for i in range(12):
+        for i in range(27):
 
             homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService('WinLoss', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
             awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService('WinLoss', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
@@ -671,25 +679,45 @@ class getPredictions:
             homeWinLossOutcome = homeWinLossOutcome + ((homePredictions1WL[0] + homePredictions1WL[1]) / 2) + ((homePredictions2WL[0] + homePredictions2WL[1]) / 2) + ((homePredictions3WL[0] + homePredictions3WL[1]) / 2)
             awayWinLossOutcome = awayWinLossOutcome + ((awayPredictions1WL[0] + awayPredictions1WL[1]) / 2) + ((awayPredictions2WL[0] + awayPredictions2WL[1]) / 2) + ((awayPredictions3WL[0] + awayPredictions3WL[1]) / 2)
 
-            homePredictions1TM, homePredictions2TM, homePredictions3TM = self.teamService('Tm', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
-            awayPredictions1TM, awayPredictions2TM, awayPredictions3TM = self.teamService('Tm', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
+        # for i in range(12):
+        #     homePredictions1TM, homePredictions2TM, homePredictions3TM = self.teamService('Tm', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
+        #     awayPredictions1TM, awayPredictions2TM, awayPredictions3TM = self.teamService('Tm', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
 
-            homePointsOutcomeTm.append((((homePredictions1TM[0] + homePredictions1TM[1]) / 2) + ((homePredictions2TM[0] + homePredictions2TM[1]) / 2) + ((homePredictions3TM[0] + homePredictions3TM[1]) / 2)) / 3)
-            awayPointsOutcomeTm.append((((awayPredictions1TM[0] + awayPredictions1TM[1]) / 2) + ((awayPredictions2TM[0] + awayPredictions2TM[1]) / 2) + ((awayPredictions3TM[0] + awayPredictions3TM[1]) / 2)) / 3)
-            
-            homePredictions1OPP, homePredictions2OPP, homePredictions3OPP = self.teamService('Opp', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
-            awayPredictions1OPP, awayPredictions2OPP, awayPredictions3OPP = self.teamService('Opp', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
+        #     homePointsOutcomeTm.append((homePredictions1TM[0] + homePredictions2TM[0] + homePredictions3TM[0]) / 3)
+        #     awayPointsOutcomeTm.append((awayPredictions1TM[0] + awayPredictions2TM[0] + awayPredictions3TM[0]) / 3)
+        
+        # for i in range(12):  
+        #     homePredictions1OPP, homePredictions2OPP, homePredictions3OPP = self.teamService('Opp', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
+        #     awayPredictions1OPP, awayPredictions2OPP, awayPredictions3OPP = self.teamService('Opp', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
 
-            homePointsOutcomeOpp.append((((homePredictions1OPP[0] + homePredictions1OPP[1]) / 2) + ((homePredictions2OPP[0] + homePredictions2OPP[1]) / 2) + ((homePredictions3OPP[0] + homePredictions3OPP[1]) / 2)) / 3)
-            awayPointsOutcomeOpp.append((((awayPredictions1OPP[0] + awayPredictions1OPP[1]) / 2) + ((awayPredictions2OPP[0] + awayPredictions2OPP[1]) / 2) + ((awayPredictions3OPP[0] + awayPredictions3OPP[1]) / 2)) / 3)
+        #     homePointsOutcomeOpp.append((homePredictions1OPP[0] + homePredictions2OPP[0] + homePredictions3OPP[0]) / 3)
+        #     awayPointsOutcomeOpp.append((awayPredictions1OPP[0] + awayPredictions2OPP[0] + awayPredictions3OPP[0]) / 3)
+
+        
+        homePointsOutcomeTmMax = max(homePointsOutcomeTm)
+        awayPointsOutcomeTmMax = max(awayPointsOutcomeTm)
+        homePointsOutcomeOppMax = max(homePointsOutcomeOpp)
+        awayPointsOutcomeOppMax = max(awayPointsOutcomeOpp)
+
+        homePointsOutcomeTmMin = min(homePointsOutcomeTm)
+        awayPointsOutcomeTmMin = min(awayPointsOutcomeTm)
+        homePointsOutcomeOppMin = min(homePointsOutcomeOpp)
+        awayPointsOutcomeOppMin = min(awayPointsOutcomeOpp)
+
+        # homePointsOutcomeTmAvg = sum(homePointsOutcomeTm) / len(homePointsOutcomeTm)
+        # awayPointsOutcomeTmAvg = sum(awayPointsOutcomeTm) / len(awayPointsOutcomeTm)
+        # homePointsOutcomeOppAvg = sum(homePointsOutcomeOpp) / len(homePointsOutcomeOpp)
+        # awayPointsOutcomeOppAvg = sum(awayPointsOutcomeOpp) / len(awayPointsOutcomeOpp)
 
 
-        homePointsOutcomeTmAvg = sum(homePointsOutcomeTm) / len(homePointsOutcomeTm)
-        awayPointsOutcomeTmAvg = sum(awayPointsOutcomeTm) / len(awayPointsOutcomeTm)
-        homePointsOutcomeOppAvg = sum(homePointsOutcomeOpp) / len(homePointsOutcomeOpp)
-        awayPointsOutcomeOppAvg = sum(awayPointsOutcomeOpp) / len(awayPointsOutcomeOpp)
-        homePointsOutcomeAvg = int((homePointsOutcomeTmAvg + awayPointsOutcomeOppAvg) / 2)
-        awayPointsOutcomeAvg = int((awayPointsOutcomeTmAvg + homePointsOutcomeOppAvg) / 2) 
+        # print('homePointsOutcomeTm',homePointsOutcomeTmMax,min(homePointsOutcomeTm),sum(homePointsOutcomeTm) / len(homePointsOutcomeTm))
+        # print('awayPointsOutcomeTm',max(awayPointsOutcomeTm),min(awayPointsOutcomeTm),sum(awayPointsOutcomeTm) / len(awayPointsOutcomeTm))
+        # print('homePointsOutcomeOpp',max(homePointsOutcomeOpp),min(homePointsOutcomeOpp),sum(homePointsOutcomeOpp) / len(homePointsOutcomeOpp))
+        # print('awayPointsOutcomeOpp',max(awayPointsOutcomeOpp),min(awayPointsOutcomeOpp),sum(awayPointsOutcomeOpp) / len(awayPointsOutcomeOpp))
+
+
+        # homePointsOutcomeAvg = int((homePointsOutcomeTmAvg + awayPointsOutcomeOppAvg) / 2)
+        # awayPointsOutcomeAvg = int((awayPointsOutcomeTmAvg + homePointsOutcomeOppAvg) / 2) 
         
 
         if homeWinLossOutcome > awayWinLossOutcome:
@@ -697,11 +725,11 @@ class getPredictions:
             resultsFile.write("'")         
             resultsFile.write(homeTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{homePointsOutcomeAvg}')
+            resultsFile.write(f'{round((homePointsOutcomeTmMax + awayPointsOutcomeOppMax) / 2,2)}')
             resultsFile.write(',')
             resultsFile.write(awayTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{awayPointsOutcomeAvg}')
+            resultsFile.write(f'{round((awayPointsOutcomeTmMin + homePointsOutcomeOppMin) / 2,2)}')
             resultsFile.write(',')
             resultsFile.write(str(round(percent,2)))
             resultsFile.write("',")
@@ -712,11 +740,11 @@ class getPredictions:
             resultsFile.write("'")
             resultsFile.write(awayTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{awayPointsOutcomeAvg}')
+            resultsFile.write(f'{round((awayPointsOutcomeTmMax + homePointsOutcomeOppMax) / 2,2)}')
             resultsFile.write(',')
             resultsFile.write(homeTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{homePointsOutcomeAvg}')
+            resultsFile.write(f'{round((homePointsOutcomeTmMin + awayPointsOutcomeOppMin) / 2,2)}')
             resultsFile.write(',')
             resultsFile.write(str(round(percent,2)))
             resultsFile.write("',")
@@ -758,27 +786,27 @@ week = int(sys.argv[1])
 year = 2023
 table = 'productionNFL'
 
-storeDataObj = storeTeamData(table, week, year)
-storeDataObj.storeAllTeamsData()
+# storeDataObj = storeTeamData(table, week, year)
+# storeDataObj.storeAllTeamsData()
 
-storeWeatherObj = updateWeatherData(table, week, year)
-startOfWeek = storeWeatherObj.doit()
+# storeWeatherObj = updateWeatherData(table, week, year)
+# startOfWeek = storeWeatherObj.doit()
 
-month, day, year = startOfWeek.split('/')
-if day == 1:
-    month = int(month) - 1
-    day = '28'
-else:
-    day = int(day) - 1
-year = '20' + year
+# month, day, year = startOfWeek.split('/')
+# if day == 1:
+#     month = int(month) - 1
+#     day = '28'
+# else:
+#     day = int(day) - 1
+# year = '20' + year
 
-resetStartOfWeek = f'{year}-{month}-{day}'
+# resetStartOfWeek = f'{year}-{month}-{day}'
 
-storeGamblingObj = updateGamblingData(table, year)
-storeGamblingObj.doit(resetStartOfWeek)
+# storeGamblingObj = updateGamblingData(table, year)
+# storeGamblingObj.doit(resetStartOfWeek)
 
-storeUpcomingWeekData = getUpcomingWeekData(week, year)
-storeUpcomingWeekData.getWeatherByWeek()
+# storeUpcomingWeekData = getUpcomingWeekData(week, year)
+# storeUpcomingWeekData.getWeatherByWeek()
 
 predictions = getPredictions(week, year)
 predictions.doit()
