@@ -34,7 +34,7 @@ class theBot:
 
     #Adjusts self.df to a DataFrame of floats and removes the team name
     def adjustDF(self):
-        self.df = self.df.drop(columns=['Team'])
+        self.df = self.df.drop(columns=['Team', 'HomeTeam'])
 
         #Convert object types to floats
         for col in self.df:
