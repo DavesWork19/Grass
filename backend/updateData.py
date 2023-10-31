@@ -17,6 +17,7 @@ from Legends import *
 #Go to website and scrape all data for given team
 #Find previous week if its not a by week
 #Save weeks data to database
+
 class storeTeamData:
     def __init__(self, table, week, year):
         self.teams = ['dal','tam','nor','atl','car','min','gnb','det','chi','ram','crd','sfo','sea','oti','clt','jax','kan','rai','sdg','den','phi','was','nyg','nyj','mia','nwe','buf','cin','pit','rav','cle','htx']
@@ -316,26 +317,43 @@ class updateWeatherData:
         matchUp = moreSoup.div 
         while matchUp != None:
             matchUpData1 = matchUp.div
-            dateAndTime = matchUpData1.div.text.strip().split(' ')
+            dateAndTime = matchUpData1.div.text.strip()
             dates.append(dateAndTime[0])
+            dateAndTime = dateAndTime.split(' ')
+            day = datetime.strptime(dateAndTime[0], '%m/%d/%y')
+            dayCode = getDay(day.strftime('%A')[:3])
+
             hour = int(dateAndTime[1].split(':')[0])
             am_pm = dateAndTime[2]
             timeCode = getTime(hour,am_pm)
+            time.sleep(3)
 
-            time.sleep(1)
             matchUpData2 = matchUpData1.next_sibling.next_sibling
             awayTeam, at, homeTeam = matchUpData2.find_all('span')
             awayTeam = getTeam(awayTeam.text)
             homeTeam = getTeam(homeTeam.text)
-
-            time.sleep(1)
+ 
+            time.sleep(3)
+            
             matchUpData3 = matchUpData2.next_sibling.next_sibling
             weatherData = matchUpData3.div.div.next_sibling.next_sibling
-            temp, weather = weatherData.find_all('span')
-            temp = getTemp(int(temp.text.split(' ')[0]))
-            weather = getWeather(weather.text)
+            weatherInfo = weatherData.find_all('span')
 
-            time.sleep(1)
+            temp = None
+            weather = None
+            weatherInfoLen = len(weatherInfo)
+            if weatherInfoLen == 0:
+                temp = 73
+                weather = 'Overcast'
+            elif weatherInfoLen == 1:
+                temp = getTemp(73)
+                weather = getWeather('Overcast')
+            else:
+                temp, weather = weatherInfo
+                temp = getTemp(int(temp.text.split(' ')[0]))
+                weather = getWeather(weather.text)
+
+            time.sleep(3)
             windDataContainer = weatherData.next_sibling.next_sibling
             windData = windDataContainer.find_all('span')
             windDataLength = len(windData)
@@ -343,19 +361,22 @@ class updateWeatherData:
             if windDataLength == 3:
                 wind = windData[1].text.split(' ')[0]
 
-            time.sleep(1)
+            time.sleep(3)
             channelData = windDataContainer.next_sibling.next_sibling
-            channels = channelData.find_all('span')
-            channelsLength = len(channels)
-            channel = 0
-            if channelsLength > 1:
-                channel = channels[1].text
-                if ',' in channel:
-                    channel = channel.split(',')[0]
-                elif ' ' in channel:
-                    channel = channel.split(' ')[0]
-                channel = getChannel(channel)
-
+            if channelData != None:
+                channels = channelData.find_all('span')
+                channelsLength = len(channels)
+                channel = 0
+                if channelsLength > 1:
+                    channel = channels[1].text
+                    if ',' in channel:
+                        channel = channel.split(',')[0]
+                    elif ' ' in channel:
+                        channel = channel.split(' ')[0]
+                    channel = getChannel(channel)
+            else:
+                channel = 6
+            
 
             data = {'Time':timeCode,'Channel':channel,'Temp':temp,'Weather':weather,'Wind':wind}
             self.addData(data, awayTeam, homeTeam)
@@ -508,146 +529,145 @@ def updatePercentages():
     fileRead = open(filenameRead, 'r')
 
 
-    wholeFile = fileRead.readlines()
     groups = {'AFCNorth': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFCSouth': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFCEast': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFCWest': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFCNorth': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFCSouth': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFCEast': ['Cowboys', 'Giants', 'Eagles', 'Commanders'], 'NFCWest': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Commanders', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
     results = {'AFC':[0,0], 'AFCNorth':[0,0], 'AFCSouth':[0,0], 'AFCEast':[0,0], 'AFCWest':[0,0], 'NFC':[0,0], 'NFCNorth':[0,0], 'NFCSouth':[0,0], 'NFCEast':[0,0], 'NFCWest':[0,0]}
     week = 0
     year = 0
 
-    for line in wholeFile:
+    for line in fileRead.readlines():
         data = line.split(',')
+        dataLength = len(data)
 
-        if len(data) > 1:
-            awayTeam = data[0]
-            homeTeam = data[1]
-            winner = data[2]
-            outcome = data[-1][0]
+        if dataLength > 1:
+            predictedWinner = data[0]
+            predictedLoser = data[1]
+            outcome = data[2][0]
 
             if outcome == '1':
-                if awayTeam not in results:
-                    results[awayTeam] = [100,1]
+                if predictedWinner not in results:
+                    results[predictedWinner] = [100,1]
                 else:
-                    results[awayTeam] = [results[awayTeam][0] + 100, results[awayTeam][1] + 1]
+                    results[predictedWinner] = [results[predictedWinner][0] + 100, results[predictedWinner][1] + 1]
 
-                if homeTeam not in results:
-                    results[homeTeam] = [100,1]
+                if predictedLoser not in results:
+                    results[predictedLoser] = [100,1]
                 else:
-                    results[homeTeam] = [results[homeTeam][0] + 100, results[homeTeam][1] + 1]
+                    results[predictedLoser] = [results[predictedLoser][0] + 100, results[predictedLoser][1] + 1]
 
 
-                if awayTeam in groups['AFC']:
+                if predictedWinner in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 100, results['AFC'][1] + 1]
 
-                    if awayTeam in groups['AFCNorth']:
+                    if predictedWinner in groups['AFCNorth']:
                         results['AFCNorth'] = [results['AFCNorth'][0]  + 100, results['AFCNorth'][1] + 1]
-                    elif awayTeam in groups['AFCSouth']:
+                    elif predictedWinner in groups['AFCSouth']:
                         results['AFCSouth'] = [results['AFCSouth'][0]  + 100, results['AFCSouth'][1] + 1]
-                    elif awayTeam in groups['AFCEast']:
+                    elif predictedWinner in groups['AFCEast']:
                         results['AFCEast'] = [results['AFCEast'][0]  + 100, results['AFCEast'][1] + 1]
-                    elif awayTeam in groups['AFCWest']:
+                    elif predictedWinner in groups['AFCWest']:
                         results['AFCWest'] = [results['AFCWest'][0]  + 100, results['AFCWest'][1] + 1]
 
-                elif awayTeam in groups['NFC']:
+                elif predictedWinner in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 100, results['NFC'][1] + 1]
 
-                    if awayTeam in groups['NFCNorth']:
+                    if predictedWinner in groups['NFCNorth']:
                         results['NFCNorth'] = [results['NFCNorth'][0]  + 100, results['NFCNorth'][1] + 1]
-                    elif awayTeam in groups['NFCSouth']:
+                    elif predictedWinner in groups['NFCSouth']:
                         results['NFCSouth'] = [results['NFCSouth'][0]  + 100, results['NFCSouth'][1] + 1]
-                    elif awayTeam in groups['NFCEast']:
+                    elif predictedWinner in groups['NFCEast']:
                         results['NFCEast'] = [results['NFCEast'][0]  + 100, results['NFCEast'][1] + 1]
-                    elif awayTeam in groups['NFCWest']:
+                    elif predictedWinner in groups['NFCWest']:
                         results['NFCWest'] = [results['NFCWest'][0]  + 100, results['NFCWest'][1] + 1]
 
-                if homeTeam in groups['AFC']:
+                if predictedLoser in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 100, results['AFC'][1] + 1]
 
-                    if homeTeam in groups['AFCNorth']:
+                    if predictedLoser in groups['AFCNorth']:
                         results['AFCNorth'] = [results['AFCNorth'][0]  + 100, results['AFCNorth'][1] + 1]
-                    elif homeTeam in groups['AFCSouth']:
+                    elif predictedLoser in groups['AFCSouth']:
                         results['AFCSouth'] = [results['AFCSouth'][0]  + 100, results['AFCSouth'][1] + 1]
-                    elif homeTeam in groups['AFCEast']:
+                    elif predictedLoser in groups['AFCEast']:
                         results['AFCEast'] = [results['AFCEast'][0]  + 100, results['AFCEast'][1] + 1]
-                    elif homeTeam in groups['AFCWest']:
+                    elif predictedLoser in groups['AFCWest']:
                         results['AFCWest'] = [results['AFCWest'][0]  + 100, results['AFCWest'][1] + 1]
 
-                elif homeTeam in groups['NFC']:
+                elif predictedLoser in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 100, results['NFC'][1] + 1]
 
-                    if homeTeam in groups['NFCNorth']:
+                    if predictedLoser in groups['NFCNorth']:
                         results['NFCNorth'] = [results['NFCNorth'][0]  + 100, results['NFCNorth'][1] + 1]
-                    elif homeTeam in groups['NFCSouth']:
+                    elif predictedLoser in groups['NFCSouth']:
                         results['NFCSouth'] = [results['NFCSouth'][0]  + 100, results['NFCSouth'][1] + 1]
-                    elif homeTeam in groups['NFCEast']:
+                    elif predictedLoser in groups['NFCEast']:
                         results['NFCEast'] = [results['NFCEast'][0]  + 100, results['NFCEast'][1] + 1]
-                    elif homeTeam in groups['NFCWest']:
+                    elif predictedLoser in groups['NFCWest']:
                         results['NFCWest'] = [results['NFCWest'][0]  + 100, results['NFCWest'][1] + 1]
 
                 results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 100, results[f'{year} Week {week}'][1] + 1]
 
             else:
-                if awayTeam not in results:
-                    results[awayTeam] = [0,1]
+                if predictedWinner not in results:
+                    results[predictedWinner] = [0,1]
                 else:
-                    results[awayTeam] = [results[awayTeam][0] + 0, results[awayTeam][1] + 1]
+                    results[predictedWinner] = [results[predictedWinner][0] + 0, results[predictedWinner][1] + 1]
 
-                if homeTeam not in results:
-                    results[homeTeam] = [0,1]
+                if predictedLoser not in results:
+                    results[predictedLoser] = [0,1]
                 else:
-                    results[homeTeam] = [results[homeTeam][0] + 0, results[homeTeam][1] + 1]
+                    results[predictedLoser] = [results[predictedLoser][0] + 0, results[predictedLoser][1] + 1]
 
 
-                if awayTeam in groups['AFC']:
+                if predictedWinner in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 0, results['AFC'][1] + 1]
 
-                    if awayTeam in groups['AFCNorth']:
+                    if predictedWinner in groups['AFCNorth']:
                         results['AFCNorth'] = [results['AFCNorth'][0]  + 0, results['AFCNorth'][1] + 1]
-                    elif awayTeam in groups['AFCSouth']:
+                    elif predictedWinner in groups['AFCSouth']:
                         results['AFCSouth'] = [results['AFCSouth'][0]  + 0, results['AFCSouth'][1] + 1]
-                    elif awayTeam in groups['AFCEast']:
+                    elif predictedWinner in groups['AFCEast']:
                         results['AFCEast'] = [results['AFCEast'][0]  + 0, results['AFCEast'][1] + 1]
-                    elif awayTeam in groups['AFCWest']:
+                    elif predictedWinner in groups['AFCWest']:
                         results['AFCWest'] = [results['AFCWest'][0]  + 0, results['AFCWest'][1] + 1]
 
-                elif awayTeam in groups['NFC']:
+                elif predictedWinner in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 0, results['NFC'][1] + 1]
 
-                    if awayTeam in groups['NFCNorth']:
+                    if predictedWinner in groups['NFCNorth']:
                         results['NFCNorth'] = [results['NFCNorth'][0]  + 0, results['NFCNorth'][1] + 1]
-                    elif awayTeam in groups['NFCSouth']:
+                    elif predictedWinner in groups['NFCSouth']:
                         results['NFCSouth'] = [results['NFCSouth'][0]  + 0, results['NFCSouth'][1] + 1]
-                    elif awayTeam in groups['NFCEast']:
+                    elif predictedWinner in groups['NFCEast']:
                         results['NFCEast'] = [results['NFCEast'][0]  + 0, results['NFCEast'][1] + 1]
-                    elif awayTeam in groups['NFCWest']:
+                    elif predictedWinner in groups['NFCWest']:
                         results['NFCWest'] = [results['NFCWest'][0]  + 0, results['NFCWest'][1] + 1]
 
-                if homeTeam in groups['AFC']:
+                if predictedLoser in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 0, results['AFC'][1] + 1]
 
-                    if homeTeam in groups['AFCNorth']:
+                    if predictedLoser in groups['AFCNorth']:
                         results['AFCNorth'] = [results['AFCNorth'][0]  + 0, results['AFCNorth'][1] + 1]
-                    elif homeTeam in groups['AFCSouth']:
+                    elif predictedLoser in groups['AFCSouth']:
                         results['AFCSouth'] = [results['AFCSouth'][0]  + 0, results['AFCSouth'][1] + 1]
-                    elif homeTeam in groups['AFCEast']:
+                    elif predictedLoser in groups['AFCEast']:
                         results['AFCEast'] = [results['AFCEast'][0]  + 0, results['AFCEast'][1] + 1]
-                    elif homeTeam in groups['AFCWest']:
+                    elif predictedLoser in groups['AFCWest']:
                         results['AFCWest'] = [results['AFCWest'][0]  + 0, results['AFCWest'][1] + 1]
 
-                elif homeTeam in groups['NFC']:
+                elif predictedLoser in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 0, results['NFC'][1] + 1]
 
-                    if homeTeam in groups['NFCNorth']:
+                    if predictedLoser in groups['NFCNorth']:
                         results['NFCNorth'] = [results['NFCNorth'][0]  + 0, results['NFCNorth'][1] + 1]
-                    elif homeTeam in groups['NFCSouth']:
+                    elif predictedLoser in groups['NFCSouth']:
                         results['NFCSouth'] = [results['NFCSouth'][0]  + 0, results['NFCSouth'][1] + 1]
-                    elif homeTeam in groups['NFCEast']:
+                    elif predictedLoser in groups['NFCEast']:
                         results['NFCEast'] = [results['NFCEast'][0]  + 0, results['NFCEast'][1] + 1]
-                    elif homeTeam in groups['NFCWest']:
+                    elif predictedLoser in groups['NFCWest']:
                         results['NFCWest'] = [results['NFCWest'][0]  + 0, results['NFCWest'][1] + 1]
 
                 results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 0, results[f'{year} Week {week}'][1] + 1]
 
-        else:
+        elif dataLength == 1:
             weekOrYear = data[0][:-1]
             if weekOrYear == '2022':
                 year = 2022
@@ -854,7 +874,7 @@ class getPredictions:
 
         return predictions1,predictions2,predictions3
 
-    def updateMatchup(self, awayTeamName, homeTeamName, time, day, channel, temp, weather, wind, resultsFile):
+    def updateMatchup(self, awayTeamName, homeTeamName, time, day, channel, temp, weather, wind, resultsFile, percentFile):
         homeTeamNumber = getTeam(homeTeamName)
         awayTeamNumber = getTeam(awayTeamName)
 
@@ -865,7 +885,7 @@ class getPredictions:
         homePointsOutcomeOpp = [1,2]
         awayPointsOutcomeOpp = [1,2]
 
-        for i in range(33):
+        for i in range(12):
 
             homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService('WinLoss', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
             awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService('WinLoss', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
@@ -929,6 +949,9 @@ class getPredictions:
             resultsFile.write("',")
             resultsFile.write('\n')
 
+            percentFile.write(f'{homeTeamName},{awayTeamName},\n')
+       
+
         else:
             percent = (1 - (homeWinLossOutcome / awayWinLossOutcome)) * 100
             resultsFile.write("'")
@@ -943,21 +966,26 @@ class getPredictions:
             resultsFile.write(str(round(percent,2)))
             resultsFile.write("',")
             resultsFile.write('\n')
+
+            percentFile.write(f'{awayTeamName},{homeTeamName},\n')
     
     def doit(self):
         readFilename = 'upcomingWeekData.txt'
         resultFilename = '../frontend/src/nflPages/results.js'
+        percentageFilename = './percentages.txt'
 
         readFile = open(readFilename, 'r')
         resultsFile = open(resultFilename, 'w')
+        percentFile = open(percentageFilename, 'a')
         resultsFile.write('export const weeklyResults = [\n')
+        percentFile.write(f'{self.week + 1}\n')
 
         for matchup in readFile.readlines():
 
             awayTeam, homeTeam, time, day, channel, temp, weather, wind = matchup.split('_')
             wind = wind.strip()
 
-            self.updateMatchup(awayTeam, homeTeam, time, day, channel, temp, weather, wind, resultsFile)
+            self.updateMatchup(awayTeam, homeTeam, time, day, channel, temp, weather, wind, resultsFile, percentFile)
             
 
         resultsFile.write('];')
@@ -985,6 +1013,7 @@ table = 'productionNFL'
 
 # storeWeatherObj = updateWeatherData(table, week, year)
 # startOfWeek = storeWeatherObj.doit()
+# print('broken start of week ===> ', startOfWeek)
 
 # month, day, year = startOfWeek.split('/')
 # if day == 1:
@@ -995,14 +1024,15 @@ table = 'productionNFL'
 # year = '20' + year
 
 # resetStartOfWeek = f'{year}-{month}-{day}'
+# resetStartOfWeek = '2023-10-18'
 
 # storeGamblingObj = updateGamblingData(table, year)
 # storeGamblingObj.doit(resetStartOfWeek)
 
-updatePercentages()
+# updatePercentages()
 
 # storeUpcomingWeekData = getUpcomingWeekData(week, year)
 # storeUpcomingWeekData.getWeatherByWeek()
 
-# predictions = getPredictions(week, year)
-# predictions.doit()
+predictions = getPredictions(week, year)
+predictions.doit()

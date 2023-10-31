@@ -279,7 +279,7 @@ def getWeather(weather):
         return 2
     elif ('Fog' in weather) or ('Foggy' in weather):
         return 3
-    elif ('Overcast' in weather) or ('Cloudy' in weather):
+    elif ('Overcast' in weather) or ('Cloudy' in weather) or ('Clouds' in weather):
         return 4
     elif ('Rain' in weather) or ('Drizzle' in weather) or ('Thunderstorms' in weather):
         return 5

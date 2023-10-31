@@ -5,6 +5,8 @@
 
 #Then predict winloss with upcomingWeek DF
 
+#Feature selection for dataset
+#Check spread data with confidence interval
 
 
 
