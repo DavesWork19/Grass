@@ -1,0 +1,18 @@
+export const weeklyResults = [
+'Packers,2.0,Lions,1.0,63.78',
+'Falcons,2.0,Jaguars,1.0,32.86',
+'Bills,2.0,Dolphins,1.0,8.0',
+'Bears,2.0,Broncos,1.0,56.76',
+'Ravens,2.0,Browns,1.0,12.85',
+'Titans,2.0,Bengals,1.0,25.93',
+'Rams,2.0,Colts,1.0,23.8',
+'Buccaneers,2.0,Saints,1.0,4.74',
+'Eagles,2.0,Washington,1.0,79.32',
+'Vikings,2.0,Panthers,1.0,63.83',
+'Steelers,2.0,Texans,1.0,83.3',
+'Chargers,2.0,Raiders,1.0,1.7',
+'Cowboys,2.0,Patriots,1.0,51.6',
+'49ers,2.0,Cardinals,1.0,59.94',
+'Chiefs,2.0,Jets,1.0,79.14',
+'Seahawks,2.0,Giants,1.0,79.1',
+];
