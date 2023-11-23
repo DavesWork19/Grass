@@ -852,15 +852,29 @@ class getPredictions:
         teamData = mycursor.fetchall()
         dfColumns = ['id','Week','Day','WinLoss','OT','At','OppTeam','Tm','Opp','Cmp','AttPassing','YdsPassing','TDPassing','Interceptions','Sk','YdsLossFromSacks','YPerAPassing','NYPerA','CmpPerc','Rate','AttRushing','YdsRushing','YPerARushing','TDRushing','FGM','FGA','XPM','XPA','Pnt','YdsPunting','ThirdDConv','ThirdDAtt','FourthDConv','FourthDAtt','ToP','Year','Team','YardsPerPoint','HomeTeam','Time','Channel','Temp','Weather','Wind','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','favored']
         teamDF = pd.DataFrame(teamData, columns = dfColumns)
+        #teamDF = teamDF.drop(columns=['favored'])
+        #teamDF = teamDF.drop(columns=['Channel','Temp','Weather','Wind','favored'])
 
-        upcomingWeekData = None
-        if at == 0:
-            upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
+        #favoredTeams = ['pit', 'kan', 'rav', 'nor', 'cle','atl','htx','nwe','gnb','clt','phi', 'nyg','cin', 'sdg']
+
+        # upcomingWeekData = None
+        # if at == 0:
+        #     # if getTeamSmallNameFromTeam(teamNumber) in favoredTeams:
+        #     #     upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year, 1]]
+        #     # else:
+        #     upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
             
-        else:
-            upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
+        # else:
+        #     # if getTeamSmallNameFromTeam(teamNumber) in favoredTeams:
+        #     #     upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year, 1]]
+        #     # else:
+        upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, wind, temp, weather, channel, self.year]]
+        #upcomingWeekData = [[self.week, time, day, at, oppTeamNumber, self.year]]
         
-        upcomingWeekColumns = ['Week','Time','Day','At','OppTeam','Wind','Temp','Weather','Channel','Year']
+
+        
+        upcomingWeekColumns = ['Week','Time','Day','At','OppTeam', 'Wind', 'Temp', 'Weather', 'Channel','Year']
+        #upcomingWeekColumns = ['Week','Time','Day','At','OppTeam','Year']
         upcomingWeekDF = pd.DataFrame(upcomingWeekData, columns = upcomingWeekColumns)
 
         model = theBot(teamDF, upcomingWeekDF, columnName)
@@ -1013,26 +1027,16 @@ table = 'productionNFL'
 
 # storeWeatherObj = updateWeatherData(table, week, year)
 # startOfWeek = storeWeatherObj.doit()
-# print('broken start of week ===> ', startOfWeek)
 
-# month, day, year = startOfWeek.split('/')
-# if day == 1:
-#     month = int(month) - 1
-#     day = '28'
-# else:
-#     day = int(day) - 1
-# year = '20' + year
-
-# resetStartOfWeek = f'{year}-{month}-{day}'
-# resetStartOfWeek = '2023-10-18'
+# resetStartOfWeek = '2023-11-15'
 
 # storeGamblingObj = updateGamblingData(table, year)
 # storeGamblingObj.doit(resetStartOfWeek)
 
-# updatePercentages()
+updatePercentages()
 
-# storeUpcomingWeekData = getUpcomingWeekData(week, year)
-# storeUpcomingWeekData.getWeatherByWeek()
+storeUpcomingWeekData = getUpcomingWeekData(week, year)
+storeUpcomingWeekData.getWeatherByWeek()
 
 predictions = getPredictions(week, year)
 predictions.doit()

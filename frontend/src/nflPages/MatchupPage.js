@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import './MatchupPage.css';
 import '../Fonts.css';
@@ -6,6 +6,7 @@ import { weeklyResults } from './results.js';
 import { backButton } from '../constants';
 
 const MatchupPage = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const currentURL = pathname.split('/')[2];
   const [awayTeam, homeTeam] = currentURL.split('At');
@@ -38,7 +39,13 @@ const MatchupPage = () => {
       <div className='row lightText pb-5 fs-3'>
         <div className='col-12'>and {finalResultsLoser} Losing</div>
       </div>
-      <Link to='/2332220' className='pb-5'>
+      <Link
+        to={'..'}
+        onClick={(e) => {
+          e.preventDefault();
+          navigate(-1);
+        }}
+      >
         <button className='matchupButton nflSiteText'>{backButton}</button>
       </Link>
     </div>
