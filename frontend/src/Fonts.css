@@ -22,10 +22,21 @@
     font-size: 1.1rem;
   }
 }
-@media (max-width: 500px) {
-  .timeMobileText {
-    font-size: 0.9rem;
+
+@media (max-width: 550px) {
+  .atSymbol {
+    padding-top: 10%;
   }
+}
+@media (max-width: 450px) {
+  .atSymbol {
+    padding-top: 25%;
+  }
+}
+
+.teamImgs {
+  min-width: 50px;
+  min-height: 50px;
 }
 
 .nflSiteTextRaw {
@@ -48,6 +59,6 @@
   font-family: 'regularText';
 }
 
-.test {
-  height: 82vh;
+.smallText {
+  font-size: xx-small;
 }

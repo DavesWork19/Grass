@@ -7,7 +7,7 @@ Bengals,Steelers,0
 Eagles,Lions,1
 Patriots,Dolphins,0
 Ravens,Jets,1
-Jaguars,Commanders,0
+Jaguars,Washington,0
 Panthers,Browns,0
 Texans,Colts,0
 Buccaneers,Cowboys,1
@@ -19,7 +19,7 @@ Broncos,Seahawks,0
 2
 Chiefs,Chargers,1
 Jets,Browns,1
-Lions,Commanders,1
+Lions,Washington,1
 Saints,Buccaneers,0
 Panthers,Giants,0
 Patriots,Steelers,1
@@ -43,7 +43,7 @@ Vikings,Lions,1
 Ravens,Patriots,1
 Bengals,Jets,1
 Titans,Raiders,1
-Eagles,Commanders,1
+Eagles,Washington,1
 Jaguars,Chargers,1
 Rams,Cardinals,1
 Seahawks,Falcons,0
@@ -53,7 +53,7 @@ Cowboys,Giants,1
 4
 Dolphins,Bengals,0
 Saints,Vikings,0
-Cowboys,Commanders,1
+Cowboys,Washington,1
 Browns,Falcons,0
 Seahawks,Lions,1
 Titans,Colts,1
@@ -78,14 +78,14 @@ Saints,Seahawks,1
 Patriots,Lions,1
 Dolphins,Jets,0
 Buccaneers,Falcons,1
-Titans,Commanders,1
+Titans,Washington,1
 49ers,Panthers,1
 Eagles,Cardinals,1
 Rams,Cowboys,0
 Ravens,Bengals,1
 Chiefs,Raiders,1
 6
-Bears,Commandxrs,0
+Bears,Washington,0
 49ers,Falcons,0
 Patriots,Browns,1
 Colts,Jaguars,1
@@ -125,7 +125,7 @@ Saints,Raiders,1
 Patriots,Jets,1
 Eagles,Steelers,1
 Titans,Texans,1
-Colts,Commanders,0
+Colts,Washington,0
 Rams,49ers,0
 Seahawks,Giants,1
 Bills,Packers,1
@@ -139,7 +139,7 @@ Packers,Lions,0
 Raiders,Jaguars,0
 Patriots,Colts,1
 Bills,Jets,0
-Vikings,Commanders,1
+Vikings,Washington,1
 Seahawks,Cardinals,1
 Rams,Buccaneers,0
 Titans,Chiefs,0

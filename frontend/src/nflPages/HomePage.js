@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom';
 import Matchups from './MatchupsPage';
 import WeeklyPercents from './WeeklyPercentages';
 import { footerMessage1, footerMessage2 } from '../constants';
-import {
-  TeamsPercents,
-  ConferencePercent,
-  DivisionPercent,
-} from './HomePagePercentages';
 import { upcomingWeekData } from './upcomingWeekData.js';
 
 const NewHome = () => {
@@ -19,41 +14,7 @@ const NewHome = () => {
       </div>
 
       <div className='row'>
-        <div className='col-4 AFCTable'>
-          {DivisionPercent('AFC')}
-
-          {ConferencePercent('AFCNorth')}
-          {TeamsPercents(['Ravens', 'Bengals', 'Browns', 'Steelers'])}
-
-          {ConferencePercent('AFCSouth')}
-          {TeamsPercents(['Titans', 'Colts', 'Jaguars', 'Texans'])}
-
-          {ConferencePercent('AFCEast')}
-          {TeamsPercents(['Bills', 'Jets', 'Dolphins', 'Patriots'])}
-
-          {ConferencePercent('AFCWest')}
-          {TeamsPercents(['Chiefs', 'Chargers', 'Broncos', 'Raiders'])}
-        </div>
-
-        <div className='col-4'>
-          <Matchups />
-        </div>
-
-        <div className='col-4 NFCTable'>
-          {DivisionPercent('NFC')}
-
-          {ConferencePercent('NFCNorth')}
-          {TeamsPercents(['Vikings', 'Packers', 'Bears', 'Lions'])}
-
-          {ConferencePercent('NFCSouth')}
-          {TeamsPercents(['Buccaneers', 'Falcons', 'Saints', 'Panthers'])}
-
-          {ConferencePercent('NFCEast')}
-          {TeamsPercents(['Cowboys', 'Giants', 'Eagles', 'Commanders'])}
-
-          {ConferencePercent('NFCWest')}
-          {TeamsPercents(['49ers', 'Rams', 'Seahawks', 'Cardinals'])}
-        </div>
+        <Matchups />
       </div>
 
       <div className='row'>

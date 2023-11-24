@@ -529,8 +529,8 @@ def updatePercentages():
     fileRead = open(filenameRead, 'r')
 
 
-    groups = {'AFCNorth': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFCSouth': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFCEast': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFCWest': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFCNorth': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFCSouth': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFCEast': ['Cowboys', 'Giants', 'Eagles', 'Commanders'], 'NFCWest': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Commanders', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
-    results = {'AFC':[0,0], 'AFCNorth':[0,0], 'AFCSouth':[0,0], 'AFCEast':[0,0], 'AFCWest':[0,0], 'NFC':[0,0], 'NFCNorth':[0,0], 'NFCSouth':[0,0], 'NFCEast':[0,0], 'NFCWest':[0,0]}
+    groups = {'AFC North': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFC South': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFC East': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFC West': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFC North': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFC South': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFC East': ['Cowboys', 'Giants', 'Eagles', 'Commanders'], 'NFC West': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Commanders', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
+    results = {'AFC':[0,0], 'AFC North':[0,0], 'AFC South':[0,0], 'AFC East':[0,0], 'AFC West':[0,0], 'NFC':[0,0], 'NFC North':[0,0], 'NFC South':[0,0], 'NFC East':[0,0], 'NFC West':[0,0]}
     week = 0
     year = 0
 
@@ -558,50 +558,50 @@ def updatePercentages():
                 if predictedWinner in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 100, results['AFC'][1] + 1]
 
-                    if predictedWinner in groups['AFCNorth']:
-                        results['AFCNorth'] = [results['AFCNorth'][0]  + 100, results['AFCNorth'][1] + 1]
-                    elif predictedWinner in groups['AFCSouth']:
-                        results['AFCSouth'] = [results['AFCSouth'][0]  + 100, results['AFCSouth'][1] + 1]
-                    elif predictedWinner in groups['AFCEast']:
-                        results['AFCEast'] = [results['AFCEast'][0]  + 100, results['AFCEast'][1] + 1]
-                    elif predictedWinner in groups['AFCWest']:
-                        results['AFCWest'] = [results['AFCWest'][0]  + 100, results['AFCWest'][1] + 1]
+                    if predictedWinner in groups['AFC North']:
+                        results['AFC North'] = [results['AFC North'][0]  + 100, results['AFC North'][1] + 1]
+                    elif predictedWinner in groups['AFC South']:
+                        results['AFC South'] = [results['AFC South'][0]  + 100, results['AFC South'][1] + 1]
+                    elif predictedWinner in groups['AFC East']:
+                        results['AFC East'] = [results['AFC East'][0]  + 100, results['AFC East'][1] + 1]
+                    elif predictedWinner in groups['AFC West']:
+                        results['AFC West'] = [results['AFC West'][0]  + 100, results['AFC West'][1] + 1]
 
                 elif predictedWinner in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 100, results['NFC'][1] + 1]
 
-                    if predictedWinner in groups['NFCNorth']:
-                        results['NFCNorth'] = [results['NFCNorth'][0]  + 100, results['NFCNorth'][1] + 1]
-                    elif predictedWinner in groups['NFCSouth']:
-                        results['NFCSouth'] = [results['NFCSouth'][0]  + 100, results['NFCSouth'][1] + 1]
-                    elif predictedWinner in groups['NFCEast']:
-                        results['NFCEast'] = [results['NFCEast'][0]  + 100, results['NFCEast'][1] + 1]
-                    elif predictedWinner in groups['NFCWest']:
-                        results['NFCWest'] = [results['NFCWest'][0]  + 100, results['NFCWest'][1] + 1]
+                    if predictedWinner in groups['NFC North']:
+                        results['NFC North'] = [results['NFC North'][0]  + 100, results['NFC North'][1] + 1]
+                    elif predictedWinner in groups['NFC South']:
+                        results['NFC South'] = [results['NFC South'][0]  + 100, results['NFC South'][1] + 1]
+                    elif predictedWinner in groups['NFC East']:
+                        results['NFC East'] = [results['NFC East'][0]  + 100, results['NFC East'][1] + 1]
+                    elif predictedWinner in groups['NFC West']:
+                        results['NFC West'] = [results['NFC West'][0]  + 100, results['NFC West'][1] + 1]
 
                 if predictedLoser in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 100, results['AFC'][1] + 1]
 
-                    if predictedLoser in groups['AFCNorth']:
-                        results['AFCNorth'] = [results['AFCNorth'][0]  + 100, results['AFCNorth'][1] + 1]
-                    elif predictedLoser in groups['AFCSouth']:
-                        results['AFCSouth'] = [results['AFCSouth'][0]  + 100, results['AFCSouth'][1] + 1]
-                    elif predictedLoser in groups['AFCEast']:
-                        results['AFCEast'] = [results['AFCEast'][0]  + 100, results['AFCEast'][1] + 1]
-                    elif predictedLoser in groups['AFCWest']:
-                        results['AFCWest'] = [results['AFCWest'][0]  + 100, results['AFCWest'][1] + 1]
+                    if predictedLoser in groups['AFC North']:
+                        results['AFC North'] = [results['AFC North'][0]  + 100, results['AFC North'][1] + 1]
+                    elif predictedLoser in groups['AFC South']:
+                        results['AFC South'] = [results['AFC South'][0]  + 100, results['AFC South'][1] + 1]
+                    elif predictedLoser in groups['AFC East']:
+                        results['AFC East'] = [results['AFC East'][0]  + 100, results['AFC East'][1] + 1]
+                    elif predictedLoser in groups['AFC West']:
+                        results['AFC West'] = [results['AFC West'][0]  + 100, results['AFC West'][1] + 1]
 
                 elif predictedLoser in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 100, results['NFC'][1] + 1]
 
-                    if predictedLoser in groups['NFCNorth']:
-                        results['NFCNorth'] = [results['NFCNorth'][0]  + 100, results['NFCNorth'][1] + 1]
-                    elif predictedLoser in groups['NFCSouth']:
-                        results['NFCSouth'] = [results['NFCSouth'][0]  + 100, results['NFCSouth'][1] + 1]
-                    elif predictedLoser in groups['NFCEast']:
-                        results['NFCEast'] = [results['NFCEast'][0]  + 100, results['NFCEast'][1] + 1]
-                    elif predictedLoser in groups['NFCWest']:
-                        results['NFCWest'] = [results['NFCWest'][0]  + 100, results['NFCWest'][1] + 1]
+                    if predictedLoser in groups['NFC North']:
+                        results['NFC North'] = [results['NFC North'][0]  + 100, results['NFC North'][1] + 1]
+                    elif predictedLoser in groups['NFC South']:
+                        results['NFC South'] = [results['NFC South'][0]  + 100, results['NFC South'][1] + 1]
+                    elif predictedLoser in groups['NFC East']:
+                        results['NFC East'] = [results['NFC East'][0]  + 100, results['NFC East'][1] + 1]
+                    elif predictedLoser in groups['NFC West']:
+                        results['NFC West'] = [results['NFC West'][0]  + 100, results['NFC West'][1] + 1]
 
                 results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 100, results[f'{year} Week {week}'][1] + 1]
 
@@ -620,50 +620,50 @@ def updatePercentages():
                 if predictedWinner in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 0, results['AFC'][1] + 1]
 
-                    if predictedWinner in groups['AFCNorth']:
-                        results['AFCNorth'] = [results['AFCNorth'][0]  + 0, results['AFCNorth'][1] + 1]
-                    elif predictedWinner in groups['AFCSouth']:
-                        results['AFCSouth'] = [results['AFCSouth'][0]  + 0, results['AFCSouth'][1] + 1]
-                    elif predictedWinner in groups['AFCEast']:
-                        results['AFCEast'] = [results['AFCEast'][0]  + 0, results['AFCEast'][1] + 1]
-                    elif predictedWinner in groups['AFCWest']:
-                        results['AFCWest'] = [results['AFCWest'][0]  + 0, results['AFCWest'][1] + 1]
+                    if predictedWinner in groups['AFC North']:
+                        results['AFC North'] = [results['AFC North'][0]  + 0, results['AFC North'][1] + 1]
+                    elif predictedWinner in groups['AFC South']:
+                        results['AFC South'] = [results['AFC South'][0]  + 0, results['AFC South'][1] + 1]
+                    elif predictedWinner in groups['AFC East']:
+                        results['AFC East'] = [results['AFC East'][0]  + 0, results['AFC East'][1] + 1]
+                    elif predictedWinner in groups['AFC West']:
+                        results['AFC West'] = [results['AFC West'][0]  + 0, results['AFC West'][1] + 1]
 
                 elif predictedWinner in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 0, results['NFC'][1] + 1]
 
-                    if predictedWinner in groups['NFCNorth']:
-                        results['NFCNorth'] = [results['NFCNorth'][0]  + 0, results['NFCNorth'][1] + 1]
-                    elif predictedWinner in groups['NFCSouth']:
-                        results['NFCSouth'] = [results['NFCSouth'][0]  + 0, results['NFCSouth'][1] + 1]
-                    elif predictedWinner in groups['NFCEast']:
-                        results['NFCEast'] = [results['NFCEast'][0]  + 0, results['NFCEast'][1] + 1]
-                    elif predictedWinner in groups['NFCWest']:
-                        results['NFCWest'] = [results['NFCWest'][0]  + 0, results['NFCWest'][1] + 1]
+                    if predictedWinner in groups['NFC North']:
+                        results['NFC North'] = [results['NFC North'][0]  + 0, results['NFC North'][1] + 1]
+                    elif predictedWinner in groups['NFC South']:
+                        results['NFC South'] = [results['NFC South'][0]  + 0, results['NFC South'][1] + 1]
+                    elif predictedWinner in groups['NFC East']:
+                        results['NFC East'] = [results['NFC East'][0]  + 0, results['NFC East'][1] + 1]
+                    elif predictedWinner in groups['NFC West']:
+                        results['NFC West'] = [results['NFC West'][0]  + 0, results['NFC West'][1] + 1]
 
                 if predictedLoser in groups['AFC']:
                     results['AFC'] = [results['AFC'][0]  + 0, results['AFC'][1] + 1]
 
-                    if predictedLoser in groups['AFCNorth']:
-                        results['AFCNorth'] = [results['AFCNorth'][0]  + 0, results['AFCNorth'][1] + 1]
-                    elif predictedLoser in groups['AFCSouth']:
-                        results['AFCSouth'] = [results['AFCSouth'][0]  + 0, results['AFCSouth'][1] + 1]
-                    elif predictedLoser in groups['AFCEast']:
-                        results['AFCEast'] = [results['AFCEast'][0]  + 0, results['AFCEast'][1] + 1]
-                    elif predictedLoser in groups['AFCWest']:
-                        results['AFCWest'] = [results['AFCWest'][0]  + 0, results['AFCWest'][1] + 1]
+                    if predictedLoser in groups['AFC North']:
+                        results['AFC North'] = [results['AFC North'][0]  + 0, results['AFC North'][1] + 1]
+                    elif predictedLoser in groups['AFC South']:
+                        results['AFC South'] = [results['AFC South'][0]  + 0, results['AFC South'][1] + 1]
+                    elif predictedLoser in groups['AFC East']:
+                        results['AFC East'] = [results['AFC East'][0]  + 0, results['AFC East'][1] + 1]
+                    elif predictedLoser in groups['AFC West']:
+                        results['AFC West'] = [results['AFC West'][0]  + 0, results['AFC West'][1] + 1]
 
                 elif predictedLoser in groups['NFC']:
                     results['NFC'] = [results['NFC'][0]  + 0, results['NFC'][1] + 1]
 
-                    if predictedLoser in groups['NFCNorth']:
-                        results['NFCNorth'] = [results['NFCNorth'][0]  + 0, results['NFCNorth'][1] + 1]
-                    elif predictedLoser in groups['NFCSouth']:
-                        results['NFCSouth'] = [results['NFCSouth'][0]  + 0, results['NFCSouth'][1] + 1]
-                    elif predictedLoser in groups['NFCEast']:
-                        results['NFCEast'] = [results['NFCEast'][0]  + 0, results['NFCEast'][1] + 1]
-                    elif predictedLoser in groups['NFCWest']:
-                        results['NFCWest'] = [results['NFCWest'][0]  + 0, results['NFCWest'][1] + 1]
+                    if predictedLoser in groups['NFC North']:
+                        results['NFC North'] = [results['NFC North'][0]  + 0, results['NFC North'][1] + 1]
+                    elif predictedLoser in groups['NFC South']:
+                        results['NFC South'] = [results['NFC South'][0]  + 0, results['NFC South'][1] + 1]
+                    elif predictedLoser in groups['NFC East']:
+                        results['NFC East'] = [results['NFC East'][0]  + 0, results['NFC East'][1] + 1]
+                    elif predictedLoser in groups['NFC West']:
+                        results['NFC West'] = [results['NFC West'][0]  + 0, results['NFC West'][1] + 1]
 
                 results[f'{year} Week {week}'] = [results[f'{year} Week {week}'][0] + 0, results[f'{year} Week {week}'][1] + 1]
 
@@ -1033,10 +1033,10 @@ table = 'productionNFL'
 # storeGamblingObj = updateGamblingData(table, year)
 # storeGamblingObj.doit(resetStartOfWeek)
 
-updatePercentages()
+# updatePercentages()
 
-storeUpcomingWeekData = getUpcomingWeekData(week, year)
-storeUpcomingWeekData.getWeatherByWeek()
+# storeUpcomingWeekData = getUpcomingWeekData(week, year)
+# storeUpcomingWeekData.getWeatherByWeek()
 
 predictions = getPredictions(week, year)
 predictions.doit()
