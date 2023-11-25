@@ -14,6 +14,22 @@ def getDay(day):
     elif day == 'Tue':
         return 6
 
+def getDayFromCode(day):
+    if day == '0':
+        return 'Wed'
+    elif day == '1':
+        return 'Thu'
+    elif day == '2':
+        return 'Fri'
+    elif day == '3':
+        return 'Sat'
+    elif day == '4':
+        return 'Sun'
+    elif day == '5':
+        return 'Mon'
+    elif day == '6':
+        return 'Tue'
+
 
 def getWinloss(result):
     if result == 'W':

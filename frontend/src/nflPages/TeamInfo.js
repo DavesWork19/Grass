@@ -1,12 +1,20 @@
+import '../Fonts.css';
+
 const TeamInfo = (props) => {
-  const { title, percent } = props.info;
+  let { title, percent } = props.info;
+  let showPercent = true;
+
+  if (percent === -1) {
+    percent = 'NA';
+    showPercent = false;
+  }
 
   return (
-    <div className='row my-3 '>
-      <div className='col-7'>{title}</div>
-      <div className='col-2'>
+    <div className='row mt-3 teamStats pb-3'>
+      <div className='col-8'>{title}</div>
+      <div className='col-2 ps-0'>
         {percent}
-        <span className='timeText'>{'%'}</span>
+        {showPercent && <span className='timeText'>{'%'}</span>}
       </div>
     </div>
   );

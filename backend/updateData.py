@@ -529,7 +529,7 @@ def updatePercentages():
     fileRead = open(filenameRead, 'r')
 
 
-    groups = {'AFC North': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFC South': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFC East': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFC West': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFC North': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFC South': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFC East': ['Cowboys', 'Giants', 'Eagles', 'Commanders'], 'NFC West': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Commanders', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
+    groups = {'AFC North': ['Ravens', 'Bengals', 'Browns', 'Steelers'], 'AFC South': ['Titans', 'Colts', 'Jaguars', 'Texans'], 'AFC East': ['Bills', 'Jets', 'Dolphins', 'Patriots'], 'AFC West': ['Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'AFC': ['Ravens', 'Bengals', 'Browns', 'Steelers', 'Titans', 'Colts', 'Jaguars', 'Texans', 'Bills', 'Jets', 'Dolphins', 'Patriots', 'Cheifs', 'Chargers', 'Broncos', 'Raiders'], 'NFC North': ['Vikings', 'Packers', 'Bears', 'Lions'], 'NFC South': ['Buccaneers', 'Falcons', 'Saints', 'Panthers'], 'NFC East': ['Cowboys', 'Giants', 'Eagles', 'Washington'], 'NFC West': ['49ers', 'Rams', 'Seahawks', 'Cardinals'], 'NFC': ['Vikings', 'Packers', 'Bears', 'Lions', 'Buccaneers', 'Falcons', 'Saints', 'Panthers', 'Cowboys', 'Giants', 'Eagles', 'Washington', '49ers', 'Rams', 'Seahawks', 'Cardinals']}
     results = {'AFC':[0,0], 'AFC North':[0,0], 'AFC South':[0,0], 'AFC East':[0,0], 'AFC West':[0,0], 'NFC':[0,0], 'NFC North':[0,0], 'NFC South':[0,0], 'NFC East':[0,0], 'NFC West':[0,0]}
     week = 0
     year = 0
@@ -899,7 +899,7 @@ class getPredictions:
         homePointsOutcomeOpp = [1,2]
         awayPointsOutcomeOpp = [1,2]
 
-        for i in range(12):
+        for i in range(1):
 
             homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService('WinLoss', homeTeamNumber, time, day, 1, awayTeamNumber, channel, temp, weather, wind)
             awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService('WinLoss', awayTeamNumber, time, day, 0, homeTeamNumber, channel, temp, weather, wind)
@@ -953,11 +953,7 @@ class getPredictions:
             resultsFile.write("'")         
             resultsFile.write(homeTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{round((homePointsOutcomeTmMax + awayPointsOutcomeOppMax) / 2,2)}')
-            resultsFile.write(',')
-            resultsFile.write(awayTeamName)
-            resultsFile.write(',')
-            resultsFile.write(f'{round((awayPointsOutcomeTmMin + homePointsOutcomeOppMin) / 2,2)}')
+            resultsFile.write(f'{getDayFromCode(str(day))}')
             resultsFile.write(',')
             resultsFile.write(str(round(percent,2)))
             resultsFile.write("',")
@@ -971,11 +967,7 @@ class getPredictions:
             resultsFile.write("'")
             resultsFile.write(awayTeamName)
             resultsFile.write(',')
-            resultsFile.write(f'{round((awayPointsOutcomeTmMax + homePointsOutcomeOppMax) / 2,2)}')
-            resultsFile.write(',')
-            resultsFile.write(homeTeamName)
-            resultsFile.write(',')
-            resultsFile.write(f'{round((homePointsOutcomeTmMin + awayPointsOutcomeOppMin) / 2,2)}')
+            resultsFile.write(f'{getDayFromCode(str(day))}')
             resultsFile.write(',')
             resultsFile.write(str(round(percent,2)))
             resultsFile.write("',")

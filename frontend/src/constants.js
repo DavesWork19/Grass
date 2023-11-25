@@ -47,8 +47,10 @@ export const footerMessage1 =
   '*Predicted results are subject to change until the start of each matchup.';
 export const footerMessage2 =
   '**Percentages represent the accuracy of the model for the 2022 season.';
-export const matchUpPageText =
+export const matchUpPageText1 =
   'Percentages represent win percentage for corresponding label';
+export const matchUpPageText2 =
+  'Percentages include data from week 1 to 13 of the 2022 season and all weeks for 2023 season.';
 
 export const buf = 'Bills';
 export const mia = 'Dolphins';
@@ -155,5 +157,10 @@ export const teamInfo = {
 };
 
 export const teamStatsText = 'Team Stats';
+
+export const awayTeamAwayPercentText = 'When away';
+export const homeTeamHomePercentText = 'When home';
+export const winnerPredictedPercentText = 'When predicted winner';
+export const loserPredictedPercentText = 'When predicted loser';
 
 export const backButton = 'Back';

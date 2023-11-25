@@ -33,6 +33,12 @@
     padding-top: 25%;
   }
 }
+@media (max-width: 550px) {
+  .teamStats {
+    border-bottom: thin solid;
+    border-color: white;
+  }
+}
 
 .teamImgs {
   min-width: 50px;
