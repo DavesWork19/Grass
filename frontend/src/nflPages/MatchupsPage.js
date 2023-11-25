@@ -33,23 +33,21 @@ const Matchups = () => {
     const timeLabel = `${parseInt(hour)}:${minute} ${am_pm} ${timeZone}`;
 
     return (
-      <div className='col-12'>
-        <Link to={link} key={link}>
-          <button className='btn btn-light mt-1 mb-5 px-5'>
-            <div className='timeText timeMobileText'>{date}</div>
-            <div className='timeText timeMobileText border-bottom border-black mb-1'>
-              {timeLabel}
+      <Link to={link} key={link} className='col-12'>
+        <button className='btn btn-light mt-1 mb-5 px-5'>
+          <div className='timeText timeMobileText'>{date}</div>
+          <div className='timeText timeMobileText border-bottom border-black mb-1'>
+            {timeLabel}
+          </div>
+          <div className='row'>
+            <div className='col-4'>{setTeam(awayTeam)}</div>
+            <div className='col-4'>
+              <img className='atSymbol' src={ATLogo} alt='atLogo' />
             </div>
-            <div className='row'>
-              <div className='col-4'>{setTeam(awayTeam)}</div>
-              <div className='col-4'>
-                <img className='atSymbol' src={ATLogo} alt='atLogo' />
-              </div>
-              <div className='col-4'>{setTeam(homeTeam)}</div>
-            </div>
-          </button>
-        </Link>
-      </div>
+            <div className='col-4'>{setTeam(homeTeam)}</div>
+          </div>
+        </button>
+      </Link>
     );
   });
 };

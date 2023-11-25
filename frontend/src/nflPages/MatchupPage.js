@@ -16,8 +16,17 @@ import {
   winnerPredictedPercentText,
   loserPredictedPercentText,
 } from '../constants';
+import { useLayoutEffect } from 'react';
 
 const MatchupPage = () => {
+  useLayoutEffect(() => {
+    window.scrollTo({
+      top: 100,
+      left: 100,
+      behavior: 'smooth',
+    });
+  });
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const currentURL = pathname.split('/')[2];
