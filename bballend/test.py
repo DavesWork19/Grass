@@ -4,6 +4,7 @@ import pandas as pd
 import time
 import mysql.connector
 from datetime import date
+import random
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -18,6 +19,7 @@ from legends import *
 from constants import ALL_TEAMS, ALL_YEARS 
 
 
+sleepTimes = [7,13,17]
 
 
 def updateNBAGames():
@@ -58,12 +60,13 @@ def updateNBAGames():
         }
         page = requests.get(url, headers=HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
-        time.sleep(3)
+        time.sleep(random.choice(sleepTimes))
         moreSoup = soup.find('div', id='wrap')
         evenMoreSoup = moreSoup.find('div', id='content')
         allGamesWrapper = evenMoreSoup.find('div', id='all_games')
         allGamesTable = allGamesWrapper.find('table', id='games')
         tableBody = allGamesTable.find('tbody')
+        time.sleep(random.choice(sleepTimes))
 
         for row in tableBody.find_all('tr'):
 
@@ -205,7 +208,7 @@ def updateNBAGames():
                         
                         break
                                    
-        time.sleep(7)
+        time.sleep(random.choice(sleepTimes))
         print(f"{getTeam(team)['number'] + 1}/30 {team} completed.")
 
 
@@ -233,12 +236,12 @@ def getGamblingData():
     #Start Selenium driver
     driver = webdriver.Chrome()
     driver.get("https://sportsbook.draftkings.com/leagues/basketball/nba")
-    time.sleep(10)
+    time.sleep(random.choice(sleepTimes))
     
     container = driver.find_element(By.CLASS_NAME, 'sportsbook-responsive-card-container')
-    time.sleep(12)
+    time.sleep(random.choice(sleepTimes))
     todaysGames = driver.find_element(By.CLASS_NAME, 'parlay-card-10-a')
-    time.sleep(12)
+    time.sleep(random.choice(sleepTimes))
     todayGamesTable = driver.find_element(By.CLASS_NAME, 'sportsbook-table__body')
     todayGamesTableHTML = todayGamesTable.get_attribute('innerHTML')
     soup = BeautifulSoup(todayGamesTableHTML, 'html.parser')
@@ -317,10 +320,9 @@ def getGamblingData():
 
             sameGame = True
            
-        time.sleep(21)
+        time.sleep(random.choice(sleepTimes))
     driver.quit()
     print('All gambling data has been saved!')
-
 
 
 
