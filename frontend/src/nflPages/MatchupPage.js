@@ -29,7 +29,7 @@ const MatchupPage = () => {
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const currentURL = pathname.split('/')[2];
+  const currentURL = pathname.split('/')[3];
   const [awayTeam, homeTeam] = currentURL.split('At');
   const results = weeklyResults.find(
     (element) =>

@@ -68,3 +68,8 @@
 .smallText {
   font-size: xx-small;
 }
+
+.gamblingLogo {
+  max-width: 160px;
+  min-width: 16.67%;
+}

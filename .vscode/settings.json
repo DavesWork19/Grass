@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/8c50ee03-6b65-40f0-b4ea-0c2261f2a037/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/FootballPredictions",
+  "appService.deploySubpath": "frontend/build"
+}

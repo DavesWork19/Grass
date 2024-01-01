@@ -1,17 +1,15 @@
 import './HomePage.css';
 import '../Fonts.css';
-import { Link } from 'react-router-dom';
 import Matchups from './MatchupsPage';
 import WeeklyPercents from './WeeklyPercentages';
 import { footerMessage1, footerMessage2 } from '../constants';
 import { upcomingWeekData } from './upcomingWeekData.js';
+import NFLHeader from './Header';
 
-const NewHome = () => {
+const NFLHomePage = () => {
   return (
-    <main className='container-fluid nflSiteText bg-black'>
-      <div className='row pt-2 pb-3'>
-        <h1 className='col-12 lightText fs-1'>{`Week ${upcomingWeekData[0]}`}</h1>
-      </div>
+    <main className='container-fluid nflSiteText bg-black lightText'>
+      <NFLHeader week={upcomingWeekData[0]} />
 
       <div className='row'>
         <Matchups />
@@ -26,14 +24,9 @@ const NewHome = () => {
           {footerMessage1}
           {footerMessage2}
         </div>
-        <Link to='/' className='pt-5 text-end'>
-          <button className='nflSiteTextRaw btn btn-outline-secondary'>
-            {'Digits'}
-          </button>
-        </Link>
       </footer>
     </main>
   );
 };
 
-export default NewHome;
+export default NFLHomePage;

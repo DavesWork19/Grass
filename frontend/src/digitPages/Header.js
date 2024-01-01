@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { LEVEL_1, LEVEL_2 } from '../constants';
-import HomeIcon from './HomeIcon';
+import HomeIcon from '../HomeIcon';
 import '../Fonts.css';
 
 const Header = (props) => {

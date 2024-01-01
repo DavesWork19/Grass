@@ -10,7 +10,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './index.css';
 import HomeScreen from './digitPages/HomeScreen';
-import HomePage from './nflPages/HomePage';
+import NFLHomePage from './nflPages/HomePage';
+import NBAHomePage from './nbaPages/HomePage';
+import NBAGamePage from './nbaPages/NBAGamePage';
+import GamblingHomePage from './gamblingPages/GamblingHomePage';
 import MatchupPage from './nflPages/MatchupPage';
 import GameContainer from './digitPages/GameContainer';
 import NoPage from './NoPage';
@@ -22,8 +25,11 @@ root.render(
     <Routes>
       <Route path='/' element={<HomeScreen />} />
       <Route path='/daGame' element={<GameContainer />} />
-      <Route path='/2332220' element={<HomePage />} />
-      <Route path='/2332220/:teams' element={<MatchupPage />} />
+      <Route path='/2332220' element={<GamblingHomePage />} />
+      <Route path='/2332220/Basketball' element={<NBAHomePage />} />
+      <Route path='/2332220/Basketball/:teams' element={<NBAGamePage />} />
+      <Route path='/2332220/Football' element={<NFLHomePage />} />
+      <Route path='/2332220/Football/:teams' element={<MatchupPage />} />
       <Route path='*' element={<NoPage />} />
     </Routes>
   </BrowserRouter>
