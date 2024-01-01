@@ -14,6 +14,22 @@ def getDay(day):
     elif day == 'Tue':
         return 6
 
+def getDayFromCode(day):
+    if day == '0':
+        return 'Wed'
+    elif day == '1':
+        return 'Thu'
+    elif day == '2':
+        return 'Fri'
+    elif day == '3':
+        return 'Sat'
+    elif day == '4':
+        return 'Sun'
+    elif day == '5':
+        return 'Mon'
+    elif day == '6':
+        return 'Tue'
+
 
 def getWinloss(result):
     if result == 'W':
@@ -240,7 +256,7 @@ def getTeamSmallNameFromTeam(team):
 def getChannel(channel):
     if channel == 'tbd':
         return 0
-    if channel == 'ABC':
+    elif channel == 'ABC':
         return 1
     elif (channel == 'NBC') or (channel == 'nbc'):
         return 2
@@ -250,10 +266,12 @@ def getChannel(channel):
         return 4
     elif (channel == 'PRIME VIDEO') or (channel == 'AMAZON') or (channel == 'PRIME'):
         return 5
-    if (channel == 'ESPN') or (channel == 'espn') or (channel == 'ESPN+'):
+    elif (channel == 'ESPN') or (channel == 'espn') or (channel == 'ESPN+'):
         return 6
     elif (channel == 'NFL') or (channel == 'NFLN') or (channel == 'nfln') or (channel == 'NFLNetwork') or (channel == 'NFL NET') or (channel == 'nflnetwork') or (channel == 'NFL Network') or (channel == 'NFL NETWORK'):
         return 7
+    elif (channel == 'Peacock'):
+        return 8
 
 
 def getTemp(temp):
@@ -271,15 +289,15 @@ def getTemp(temp):
         return 5
 
 def getWeather(weather):
-    if weather == 'Dry':
+    if 'Dry' in weather:
         return 0
-    elif weather == 'Clear':
+    elif ('Clear' in weather) or ('Sunny' in weather):
         return 1
     elif 'Humid' in weather:
         return 2
     elif ('Fog' in weather) or ('Foggy' in weather):
         return 3
-    elif ('Overcast' in weather) or ('Cloudy' in weather):
+    elif ('Overcast' in weather) or ('Cloudy' in weather) or ('Clouds' in weather):
         return 4
     elif ('Rain' in weather) or ('Drizzle' in weather) or ('Thunderstorms' in weather):
         return 5

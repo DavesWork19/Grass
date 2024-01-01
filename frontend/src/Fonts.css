@@ -22,10 +22,27 @@
     font-size: 1.1rem;
   }
 }
-@media (max-width: 500px) {
-  .timeMobileText {
-    font-size: 0.9rem;
+
+@media (max-width: 550px) {
+  .atSymbol {
+    padding-top: 10%;
   }
+}
+@media (max-width: 450px) {
+  .atSymbol {
+    padding-top: 25%;
+  }
+}
+@media (max-width: 550px) {
+  .teamStats {
+    border-bottom: thin solid;
+    border-color: white;
+  }
+}
+
+.teamImgs {
+  min-width: 50px;
+  min-height: 50px;
 }
 
 .nflSiteTextRaw {
@@ -48,6 +65,11 @@
   font-family: 'regularText';
 }
 
-.test {
-  height: 82vh;
+.smallText {
+  font-size: xx-small;
+}
+
+.gamblingLogo {
+  max-width: 160px;
+  min-width: 16.67%;
 }

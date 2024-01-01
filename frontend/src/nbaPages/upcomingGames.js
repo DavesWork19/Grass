@@ -1,0 +1,18 @@
+export const upcomingWeekData = [
+  '12/14/23_08:15_PM_EST_Chargers_Raiders_57_Partly Cloudy_3',
+  '12/16/23_01:00_PM_EST_Vikings_Bengals_51_Chance Rain_6',
+  '12/16/23_04:30_PM_EST_Steelers_Colts_50_Likely Rain Showers_10',
+  '12/16/23_08:15_PM_EST_Broncos_Lions_43_Chance Rain Showers_8',
+  '12/17/23_01:00_PM_EST_Bears_Browns_48_Likely Rain Showers_14',
+  '12/17/23_01:00_PM_EST_Falcons_Panthers_52_Definite Rain Showers_20',
+  '12/17/23_01:00_PM_EST_Buccaneers_Packers_40_Mostly Cloudy_9',
+  '12/17/23_01:00_PM_EST_Texans_Titans_52_Chance Rain Showers_10',
+  '12/17/23_01:00_PM_EST_Jets_Dolphins_76_Slight Chance Rain Showers_22',
+  '12/17/23_01:00_PM_EST_Giants_Saints_57_Partly Cloudy_22',
+  '12/17/23_01:00_PM_EST_Chiefs_Patriots_47_Slight Chance Rain_10',
+  '12/17/23_04:05_PM_EST_Washington_Rams_74_Slight Chance Rain_13',
+  '12/17/23_04:05_PM_EST_49ers_Cardinals_74_Slight Chance Rain Showers_5',
+  '12/17/23_04:25_PM_EST_Cowboys_Bills_43_Likely Rain Showers_15',
+  '12/17/23_08:20_PM_EST_Ravens_Jaguars_60_Slight Chance Rain Showers_22',
+  '12/18/23_08:15_PM_EST_Eagles_Seahawks_47_Definite Rain_6',
+];
