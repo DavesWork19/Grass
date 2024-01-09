@@ -1413,23 +1413,23 @@ week = int(sys.argv[1])
 year = 2023
 table = 'productionNFL'
 
-# storeDataObj = storeTeamData(table, week, year)
-# storeDataObj.storeAllTeamsData()
+storeDataObj = storeTeamData(table, week, year)
+storeDataObj.storeAllTeamsData()
 
-# storeWeatherObj = updateWeatherData(table, week, year)
-# storeWeatherObj.doit()
+storeWeatherObj = updateWeatherData(table, week, year)
+storeWeatherObj.doit()
 
-# resetStartOfWeek = '2023-12-20'
+resetStartOfWeek = '2023-12-27'
 
-# storeGamblingObj = updateGamblingData(table, year)
-# storeGamblingObj.doit(resetStartOfWeek)
+storeGamblingObj = updateGamblingData(table, year)
+storeGamblingObj.doit(resetStartOfWeek)
 
-# updatePercentages()
+updatePercentages()
 
-# storeUpcomingWeekData = getUpcomingWeekData(week, year)
-# storeUpcomingWeekData.getWeatherByWeek()
+storeUpcomingWeekData = getUpcomingWeekData(week, year)
+storeUpcomingWeekData.getWeatherByWeek()
 
-# predictions = getPredictions(week, year)
-# predictions.doit()
+predictions = getPredictions(week, year)
+predictions.doit()
 
 updateTeamData(week)

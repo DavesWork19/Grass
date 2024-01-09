@@ -5,21 +5,28 @@ import time
 import mysql.connector
 from datetime import date
 import random
+import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import VarianceThreshold
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import SGDRegressor
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import GridSearchCV, cross_val_predict
 from sklearn.metrics import accuracy_score
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from legends import *
-from constants import ALL_TEAMS, ALL_YEARS 
+from constants import ALL_TEAMS, ALL_YEARS, ALL_COLUMNS, ALL_PERCENTAGES
 
 
-sleepTimes = [7,13,17]
+sleepTimes = [17,23,27]
 
 
 def updateNBAGames():
@@ -230,8 +237,7 @@ def getGamblingData():
     mycursor.execute(f"SELECT * FROM nbaStats WHERE isWin is NULL and spread is NULL;")
 
     teamData = mycursor.fetchall()
-    dfColumns = ['id','gameNumber','teamNumber','isHome','oppTeamNumber','isWin','isOT','gameDayNumber','gameStartNumber','teamPoints','oppTeamPoints','teamWins','teamLosses','teamStreakCode','isInSeasonTournament','year','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual']
-    nextGames = pd.DataFrame(teamData, columns = dfColumns)
+    nextGames = pd.DataFrame(teamData, columns = ALL_COLUMNS)
 
     #Start Selenium driver
     driver = webdriver.Chrome()
@@ -245,6 +251,7 @@ def getGamblingData():
     todayGamesTable = driver.find_element(By.CLASS_NAME, 'sportsbook-table__body')
     todayGamesTableHTML = todayGamesTable.get_attribute('innerHTML')
     soup = BeautifulSoup(todayGamesTableHTML, 'html.parser')
+    time.sleep(random.choice(sleepTimes))
     allRows = soup.find_all('tr')
 
     sameGame = True
@@ -259,7 +266,7 @@ def getGamblingData():
         spread, spreadOdds = moreSpread.find_all('span')
         spread = spread.text
         spreadOdds = spreadOdds.text
-        time.sleep(3)
+        time.sleep(random.choice(sleepTimes))
 
         moreOverUnder = someOverUnder.find('div', class_='sportsbook-outcome-body-wrapper')
         evenMoreOverUnder = moreOverUnder.find_all('span')
@@ -267,12 +274,12 @@ def getGamblingData():
         overUnder = evenMoreOverUnder[-2]
         overUnder = overUnder.text
         overUnderOdds = overUnderOdds.text
-        time.sleep(3)
+        time.sleep(random.choice(sleepTimes))
 
         moreML = someML.find('div', class_='sportsbook-outcome-body-wrapper')
         MLOdds = moreML.find('span')
         MLOdds = MLOdds.text
-        time.sleep(3)
+        time.sleep(random.choice(sleepTimes))
 
         if sameGame == True:
             #away team
@@ -289,7 +296,6 @@ def getGamblingData():
             #home team next game
             homeTeamNextGame = nextGames[nextGames['teamNumber'] == homeTeam['teamNumber']]
 
-            
             #Store sameGames
             #Store data:
             mycursor = mydb.cursor()
@@ -327,6 +333,23 @@ def getGamblingData():
 
 
 def runML():
+    #Initial variables
+    teams = getTeam(ALL_TEAMS)
+    columnsToPredict = ['teamPoints','oppTeamPoints']
+    columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual']
+    gamblingColumns = ['spread','spreadOdds','overUnder','overUnderOdds','moneyLine']
+    year = 2024
+
+
+    #Open frontend file
+    todaysGamesFilename = '../frontend/src/nbaPages/todaysGames.js'
+    todaysGamesFile = open(todaysGamesFilename, 'w')
+    todaysGamesFile.write('export const todaysGames = [\n')
+    todaysDate = date.today().strftime("%B %d, %Y")
+    todaysDayName = date.today().strftime("%A")
+    todaysGamesFile.write(f"'{todaysDayName}',\n")
+    todaysGamesFile.write(f"'{todaysDate}',\n")
+
     #Connect to MySQL Database
     mydb = mysql.connector.connect(
         host='127.0.0.1',
@@ -336,34 +359,20 @@ def runML():
         )
     mycursor = mydb.cursor()
 
-    #Open frontend file
-    todaysGamesFilename = '../frontend/src/nbaPages/todaysGames.js'
-    todaysGamesFile = open(todaysGamesFilename, 'w')
-    todaysGamesFile.write('export const todaysGames = [\n')
-    todaysDate = date.today().strftime("%B %d, %Y")
-    todaysGamesFile.write(f"'{todaysDate}',\n")
-
     #Get all data from Database
     mycursor.execute(f"SELECT * FROM nbaStats;")
     teamData = mycursor.fetchall()
-    dfColumns = ['id','gameNumber','teamNumber','isHome','oppTeamNumber','isWin','isOT','gameDayNumber','gameStartNumber','teamPoints','oppTeamPoints','teamWins','teamLosses','teamStreakCode','isInSeasonTournament','year','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual']
-    allTeamsDF = pd.DataFrame(teamData, columns = dfColumns)
+    allTeamsDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
+    allTeamsDF = allTeamsDF.drop(columns=['spreadCalculated','overUnderCalculated','spreadActual','overUnderActual'])
 
-    
     #Iterate over each team
-    teams = getTeam(ALL_TEAMS)
-    columnsToPredict = ['teamPoints','oppTeamPoints']
-    columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual']
-    gamblingColumns = ['spread','spreadOdds','overUnder','overUnderOdds','moneyLine']
-    year = 2024
-
     gamesToBePredictedDF = allTeamsDF[(allTeamsDF['isWin'].isna()) & (allTeamsDF['spread'].notna())]
     gamesToBePredictedDFWoGD = gamesToBePredictedDF.drop(columns = columnsToRemove)
     gamesToBePredictedDFWoGD = gamesToBePredictedDFWoGD.drop(columns = columnsToPredict)
     gamesAlreadyPredicted = []
 
 
-    for eachGame in gamesToBePredictedDF.sort_values(by=['gameStartNumber'])[['teamNumber','oppTeamNumber']].values:
+    for eachGame in gamesToBePredictedDF.sort_values(by=['gameStartNumber'])[['teamNumber','oppTeamNumber']].values:        
         team1, team2 = list(eachGame)
         
         if (team1 not in gamesAlreadyPredicted) or (team2 not in gamesAlreadyPredicted):
@@ -372,7 +381,6 @@ def runML():
             df = df[df['isWin'].notna()]
             df = df.drop(columns=columnsToRemove)
             df = df.sort_values(by=['year', 'gameNumber'])
-            modelScores = {'teamLogisticRegression' : [0,0]}
             predictedScores = {'team1' : 0, 'team2' : 0}
             
             #Predicts column from columnsToPredict from dataframe for team1 and team2
@@ -381,36 +389,175 @@ def runML():
                 X = df.drop(columns=columnsToPredict)
 
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19, random_state = 19)
+                
+                #Scale training and testing data
+                scalar = StandardScaler()
+                
+                scalar.fit(X_train)
+                X_train = scalar.transform(X_train)
+                X_test = scalar.transform(X_test)
 
-                # create a pipeline object
-                pipe = make_pipeline(
-                    StandardScaler(),
-                    LogisticRegression()
-                )
-                pipe.fit(X_train, y_train)
+                #Feature selection
+                featureSelection = VarianceThreshold(threshold=(.8 * (1 - .8)))
+                X_train = featureSelection.fit_transform(X_train)
 
-                for predicted,actual in zip(pipe.predict(X_test), y_test):
-                    if ((actual + 3) >= predicted) and ((actual - 3) <= predicted):
-                        modelScores['teamLogisticRegression'][0] = modelScores['teamLogisticRegression'][0] + 100
-                        modelScores['teamLogisticRegression'][1] = modelScores['teamLogisticRegression'][1] + 1
-                    else:
-                        modelScores['teamLogisticRegression'][1] = modelScores['teamLogisticRegression'][1] + 1
-                    
-                predictedAccuracyScore = accuracy_score(pipe.predict(X_test), y_test)*100
-                #print(f'predictedAccuracyScore: {predictedAccuracyScore}% for {column}\n')
+                #Model Selection with hyper parameter tuning with cross validation grid search
+                alphas = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+                
+                #CV 2 folds
+                #Elastic Net
+                elasticNet = ElasticNet(random_state=19)
+                elasticNetParams = [{'alpha': alphas}]
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=2)
+                elasticNetGS.fit(X_train, y_train)
+                bestElasticNet2 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
+                #Lasso
+                lasso = Lasso(random_state=19)
+                lassoParams = [{'alpha': alphas}]
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=2)
+                lassoGS.fit(X_train, y_train)
+                bestLasso2 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
+                #Stochastic gradient decent regression
+                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
+                SGDParams = [{'alpha': alphas}]
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=2)
+                SGDGS.fit(X_train, y_train)
+                bestSGD2 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                #Ridge
+                ridge = Ridge(random_state=19)
+                ridgeParams = [{'alpha': alphas}]
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=2)
+                ridgeGS.fit(X_train, y_train)
+                bestRidge2 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
+
+                #CV 3 folds
+                #Elastic Net
+                elasticNet = ElasticNet(random_state=19)
+                elasticNetParams = [{'alpha': alphas}]
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=3)
+                elasticNetGS.fit(X_train, y_train)
+                bestElasticNet3 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
+                #Lasso
+                lasso = Lasso(random_state=19)
+                lassoParams = [{'alpha': alphas}]
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=3)
+                lassoGS.fit(X_train, y_train)
+                bestLasso3 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
+                #Stochastic gradient decent regression
+                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
+                SGDParams = [{'alpha': alphas}]
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=3)
+                SGDGS.fit(X_train, y_train)
+                bestSGD3 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                #Ridge
+                ridge = Ridge(random_state=19)
+                ridgeParams = [{'alpha': alphas}]
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=3)
+                ridgeGS.fit(X_train, y_train)
+                bestRidge3 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
+
+                #CV 5 folds
+                #Elastic Net
+                elasticNet = ElasticNet(random_state=19)
+                elasticNetParams = [{'alpha': alphas}]
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=5)
+                elasticNetGS.fit(X_train, y_train)
+                bestElasticNet5 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
+                #Lasso
+                lasso = Lasso(random_state=19)
+                lassoParams = [{'alpha': alphas}]
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=5)
+                lassoGS.fit(X_train, y_train)
+                bestLasso5 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
+                #Stochastic gradient decent regression
+                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
+                SGDParams = [{'alpha': alphas}]
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=5)
+                SGDGS.fit(X_train, y_train)
+                bestSGD5 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                #Ridge
+                ridge = Ridge(random_state=19)
+                ridgeParams = [{'alpha': alphas}]
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=5)
+                ridgeGS.fit(X_train, y_train)
+                bestRidge5 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
+
+                #Score all models
+                bestElasticNet2.fit(X_train, y_train)
+                elasticNet2Score = bestElasticNet2.score(X_test, y_test)
+                bestElasticNet3.fit(X_train, y_train)
+                elasticNet3Score = bestElasticNet3.score(X_test, y_test)
+                bestElasticNet5.fit(X_train, y_train)
+                elasticNet5Score = bestElasticNet5.score(X_test, y_test)
+
+                bestLasso2.fit(X_train, y_train)
+                lasso2Score = bestLasso2.score(X_test, y_test)
+                bestLasso3.fit(X_train, y_train)
+                lasso3Score = bestLasso3.score(X_test, y_test)
+                bestLasso5.fit(X_train, y_train)
+                lasso5Score = bestLasso5.score(X_test, y_test)
+
+                bestSGD2.fit(X_train, y_train)
+                SGD2Score = bestSGD2.score(X_test, y_test)
+                bestSGD3.fit(X_train, y_train)
+                SGD3Score = bestSGD3.score(X_test, y_test)
+                bestSGD5.fit(X_train, y_train)
+                SGD5Score = bestSGD5.score(X_test, y_test)
+
+                bestRidge2.fit(X_train, y_train)
+                ridge2Score = bestRidge2.score(X_test, y_test)
+                bestRidge3.fit(X_train, y_train)
+                ridge3Score = bestRidge3.score(X_test, y_test)
+                bestRidge5.fit(X_train, y_train)
+                ridge5Score = bestRidge5.score(X_test, y_test)
+
+                allScore = {'elasticNet2Score' : elasticNet2Score,'elasticNet3Score' : elasticNet3Score,'elasticNet5Score' : elasticNet5Score,'lasso2Score' : lasso2Score,'lasso3Score' : lasso3Score,'lasso5Score' : lasso5Score,'SGD2Score' : SGD2Score,'SGD3Score' : SGD3Score,'SGD5Score' : SGD5Score,'ridge2Score' : ridge2Score,'ridge3Score' : ridge3Score,'ridge5Score' : ridge5Score}
+
+                bestScore = max(allScore, key=allScore.get)
+                bestModel = None
+
+                if bestScore == 'elasticNet2Score':
+                    bestModel = bestElasticNet2
+                elif bestScore == 'elasticNet3Score':
+                    bestModel = bestElasticNet3
+                elif bestScore == 'elasticNet5Score':
+                    bestModel = bestElasticNet5
+                elif bestScore == 'lasso2Score':
+                    bestModel = bestLasso2
+                elif bestScore == 'lasso3Score':
+                    bestModel = bestLasso3
+                elif bestScore == 'lasso5Score':
+                    bestModel = bestLasso5
+                elif bestScore == 'SGD2Score':
+                    bestModel = bestSGD2
+                elif bestScore == 'SGD3Score':
+                    bestModel = bestSGD3
+                elif bestScore == 'SGD5Score':
+                    bestModel = bestSGD5
+                elif bestScore == 'ridge2Score':
+                    bestModel = bestRidge2
+                elif bestScore == 'ridge3Score':
+                    bestModel = bestRidge3
+                elif bestScore == 'ridge5Score':
+                    bestModel = bestRidge5
+
+                team1DataToPredict = scalar.transform(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team1])
+                team2DataToPredict = scalar.transform(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team2])
 
                 if column == 'teamPoints':
-                    predictedScores['team1'] = pipe.predict(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team1])
-                    predictedScores['team2'] = pipe.predict(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team2])
+                    predictedScores['team1'] = bestModel.predict(team1DataToPredict)
+                    predictedScores['team2'] = bestModel.predict(team2DataToPredict)
                 elif column == 'oppTeamPoints':
-                    predictedScores['team2'] = predictedScores['team2'] + pipe.predict(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team1])
+                    predictedScores['team2'] = predictedScores['team2'] + bestModel.predict(team1DataToPredict)
                     predictedScores['team2'] = predictedScores['team2'] / 2
-                    predictedScores['team1'] = predictedScores['team1'] + pipe.predict(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team2])
+                    predictedScores['team1'] = predictedScores['team1'] + bestModel.predict(team2DataToPredict)
                     predictedScores['team1'] = predictedScores['team1'] / 2
 
             
             team1GamblingData = gamesToBePredictedDF[gamesToBePredictedDF['teamNumber'] == team1]
             team2GamblingData = gamesToBePredictedDF[gamesToBePredictedDF['teamNumber'] == team2]
+            team1PrimaryKey = team1GamblingData['id'].values[0]
+            team2PrimaryKey = team2GamblingData['id'].values[0]
 
             predictedTeam1Spread = predictedScores['team1'] - predictedScores['team2']
             predictedTeam2Spread = predictedScores['team2'] - predictedScores['team1']
@@ -445,6 +592,28 @@ def runML():
 
             gameTime = team1GamblingData['gameTimeActual'].values[0]
 
+            mycursor = mydb.cursor()
+
+            #Update database for team 1
+            updateData = (
+                f"UPDATE nbaStats "
+                f"SET spreadCalculated = {predictedTeam1SpreadResults}, "
+                f"overUnderCalculated = {predictedOverUnderResults} "
+                f"WHERE id = {team1PrimaryKey};"
+            )
+            mycursor.execute(updateData)
+            mydb.commit()
+
+            #Update database for team 2
+            updateData = (
+                f"UPDATE nbaStats "
+                f"SET spreadCalculated = '{predictedTeam2SpreadResults}', "
+                f"overUnderCalculated = '{predictedOverUnderResults}' "
+                f"WHERE id = {team2PrimaryKey};"
+            )
+            mycursor.execute(updateData)
+            mydb.commit()
+
             #Write to file : awayTeam,homeTeam,spread,homeTeamSpread,ifHomeTeamCovered,OverUnder, ifTeamsCoveredOverUnder
             if len(team1GamblingData[team1GamblingData['isHome'] == 1]) != 0:
                 todaysGamesFile.write(f"'{gameTime},")
@@ -469,11 +638,6 @@ def runML():
                 # todaysGamesFile.write(f"{predictedScores['team2'][0]}',\n")
             
             
-            
-            
-            adjustedPredictedScored = modelScores['teamLogisticRegression'][0]/modelScores['teamLogisticRegression'][1]   
-            #print(f'adjustedPredictedScored: {adjustedPredictedScored} for {team1} and {team2}')
-
 
             gamesAlreadyPredicted.append(team1)
             gamesAlreadyPredicted.append(team2)
@@ -481,15 +645,344 @@ def runML():
     todaysGamesFile.write(f"]")
     todaysGamesFile.close()
 
-    print('ALl games today have been predicted!')
+    print('All games today have been predicted!')
 
 
             
+def updateDatabaseActualResults():
+    #Connect to MySQL Database
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NBA'
+        )
+    mycursor = mydb.cursor()
 
+    #Get all data from Database where the spread is recorded
+    mycursor.execute(f"SELECT * FROM nbaStats where spreadCalculated is not NULL and isWin is not NULL and spreadActual is NULL;")
+    teamData = mycursor.fetchall()
+    allTeamsDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
+    
+    for row in allTeamsDF.values:
+        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual = row
+        
+        #Calculate overUnder cover
+        overUnderCalc = teamPoints + oppTeamPoints
+        if overUnderCalc > float(overUnder):
+            overUnderActual = 1
+        else:
+            overUnderActual = 0
+
+        #Calculate the spread
+        spreadFavored = spread[0]
+        spreadValue = float(spread[1:])
+        
+        if spreadFavored == '-':
+            spreadCalc = teamPoints - oppTeamPoints
+            if spreadCalc > spreadValue:
+                spreadActual = 1
+            else:
+                spreadActual = 0
+        else:
+            spreadCalc = oppTeamPoints - teamPoints
+            if spreadCalc > spreadValue:
+                spreadActual = 0
+            else:
+                spreadActual = 1
+
+        updateData = (
+            f"UPDATE nbaStats "
+            f"SET spreadActual = {spreadActual}, "
+            f"overUnderActual = {overUnderActual} "
+            f"WHERE id = {id};"
+        )
+        mycursor.execute(updateData)
+        mydb.commit()
+
+    print('All actual results have been saved to database!')
+    
+
+
+def percentHelper(win, firstName, secondName):
+    name = f'{firstName}_{secondName}'
+
+    if win == True:
+        ALL_PERCENTAGES[name] = [ALL_PERCENTAGES[name][0] + 100, ALL_PERCENTAGES[name][1] + 1] 
+    else:
+        ALL_PERCENTAGES[name] = [ALL_PERCENTAGES[name][0], ALL_PERCENTAGES[name][1] + 1]
+
+
+
+def updatePercentages():
+    #global variable
+    overallName = 'overall'
+
+    #Connect to MySQL Database
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NBA'
+        )
+    mycursor = mydb.cursor()
+
+    #Get all data from Database where the spread is recorded
+    mycursor.execute(f"SELECT * FROM nbaStats where spreadActual is not NULL;")
+    data = mycursor.fetchall()
+    df = pd.DataFrame(data, columns = ALL_COLUMNS)
+    
+    #Iterate over each team
+    teams = getTeam(ALL_TEAMS)
+
+    for row in df.values:
+        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual = row
+        teamShortName = getTeam(str(teamNumber))['shortName']
+        teamWinSpread = spreadCalculated == spreadActual
+        teamWinOverUnder = overUnderCalculated == overUnderActual
+        teamWinParlay = teamWinSpread and teamWinOverUnder
+
+        #Calculate team percents
+        percentHelper(teamWinSpread, teamShortName, 'spread')
+        percentHelper(teamWinOverUnder, teamShortName, 'overUnder')
+        percentHelper(teamWinParlay, teamShortName, 'parlay')
+
+        #Calculate team day percents
+        if gameDayNumber == 0:
+            #Sunday
+            percentHelper(teamWinSpread, teamShortName, 'Sunday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Sunday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Sunday_parlay')
+        elif gameDayNumber == 1:
+            #Monday
+            percentHelper(teamWinSpread, teamShortName, 'Monday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Monday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Monday_parlay')
+        elif gameDayNumber == 2:
+            #Tuesday
+            percentHelper(teamWinSpread, teamShortName, 'Tuesday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Tuesday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Tuesday_parlay')
+        elif gameDayNumber == 3:
+            #Wednesday
+            percentHelper(teamWinSpread, teamShortName, 'Wednesday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Wednesday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Wednesday_parlay')
+        elif gameDayNumber == 4:
+            #Thursday
+            percentHelper(teamWinSpread, teamShortName, 'Thursday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Thursday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Thursday_parlay')
+        elif gameDayNumber == 5:
+            #Friday
+            percentHelper(teamWinSpread, teamShortName, 'Friday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Friday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Friday_parlay')
+        elif gameDayNumber == 6:
+            #Saturday
+            percentHelper(teamWinSpread, teamShortName, 'Saturday_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Saturday_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Saturday_parlay')
+
+        #Calculate team time percents
+        if (gameStartNumber == 0) or (gameStartNumber == 1):
+            #12 - 12:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_12_1259_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_12_1259_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_12_1259_parlay')
+        elif (gameStartNumber == 2) or (gameStartNumber == 3):
+            #1 - 1:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_1_159_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_1_159_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_1_159_parlay')
+        elif (gameStartNumber == 4) or (gameStartNumber == 5):
+            #2 - 2:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_2_259_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_2_259_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_2_259_parlay')
+        elif (gameStartNumber == 6) or (gameStartNumber == 7):
+            #3 - 3:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_3_359_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_3_359_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_3_359_parlay')
+        elif (gameStartNumber == 8) or (gameStartNumber == 9):
+            #4 - 4:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_4_459_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_4_459_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_4_459_parlay')
+        elif (gameStartNumber == 10) or (gameStartNumber == 11):
+            #5 - 5:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_5_559_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_5_559_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_5_559_parlay')
+        elif (gameStartNumber == 12) or (gameStartNumber == 13):
+            #6 - 6:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_6_659_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_6_659_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_6_659_parlay')
+        elif (gameStartNumber == 14) or (gameStartNumber == 15):
+            #7 - 7:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_7_759_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_7_759_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_7_759_parlay')
+        elif (gameStartNumber == 16) or (gameStartNumber == 17):
+            #8 - 8:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_8_859_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_8_859_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_8_859_parlay')
+        elif (gameStartNumber == 18) or (gameStartNumber == 19):
+            #9 - 9:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_9_959_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_9_959_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_9_959_parlay')
+        elif (gameStartNumber == 20) or (gameStartNumber == 21):
+            #10 - 10:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_10_1059_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_10_1059_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_10_1059_parlay')
+        elif (gameStartNumber == 22) or (gameStartNumber == 23):
+            #11 - 11:59
+            percentHelper(teamWinSpread, teamShortName, 'Time_11_1159_spread')
+            percentHelper(teamWinOverUnder, teamShortName, 'Time_11_1159_overUnder')
+            percentHelper(teamWinParlay, teamShortName, 'Time_11_1159_parlay')
+
+        
+        #Calculate team percents
+        percentHelper(teamWinSpread, overallName, 'spread')
+        percentHelper(teamWinOverUnder, overallName, 'overUnder')
+        percentHelper(teamWinParlay, overallName, 'parlay')
+
+        #Calculate team day percents
+        if gameDayNumber == 0:
+            #Sunday
+            percentHelper(teamWinSpread, overallName, 'Sunday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Sunday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Sunday_parlay')
+        elif gameDayNumber == 1:
+            #Monday
+            percentHelper(teamWinSpread, overallName, 'Monday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Monday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Monday_parlay')
+        elif gameDayNumber == 2:
+            #Tuesday
+            percentHelper(teamWinSpread, overallName, 'Tuesday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Tuesday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Tuesday_parlay')
+        elif gameDayNumber == 3:
+            #Wednesday
+            percentHelper(teamWinSpread, overallName, 'Wednesday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Wednesday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Wednesday_parlay')
+        elif gameDayNumber == 4:
+            #Thursday
+            percentHelper(teamWinSpread, overallName, 'Thursday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Thursday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Thursday_parlay')
+        elif gameDayNumber == 5:
+            #Friday
+            percentHelper(teamWinSpread, overallName, 'Friday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Friday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Friday_parlay')
+        elif gameDayNumber == 6:
+            #Saturday
+            percentHelper(teamWinSpread, overallName, 'Saturday_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Saturday_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Saturday_parlay')
+
+        #Calculate team time percents
+        if (gameStartNumber == 0) or (gameStartNumber == 1):
+            #12 - 12:59
+            percentHelper(teamWinSpread, overallName, 'Time_12_1259_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_12_1259_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_12_1259_parlay')
+        elif (gameStartNumber == 2) or (gameStartNumber == 3):
+            #1 - 1:59
+            percentHelper(teamWinSpread, overallName, 'Time_1_159_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_1_159_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_1_159_parlay')
+        elif (gameStartNumber == 4) or (gameStartNumber == 5):
+            #2 - 2:59
+            percentHelper(teamWinSpread, overallName, 'Time_2_259_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_2_259_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_2_259_parlay')
+        elif (gameStartNumber == 6) or (gameStartNumber == 7):
+            #3 - 3:59
+            percentHelper(teamWinSpread, overallName, 'Time_3_359_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_3_359_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_3_359_parlay')
+        elif (gameStartNumber == 8) or (gameStartNumber == 9):
+            #4 - 4:59
+            percentHelper(teamWinSpread, overallName, 'Time_4_459_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_4_459_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_4_459_parlay')
+        elif (gameStartNumber == 10) or (gameStartNumber == 11):
+            #5 - 5:59
+            percentHelper(teamWinSpread, overallName, 'Time_5_559_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_5_559_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_5_559_parlay')
+        elif (gameStartNumber == 12) or (gameStartNumber == 13):
+            #6 - 6:59
+            percentHelper(teamWinSpread, overallName, 'Time_6_659_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_6_659_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_6_659_parlay')
+        elif (gameStartNumber == 14) or (gameStartNumber == 15):
+            #7 - 7:59
+            percentHelper(teamWinSpread, overallName, 'Time_7_759_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_7_759_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_7_759_parlay')
+        elif (gameStartNumber == 16) or (gameStartNumber == 17):
+            #8 - 8:59
+            percentHelper(teamWinSpread, overallName, 'Time_8_859_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_8_859_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_8_859_parlay')
+        elif (gameStartNumber == 18) or (gameStartNumber == 19):
+            #9 - 9:59
+            percentHelper(teamWinSpread, overallName, 'Time_9_959_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_9_959_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_9_959_parlay')
+        elif (gameStartNumber == 20) or (gameStartNumber == 21):
+            #10 - 10:59
+            percentHelper(teamWinSpread, overallName, 'Time_10_1059_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_10_1059_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_10_1059_parlay')
+        elif (gameStartNumber == 22) or (gameStartNumber == 23):
+            #11 - 11:59
+            percentHelper(teamWinSpread, overallName, 'Time_11_1159_spread')
+            percentHelper(teamWinOverUnder, overallName, 'Time_11_1159_overUnder')
+            percentHelper(teamWinParlay, overallName, 'Time_11_1159_parlay')
+  
+    for percent in ALL_PERCENTAGES:
+        if ALL_PERCENTAGES[percent][1] != 0:
+            ALL_PERCENTAGES[percent] = round(ALL_PERCENTAGES[percent][0] / ALL_PERCENTAGES[percent][1], 2)
+        else:
+            ALL_PERCENTAGES[percent] = 'NA'
+
+    #Open frontend file and write ALL_PERCENTAGES
+    percentagesFilename = '../frontend/src/nbaPages/percentages.js'
+    percentagesFile = open(percentagesFilename, 'w')
+    percentagesFile.write('export const percentages = {\n')
+    for percent in ALL_PERCENTAGES:
+        value = ALL_PERCENTAGES[percent]
+        if value == 'NA':
+            percentagesFile.write(f"{percent} : 'NA',\n")
+        else:
+            percentagesFile.write(f"{percent} : {value},\n")
+    percentagesFile.write('}')
+    percentagesFile.close()
+
+    print('All percentages have been sent to the frontend!')
+    #     f'{team}_last5Games_spread'
+    #     f'{team}_last5Games_overUnder'
+    #     f'{team}_last5Games_parlay'
+
+    #     f'overall_last5Games_spread'
+    #     f'overall_last5Games_overUnder'
+    #     f'overall_last5Games_parlay'
+ 
 
 
 updateNBAGames()
 getGamblingData()
 runML()
-
-
+updateDatabaseActualResults()
+updatePercentages()

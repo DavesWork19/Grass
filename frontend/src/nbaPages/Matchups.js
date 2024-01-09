@@ -12,7 +12,7 @@ const NBAMatchups = () => {
       </div>
     );
   };
-  return todaysGames.slice(1).map((data) => {
+  return todaysGames.slice(2).map((data) => {
     const [gameTime, awayTeam, homeTeam] = data.split(',');
     const link = `${awayTeam}AT${homeTeam}`;
 

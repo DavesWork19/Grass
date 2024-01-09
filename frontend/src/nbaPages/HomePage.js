@@ -3,16 +3,23 @@ import NBAMatchups from './Matchups';
 import { todaysGames } from './todaysGames';
 import { footerMessage1, footerMessage2 } from '../constants';
 import NBAHeader from './Header';
+import OverallPercents from './OverallPercentages';
 
 const NBAHomePage = () => {
-  const todaysDate = todaysGames.slice(0, 1)[0].split(',')[0];
+  const todaysDayName = todaysGames.slice(0, 1)[0];
+  const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
+  const date = `${todaysDayName} ${todaysDate}`;
 
   return (
     <main className='container-fluid nflSiteText bg-black lightText'>
-      <NBAHeader date={todaysDate} />
+      <NBAHeader date={date} />
 
       <div className='row'>
         <NBAMatchups />
+      </div>
+
+      <div className='row'>
+        <OverallPercents />
       </div>
 
       <footer className='row'>

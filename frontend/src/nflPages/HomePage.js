@@ -16,7 +16,9 @@ const NFLHomePage = () => {
       </div>
 
       <div className='row'>
-        <WeeklyPercents />
+        <div className='col-12'>
+          <WeeklyPercents />
+        </div>
       </div>
 
       <footer className='row'>
