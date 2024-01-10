@@ -10,6 +10,10 @@ const NBAHomePage = () => {
   const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
   const date = `${todaysDayName} ${todaysDate}`;
 
+  const times = todaysGames.slice(2).map((data) => data.split(',')[0]);
+  const hours = times.map((data) => data.split(':')[0]);
+  const unqiueHours = new Set(hours);
+
   return (
     <main className='container-fluid nflSiteText bg-black lightText'>
       <NBAHeader date={date} />
@@ -19,7 +23,7 @@ const NBAHomePage = () => {
       </div>
 
       <div className='row'>
-        <OverallPercents />
+        <OverallPercents hours={unqiueHours} />
       </div>
 
       <footer className='row'>
