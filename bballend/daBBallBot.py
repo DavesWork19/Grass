@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 import mysql.connector
-from datetime import date
+from datetime import date, datetime
 import random
 import matplotlib.pyplot as plt
 
@@ -18,12 +18,14 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.feature_selection import RFECV
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from legends import *
-from constants import ALL_TEAMS, ALL_YEARS, ALL_COLUMNS, ALL_PERCENTAGES
+from constants import ALL_TEAMS, ALL_YEARS, ALL_COLUMNS, ALL_PERCENTAGES, TEAM_LAST_5_GAME_COUNT
 
 
 sleepTimes = [17,23,27]
@@ -82,7 +84,14 @@ def updateNBAGames():
 
                 if int(gameNumber) > lastSavedGame:
    
-                    gameDay = row.find('td', attrs={'data-stat': 'date_game'}).text.split(',')[0]
+                    gameDay = row.find('td', attrs={'data-stat': 'date_game'}).text.split(',')
+                    day = gameDay[0].strip()
+                    monthAndDate = gameDay[1].strip()
+                    year = gameDay[2].strip()
+                    date_time = ' '.join([monthAndDate, year])
+                    datetime_str = datetime.strptime(date_time, '%b %d %Y')
+                    date = datetime_str.strftime('%m/%d/%y')
+
                     gameStart = row.find('td', attrs={'data-stat': 'game_start_time'}).text
                     gameLocation = row.find('td', attrs={'data-stat': 'game_location'}).text
                     gameOppTeam = row.find('td', attrs={'data-stat': 'opp_name'}).text
@@ -91,7 +100,7 @@ def updateNBAGames():
                     primaryKey = int(f'{gameNumber}0{originalTeamNumber}{str(year)[-2:]}')
 
                     oppTeamNumber = getTeam(gameOppTeam)['number']
-                    gameDayNumber = getDay(gameDay)['dayNumber']
+                    gameDayNumber = getDay(day)['dayNumber']
                     gameStartNumber = getTimeCode(gameStart)
                     isInSeasonT = getIsInSeasonT(inSeasonTournament)
 
@@ -155,7 +164,8 @@ def updateNBAGames():
                                 f"teamLosses, "
                                 f"teamStreakCode, "
                                 f"isInSeasonTournament, "
-                                f"year "
+                                f"year, "
+                                f"date "
                                 f") "
                                 f"VALUES ("
                                 f"{primaryKey},"
@@ -173,7 +183,8 @@ def updateNBAGames():
                                 f"{teamLosses},"
                                 f"{teamStreakCode},"
                                 f"{isInSeasonT},"
-                                f"{year}"
+                                f"{year},"
+                                f"'{date}'"
                                 f")"
                             )
                             mycursor.execute(insertData)
@@ -195,7 +206,8 @@ def updateNBAGames():
                                 f"gameStartNumber, "
                                 f"isInSeasonTournament, "
                                 f"year, "
-                                f"gameTimeActual "
+                                f"gameTimeActual, "
+                                f"date "
                                 f") "
                                 f"VALUES ("
                                 f"{primaryKey},"
@@ -207,7 +219,8 @@ def updateNBAGames():
                                 f"{gameStartNumber}, "
                                 f"{isInSeasonT},"
                                 f"{year},"
-                                f"'{gameStart}'"
+                                f"'{gameStart}',"
+                                f"'{date}'"
                                 f")"
                             )
                             mycursor.execute(insertData)
@@ -336,7 +349,7 @@ def runML():
     #Initial variables
     teams = getTeam(ALL_TEAMS)
     columnsToPredict = ['teamPoints','oppTeamPoints']
-    columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual']
+    columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual','date']
     gamblingColumns = ['spread','spreadOdds','overUnder','overUnderOdds','moneyLine']
     year = 2024
 
@@ -371,7 +384,6 @@ def runML():
     gamesToBePredictedDFWoGD = gamesToBePredictedDFWoGD.drop(columns = columnsToPredict)
     gamesAlreadyPredicted = []
 
-
     for eachGame in gamesToBePredictedDF.sort_values(by=['gameStartNumber'])[['teamNumber','oppTeamNumber']].values:        
         team1, team2 = list(eachGame)
         
@@ -398,148 +410,112 @@ def runML():
                 X_test = scalar.transform(X_test)
 
                 #Feature selection
+                #Need to add this feature selection before gridsearch
+                #featureSelection =  RFECV(estimator, step=1, cv=5)
                 featureSelection = VarianceThreshold(threshold=(.8 * (1 - .8)))
                 X_train = featureSelection.fit_transform(X_train)
 
                 #Model Selection with hyper parameter tuning with cross validation grid search
                 alphas = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+                elasticNetParams = [{'alpha': alphas}]
+                lassoParams = [{'alpha': alphas}]
+                SGDParams = [{'alpha': alphas}]
+                ridgeParams = [{'alpha': alphas}]
+                
+                #Models
+                elasticNet = ElasticNet(random_state=19)
+                lasso = Lasso(random_state=19)
+                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
+                ridge = Ridge(random_state=19)
                 
                 #CV 2 folds
                 #Elastic Net
-                elasticNet = ElasticNet(random_state=19)
-                elasticNetParams = [{'alpha': alphas}]
-                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=2)
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=2, scoring='neg_mean_absolute_error')
                 elasticNetGS.fit(X_train, y_train)
                 bestElasticNet2 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
                 #Lasso
-                lasso = Lasso(random_state=19)
-                lassoParams = [{'alpha': alphas}]
-                lassoGS = GridSearchCV(lasso, lassoParams, cv=2)
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=2, scoring='neg_mean_absolute_error')
                 lassoGS.fit(X_train, y_train)
                 bestLasso2 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
                 #Stochastic gradient decent regression
-                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
-                SGDParams = [{'alpha': alphas}]
-                SGDGS = GridSearchCV(SGD, SGDParams, cv=2)
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=2, scoring='neg_mean_absolute_error')
                 SGDGS.fit(X_train, y_train)
                 bestSGD2 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
                 #Ridge
-                ridge = Ridge(random_state=19)
-                ridgeParams = [{'alpha': alphas}]
-                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=2)
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=2, scoring='neg_mean_absolute_error')
                 ridgeGS.fit(X_train, y_train)
                 bestRidge2 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
 
                 #CV 3 folds
                 #Elastic Net
-                elasticNet = ElasticNet(random_state=19)
-                elasticNetParams = [{'alpha': alphas}]
-                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=3)
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=3, scoring='neg_mean_absolute_error')
                 elasticNetGS.fit(X_train, y_train)
                 bestElasticNet3 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
                 #Lasso
-                lasso = Lasso(random_state=19)
-                lassoParams = [{'alpha': alphas}]
-                lassoGS = GridSearchCV(lasso, lassoParams, cv=3)
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=3, scoring='neg_mean_absolute_error')
                 lassoGS.fit(X_train, y_train)
                 bestLasso3 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
                 #Stochastic gradient decent regression
-                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
-                SGDParams = [{'alpha': alphas}]
-                SGDGS = GridSearchCV(SGD, SGDParams, cv=3)
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=3, scoring='neg_mean_absolute_error')
                 SGDGS.fit(X_train, y_train)
                 bestSGD3 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
                 #Ridge
-                ridge = Ridge(random_state=19)
-                ridgeParams = [{'alpha': alphas}]
-                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=3)
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=3, scoring='neg_mean_absolute_error')
                 ridgeGS.fit(X_train, y_train)
                 bestRidge3 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
 
                 #CV 5 folds
                 #Elastic Net
-                elasticNet = ElasticNet(random_state=19)
-                elasticNetParams = [{'alpha': alphas}]
-                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=5)
+                elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=5, scoring='neg_mean_absolute_error')
                 elasticNetGS.fit(X_train, y_train)
                 bestElasticNet5 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
                 #Lasso
-                lasso = Lasso(random_state=19)
-                lassoParams = [{'alpha': alphas}]
-                lassoGS = GridSearchCV(lasso, lassoParams, cv=5)
+                lassoGS = GridSearchCV(lasso, lassoParams, cv=5, scoring='neg_mean_absolute_error')
                 lassoGS.fit(X_train, y_train)
                 bestLasso5 = Lasso(alpha = lassoGS.best_params_['alpha'], random_state=19)
                 #Stochastic gradient decent regression
-                SGD = SGDRegressor(max_iter=1000, tol=1e-3)
-                SGDParams = [{'alpha': alphas}]
-                SGDGS = GridSearchCV(SGD, SGDParams, cv=5)
+                SGDGS = GridSearchCV(SGD, SGDParams, cv=5, scoring='neg_mean_absolute_error')
                 SGDGS.fit(X_train, y_train)
                 bestSGD5 = SGDRegressor(alpha = SGDGS.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
                 #Ridge
-                ridge = Ridge(random_state=19)
-                ridgeParams = [{'alpha': alphas}]
-                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=5)
+                ridgeGS = GridSearchCV(ridge, ridgeParams, cv=5, scoring='neg_mean_absolute_error')
                 ridgeGS.fit(X_train, y_train)
                 bestRidge5 = Ridge(alpha = ridgeGS.best_params_['alpha'], random_state=19)
 
-                #Score all models
+                #Score all models with mean absolute error to see the average error in points predicted (lower better)
                 bestElasticNet2.fit(X_train, y_train)
-                elasticNet2Score = bestElasticNet2.score(X_test, y_test)
+                elasticNet2Score = mean_absolute_error(y_test, bestElasticNet2.predict(X_test))
                 bestElasticNet3.fit(X_train, y_train)
-                elasticNet3Score = bestElasticNet3.score(X_test, y_test)
+                elasticNet3Score = mean_absolute_error(y_test, bestElasticNet3.predict(X_test))
                 bestElasticNet5.fit(X_train, y_train)
-                elasticNet5Score = bestElasticNet5.score(X_test, y_test)
+                elasticNet5Score = mean_absolute_error(y_test, bestElasticNet5.predict(X_test))
 
                 bestLasso2.fit(X_train, y_train)
-                lasso2Score = bestLasso2.score(X_test, y_test)
+                lasso2Score = mean_absolute_error(y_test, bestLasso2.predict(X_test))
                 bestLasso3.fit(X_train, y_train)
-                lasso3Score = bestLasso3.score(X_test, y_test)
+                lasso3Score = mean_absolute_error(y_test, bestLasso3.predict(X_test))
                 bestLasso5.fit(X_train, y_train)
-                lasso5Score = bestLasso5.score(X_test, y_test)
+                lasso5Score = mean_absolute_error(y_test, bestLasso5.predict(X_test))
 
                 bestSGD2.fit(X_train, y_train)
-                SGD2Score = bestSGD2.score(X_test, y_test)
+                SGD2Score = mean_absolute_error(y_test, bestSGD2.predict(X_test))
                 bestSGD3.fit(X_train, y_train)
-                SGD3Score = bestSGD3.score(X_test, y_test)
+                SGD3Score = mean_absolute_error(y_test, bestSGD3.predict(X_test))
                 bestSGD5.fit(X_train, y_train)
-                SGD5Score = bestSGD5.score(X_test, y_test)
+                SGD5Score = mean_absolute_error(y_test, bestSGD5.predict(X_test))
 
                 bestRidge2.fit(X_train, y_train)
-                ridge2Score = bestRidge2.score(X_test, y_test)
+                ridge2Score = mean_absolute_error(y_test, bestRidge2.predict(X_test))
                 bestRidge3.fit(X_train, y_train)
-                ridge3Score = bestRidge3.score(X_test, y_test)
+                ridge3Score = mean_absolute_error(y_test, bestRidge3.predict(X_test))
                 bestRidge5.fit(X_train, y_train)
-                ridge5Score = bestRidge5.score(X_test, y_test)
+                ridge5Score = mean_absolute_error(y_test, bestRidge5.predict(X_test))
 
-                allScore = {'elasticNet2Score' : elasticNet2Score,'elasticNet3Score' : elasticNet3Score,'elasticNet5Score' : elasticNet5Score,'lasso2Score' : lasso2Score,'lasso3Score' : lasso3Score,'lasso5Score' : lasso5Score,'SGD2Score' : SGD2Score,'SGD3Score' : SGD3Score,'SGD5Score' : SGD5Score,'ridge2Score' : ridge2Score,'ridge3Score' : ridge3Score,'ridge5Score' : ridge5Score}
+                allScores = {'elasticNet2Score' : elasticNet2Score,'elasticNet3Score' : elasticNet3Score,'elasticNet5Score' : elasticNet5Score,'lasso2Score' : lasso2Score,'lasso3Score' : lasso3Score,'lasso5Score' : lasso5Score,'SGD2Score' : SGD2Score,'SGD3Score' : SGD3Score,'SGD5Score' : SGD5Score,'ridge2Score' : ridge2Score,'ridge3Score' : ridge3Score,'ridge5Score' : ridge5Score}
+                allBestModels = {'elasticNet2Score' : bestElasticNet2,'elasticNet3Score' : bestElasticNet3,'elasticNet5Score' : bestElasticNet5,'lasso2Score' : bestLasso2,'lasso3Score' : bestLasso3,'lasso5Score' : bestLasso5,'SGD2Score' : bestSGD2,'SGD3Score' : bestSGD3,'SGD5Score' : bestSGD5,'ridge2Score' : bestRidge2,'ridge3Score' : bestRidge3,'ridge5Score' : bestRidge5}
 
-                bestScore = max(allScore, key=allScore.get)
-                bestModel = None
-
-                if bestScore == 'elasticNet2Score':
-                    bestModel = bestElasticNet2
-                elif bestScore == 'elasticNet3Score':
-                    bestModel = bestElasticNet3
-                elif bestScore == 'elasticNet5Score':
-                    bestModel = bestElasticNet5
-                elif bestScore == 'lasso2Score':
-                    bestModel = bestLasso2
-                elif bestScore == 'lasso3Score':
-                    bestModel = bestLasso3
-                elif bestScore == 'lasso5Score':
-                    bestModel = bestLasso5
-                elif bestScore == 'SGD2Score':
-                    bestModel = bestSGD2
-                elif bestScore == 'SGD3Score':
-                    bestModel = bestSGD3
-                elif bestScore == 'SGD5Score':
-                    bestModel = bestSGD5
-                elif bestScore == 'ridge2Score':
-                    bestModel = bestRidge2
-                elif bestScore == 'ridge3Score':
-                    bestModel = bestRidge3
-                elif bestScore == 'ridge5Score':
-                    bestModel = bestRidge5
+                bestScore = min(allScores, key=allScores.get)
+                bestModel = allBestModels[bestScore]
 
                 team1DataToPredict = scalar.transform(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team1])
                 team2DataToPredict = scalar.transform(gamesToBePredictedDFWoGD[gamesToBePredictedDFWoGD['teamNumber'] == team2])
@@ -665,7 +641,7 @@ def updateDatabaseActualResults():
     allTeamsDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
     
     for row in allTeamsDF.values:
-        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual = row
+        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual,gameDate = row
         
         #Calculate overUnder cover
         overUnderCalc = teamPoints + oppTeamPoints
@@ -713,7 +689,6 @@ def percentHelper(win, firstName, secondName):
         ALL_PERCENTAGES[name] = [ALL_PERCENTAGES[name][0], ALL_PERCENTAGES[name][1] + 1]
 
 
-
 def updatePercentages():
     #global variable
     overallName = 'overall'
@@ -735,8 +710,23 @@ def updatePercentages():
     #Iterate over each team
     teams = getTeam(ALL_TEAMS)
 
-    for row in df.values:
-        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual = row
+    todaysDate = date.today()
+    past1Day = int(todaysDate.strftime('%d')) - 1
+    past1Date = todaysDate.replace(day=past1Day)
+    past2Day = int(todaysDate.strftime('%d')) - 2
+    past2Date = todaysDate.replace(day=past2Day)
+    past3Day = int(todaysDate.strftime('%d')) - 3
+    past3Date = todaysDate.replace(day=past3Day)
+    past4Day = int(todaysDate.strftime('%d')) - 4
+    past4Date = todaysDate.replace(day=past4Day)
+    past5Day = int(todaysDate.strftime('%d')) - 5
+    past5Date = todaysDate.replace(day=past5Day)
+    
+    past5Days = [past1Date.strftime('%m/%d/%y'), past2Date.strftime('%m/%d/%y'), past3Date.strftime('%m/%d/%y'), past4Date.strftime('%m/%d/%y'), past5Date.strftime('%m/%d/%y')]
+
+    #Get todays date for overall last 5 days
+    for row in df.sort_values(by=['gameNumber']).values[::-1]:
+        id,gameNumber,teamNumber,isHome,oppTeamNumber,isWin,isOT,gameDayNumber,gameStartNumber,teamPoints,oppTeamPoints,teamWins,teamLosses,teamStreakCode,isInSeasonTournament,year,spread,spreadOdds,overUnder,overUnderOdds,moneyLine,gameTimeActual,spreadCalculated,overUnderCalculated,spreadActual,overUnderActual,gameDate = row
         teamShortName = getTeam(str(teamNumber))['shortName']
         teamWinSpread = spreadCalculated == spreadActual
         teamWinOverUnder = overUnderCalculated == overUnderActual
@@ -846,13 +836,62 @@ def updatePercentages():
             percentHelper(teamWinOverUnder, teamShortName, 'Time_11_1159_overUnder')
             percentHelper(teamWinParlay, teamShortName, 'Time_11_1159_parlay')
 
-        
-        #Calculate team percents
+        #Calculate team last 5 games
+        teamCount = TEAM_LAST_5_GAME_COUNT[teamShortName]
+        if teamCount < 5:
+            if teamCount == 0:
+                percentHelper(teamWinSpread,teamShortName,'last_games_spread_1')
+                percentHelper(teamWinOverUnder,teamShortName,'last_games_overUnder_1')
+                percentHelper(teamWinParlay,teamShortName,'last_games_parlay_1')
+            elif teamCount == 1:
+                percentHelper(teamWinSpread,teamShortName,'last_games_spread_2')
+                percentHelper(teamWinOverUnder,teamShortName,'last_games_overUnder_2')
+                percentHelper(teamWinParlay,teamShortName,'last_games_parlay_2')
+            elif teamCount == 2:
+                percentHelper(teamWinSpread,teamShortName,'last_games_spread_3')
+                percentHelper(teamWinOverUnder,teamShortName,'last_games_overUnder_3')
+                percentHelper(teamWinParlay,teamShortName,'last_games_parlay_3')
+            elif teamCount == 3:
+                percentHelper(teamWinSpread,teamShortName,'last_games_spread_4')
+                percentHelper(teamWinOverUnder,teamShortName,'last_games_overUnder_4')
+                percentHelper(teamWinParlay,teamShortName,'last_games_parlay_4')
+            elif teamCount == 4:
+                percentHelper(teamWinSpread,teamShortName,'last_games_spread_5')
+                percentHelper(teamWinOverUnder,teamShortName,'last_games_overUnder_5')
+                percentHelper(teamWinParlay,teamShortName,'last_games_parlay_5')
+
+            TEAM_LAST_5_GAME_COUNT[teamShortName] = teamCount + 1
+
+        #Calculate overall last 5 games
+        if gameDate in past5Days:
+            if gameDate == past5Days[0]:
+                percentHelper(teamWinSpread,overallName,'last_games_spread_1')
+                percentHelper(teamWinOverUnder,overallName,'last_games_overUnder_1')
+                percentHelper(teamWinParlay,overallName,'last_games_parlay_1')
+            elif gameDate == past5Days[1]:
+                percentHelper(teamWinSpread,overallName,'last_games_spread_2')
+                percentHelper(teamWinOverUnder,overallName,'last_games_overUnder_2')
+                percentHelper(teamWinParlay,overallName,'last_games_parlay_2')
+            elif gameDate == past5Days[2]:
+                percentHelper(teamWinSpread,overallName,'last_games_spread_3')
+                percentHelper(teamWinOverUnder,overallName,'last_games_overUnder_3')
+                percentHelper(teamWinParlay,overallName,'last_games_parlay_3')
+            elif gameDate == past5Days[3]:
+                percentHelper(teamWinSpread,overallName,'last_games_spread_4')
+                percentHelper(teamWinOverUnder,overallName,'last_games_overUnder_4')
+                percentHelper(teamWinParlay,overallName,'last_games_parlay_4')
+            elif gameDate == past5Days[4]:
+                percentHelper(teamWinSpread,overallName,'last_games_spread_5')
+                percentHelper(teamWinOverUnder,overallName,'last_games_overUnder_5')
+                percentHelper(teamWinParlay,overallName,'last_games_parlay_5')
+
+
+        #Calculate overall percents
         percentHelper(teamWinSpread, overallName, 'spread')
         percentHelper(teamWinOverUnder, overallName, 'overUnder')
         percentHelper(teamWinParlay, overallName, 'parlay')
 
-        #Calculate team day percents
+        #Calculate overall day percents
         if gameDayNumber == 0:
             #Sunday
             percentHelper(teamWinSpread, overallName, 'Sunday_spread')
@@ -889,7 +928,7 @@ def updatePercentages():
             percentHelper(teamWinOverUnder, overallName, 'Saturday_overUnder')
             percentHelper(teamWinParlay, overallName, 'Saturday_parlay')
 
-        #Calculate team time percents
+        #Calculate overall time percents
         if (gameStartNumber == 0) or (gameStartNumber == 1):
             #12 - 12:59
             percentHelper(teamWinSpread, overallName, 'Time_12_1259_spread')
@@ -950,7 +989,7 @@ def updatePercentages():
             percentHelper(teamWinSpread, overallName, 'Time_11_1159_spread')
             percentHelper(teamWinOverUnder, overallName, 'Time_11_1159_overUnder')
             percentHelper(teamWinParlay, overallName, 'Time_11_1159_parlay')
-  
+
     for percent in ALL_PERCENTAGES:
         if ALL_PERCENTAGES[percent][1] != 0:
             ALL_PERCENTAGES[percent] = round(ALL_PERCENTAGES[percent][0] / ALL_PERCENTAGES[percent][1], 2)
@@ -971,20 +1010,82 @@ def updatePercentages():
     percentagesFile.close()
 
     print('All percentages have been sent to the frontend!')
-    #     f'{team}_last5Games_spread'
-    #     f'{team}_last5Games_overUnder'
-    #     f'{team}_last5Games_parlay'
-
-    #     f'overall_last5Games_spread'
-    #     f'overall_last5Games_overUnder'
-    #     f'overall_last5Games_parlay'
  
 
+def runParlays():
+    #Initial variables
+    teams = getTeam(ALL_TEAMS)
+    columnsToPredict = ['spreadActual','overUnderActual']
+    columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','gameTimeActual','date']
+    gamblingColumns = ['spread','spreadOdds','overUnder','overUnderOdds','moneyLine']
+    year = 2024
 
 
+    #Connect to MySQL Database
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NBA'
+        )
+    mycursor = mydb.cursor()
+
+    #Get all data from Database
+    mycursor.execute(f"SELECT * FROM nbaStats;")
+    teamData = mycursor.fetchall()
+    allTeamsDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
+
+    #create DF of games to predict
+    gamesToBePredictedDF = allTeamsDF[(allTeamsDF['isWin'].isna()) & (allTeamsDF['spread'].notna())]
+    gamesToBePredictedDFWoGD = gamesToBePredictedDF.drop(columns = columnsToRemove)
+    gamesToBePredictedDFWoGD = gamesToBePredictedDFWoGD.drop(columns = columnsToPredict)
+    
+    #Create DF for training data
+    df = allTeamsDF[(allTeamsDF['isWin'].notna()) & (allTeamsDF['spread'].notna())]
+    df = df.drop(columns = columnsToRemove)
+    df['spreadOdds'] = df['spreadOdds'].replace(to_replace='−', value='-', regex=True)
+    df['overUnderOdds'] = df['overUnderOdds'].replace(to_replace='−', value='-', regex=True)
+    df['moneyLine'] = df['moneyLine'].replace(to_replace='−', value='-', regex=True)
+    df[gamblingColumns] = df[gamblingColumns].astype(float)
+
+    print(df)
+
+    featureSelection =  RFECV(estimator, step=1, cv=2)
+    elasticNetGS = GridSearchCV(elasticNet, elasticNetParams, cv=2, scoring='neg_mean_absolute_error')
+    elasticNetGS.fit(X_train, y_train)
+    bestElasticNet2 = ElasticNet(alpha = elasticNetGS.best_params_['alpha'], random_state=19)
+ 
+
+            
+    # for column in columnsToPredict:
+    #     y = df[column]
+    #     X = df.drop(columns=columnsToPredict)
+
+    #     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19, random_state = 19)
+        
+    #     #Scale training and testing data
+    #     scalar = StandardScaler()
+        
+    #     scalar.fit(X_train)
+    #     X_train = scalar.transform(X_train)
+    #     X_test = scalar.transform(X_test)
+
+    #     #Feature selection
+    #     featureSelection = VarianceThreshold(threshold=(.8 * (1 - .8)))
+    #     X_train = featureSelection.fit_transform(X_train)
+
+
+
+
+
+    print('All parlays today have been predicted!')
+
+
+  
 
 updateNBAGames()
 getGamblingData()
 runML()
 updateDatabaseActualResults()
 updatePercentages()
+# runParlays()

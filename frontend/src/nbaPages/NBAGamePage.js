@@ -11,7 +11,8 @@ import {
 import { useLayoutEffect } from 'react';
 import { todaysGames } from './todaysGames';
 import { percentages } from './percentages';
-import TeamInfo from '../nflPages/TeamInfo';
+import Check from '../logos/Check.png';
+import XMark from '../logos/XMark.png';
 
 const NBAGamePage = () => {
   useLayoutEffect(() => {
@@ -104,6 +105,24 @@ const NBAGamePage = () => {
   const homeTeamDayParlayPercent =
     percentages[`${nbaTeamShortNames[homeTeamName]}_${todaysDayName}_parlay`];
 
+  const correctWrongLogo = (value) => {
+    console.log(value);
+    return value === 100 ? (
+      <img src={Check} alt='check' />
+    ) : (
+      <img src={XMark} alt='XMark' />
+    );
+  };
+
+  const addPercentText = (text) => {
+    return (
+      <div>
+        <span>{text}</span>
+        <span className='timeText'>{'%'}</span>
+      </div>
+    );
+  };
+
   return (
     <div className='nflSiteText pb-5 bg-black lightText container-fluid'>
       <h1 className='pt-5'>{awayTeamName}</h1>
@@ -123,113 +142,311 @@ const NBAGamePage = () => {
         <div className='col-12'>{teamStatsText}</div>
       </div>
       <div className='row lightText'>
-        <div className='col-6'>
+        <div className='col-sm-6'>
           <div className='pt-3 pb-3'>{awayTeamName}</div>
-          <TeamInfo
-            info={{ title: 'spread', percent: awayTeamSpreadPercent }}
-          />
-          <TeamInfo
-            info={{
-              title: 'over under',
-              percent: awayTeamOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: 'parlay',
-              percent: awayTeamParlayPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `spread at ${hour}PM`,
-              percent: awayTeamTimeSpreadPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `over under at ${hour}PM`,
-              percent: awayTeamTimeOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `parlay at ${hour}PM`,
-              percent: awayTeamTimeParlayPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `spread when ${todaysDayName}`,
-              percent: awayTeamDaySpreadPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `over under when ${todaysDayName}`,
-              percent: awayTeamDayOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `parlay when ${todaysDayName}`,
-              percent: awayTeamDayParlayPercent,
-            }}
-          />
+          <table class='table table-striped table-dark'>
+            <thead>
+              <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Spread</th>
+                <th scope='col'>Over Under</th>
+                <th scope='col'>Parlay</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope='row'>{`Team Overall`}</th>
+                <td>{addPercentText(awayTeamSpreadPercent)}</td>
+                <td>{addPercentText(awayTeamOverUnderPercent)}</td>
+                <td>{addPercentText(awayTeamParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{`At ${hour}PM`}</th>
+                <td>{addPercentText(awayTeamTimeSpreadPercent)}</td>
+                <td>{addPercentText(awayTeamTimeOverUnderPercent)}</td>
+                <td>{addPercentText(awayTeamTimeParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{`When ${todaysDayName}`}</th>
+                <td>{addPercentText(awayTeamDaySpreadPercent)}</td>
+                <td>{addPercentText(awayTeamDayOverUnderPercent)}</td>
+                <td>{addPercentText(awayTeamDayParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{'1 Game Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_spread_1`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_1`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_1`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'2 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_spread_2`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_2`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_2`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'3 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_spread_3`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_3`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_3`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'4 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_spread_4`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_4`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_4`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'5 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_spread_5`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_5`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_5`
+                    ]
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div className='col-6 border-start'>
+        <div className='col-sm-6'>
           <div className='pt-3 pb-3'>{homeTeamName}</div>
-          <TeamInfo
-            info={{ title: 'spread', percent: homeTeamSpreadPercent }}
-          />
-          <TeamInfo
-            info={{
-              title: 'over under',
-              percent: homeTeamOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: 'parlay',
-              percent: homeTeamParlayPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `spread at ${hour}PM`,
-              percent: homeTeamTimeSpreadPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `over under at ${hour}PM`,
-              percent: homeTeamTimeOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `parlay at ${hour}PM`,
-              percent: homeTeamTimeParlayPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `spread when ${todaysDayName}`,
-              percent: homeTeamDaySpreadPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `over under when ${todaysDayName}`,
-              percent: homeTeamDayOverUnderPercent,
-            }}
-          />
-          <TeamInfo
-            info={{
-              title: `parlay when ${todaysDayName}`,
-              percent: homeTeamDayParlayPercent,
-            }}
-          />
+          <table class='table table-striped table-dark'>
+            <thead>
+              <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Spread</th>
+                <th scope='col'>Over Under</th>
+                <th scope='col'>Parlay</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope='row'>{`Team Overall`}</th>
+                <td>{addPercentText(homeTeamSpreadPercent)}</td>
+                <td>{addPercentText(homeTeamOverUnderPercent)}</td>
+                <td>{addPercentText(homeTeamParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{`At ${hour}PM`}</th>
+                <td>{addPercentText(homeTeamTimeSpreadPercent)}</td>
+                <td>{addPercentText(homeTeamTimeOverUnderPercent)}</td>
+                <td>{addPercentText(homeTeamTimeParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{`When ${todaysDayName}`}</th>
+                <td>{addPercentText(homeTeamDaySpreadPercent)}</td>
+                <td>{addPercentText(homeTeamDayOverUnderPercent)}</td>
+                <td>{addPercentText(homeTeamDayParlayPercent)}</td>
+              </tr>
+              <tr>
+                <th scope='row'>{'1 Game Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_spread_1`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_1`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_1`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'2 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_spread_2`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_2`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_2`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'3 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_spread_3`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_3`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_3`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'4 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_spread_4`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_4`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_4`
+                    ]
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope='row'>{'5 Games Ago'}</th>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_spread_5`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_5`
+                    ]
+                  )}
+                </td>
+                <td>
+                  {correctWrongLogo(
+                    percentages[
+                      `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_5`
+                    ]
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

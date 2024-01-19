@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '../HomeIcon';
 import '../Fonts.css';
+import { secretCode } from '../constants';
 
 const NBAHeader = (props) => {
   const navigate = useNavigate();
@@ -15,7 +16,10 @@ const NBAHeader = (props) => {
         <h1 className='col-9 fs-5 my-auto regularText'>
           {'The Numbers Game???'}
         </h1>
-        <div className={'col-3'} onClick={() => handleHomeClick('/2332220')}>
+        <div
+          className={'col-3'}
+          onClick={() => handleHomeClick(`/${secretCode}`)}
+        >
           <HomeIcon color='slategray' />
         </div>
       </div>

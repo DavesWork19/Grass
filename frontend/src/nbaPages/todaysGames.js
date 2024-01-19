@@ -1,9 +1,11 @@
 export const todaysGames = [
-'Tuesday',
-'January 09, 2024',
-'7:00p,Sacramento Kings,Detroit Pistons,+11,1,240,1',
-'7:00p,Minnesota Timberwolves,Orlando Magic,+5.5,1,217,1',
-'7:30p,Portland Trail Blazers,New York Knicks,-12,0,228.5,1',
-'8:30p,Memphis Grizzlies,Dallas Mavericks,-8,0,235,0',
-'10:30p,Toronto Raptors,Los Angeles Lakers,-4.5,0,236,0',
+'Friday',
+'January 19, 2024',
+'7:00p,Philadelphia 76ers,Orlando Magic,+5,1,223,1',
+'7:00p,San Antonio Spurs,Charlotte Hornets,-4.5,0,235.5,0',
+'7:30p,Denver Nuggets,Boston Celtics,-7,0,234,0',
+'8:00p,Atlanta Hawks,Miami Heat,-9,0,225,1',
+'8:00p,Phoenix Suns,New Orleans Pelicans,-1.5,0,237,0',
+'10:00p,Indiana Pacers,Portland Trail Blazers,+5,0,238.5,0',
+'10:30p,Brooklyn Nets,Los Angeles Lakers,-7,0,227.5,1',
 ]

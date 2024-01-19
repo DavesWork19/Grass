@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { secretCode } from '../constants';
 
 const NumberPad = (props) => {
   const navigate = useNavigate();
@@ -32,9 +33,9 @@ const NumberPad = (props) => {
         setTimeout(() => {
           setMathQuestionBorder('border border-success border-5');
         }, 100);
-      } else if (newGuessInt === 2332220) {
+      } else if (newGuessInt === parseInt(secretCode)) {
         setTimeout(() => {
-          navigate('/2332220');
+          navigate(`/${secretCode}`);
         }, 10);
       }
     }

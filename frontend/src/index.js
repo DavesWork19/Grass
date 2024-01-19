@@ -9,6 +9,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './index.css';
+import { secretCode } from './constants';
 import HomeScreen from './digitPages/HomeScreen';
 import NFLHomePage from './nflPages/HomePage';
 import NBAHomePage from './nbaPages/HomePage';
@@ -25,11 +26,17 @@ root.render(
     <Routes>
       <Route path='/' element={<HomeScreen />} />
       <Route path='/daGame' element={<GameContainer />} />
-      <Route path='/2332220' element={<GamblingHomePage />} />
-      <Route path='/2332220/Basketball' element={<NBAHomePage />} />
-      <Route path='/2332220/Basketball/:teams' element={<NBAGamePage />} />
-      <Route path='/2332220/Football' element={<NFLHomePage />} />
-      <Route path='/2332220/Football/:teams' element={<MatchupPage />} />
+      <Route path={`/${secretCode}`} element={<GamblingHomePage />} />
+      <Route path={`/${secretCode}/Basketball`} element={<NBAHomePage />} />
+      <Route
+        path={`/${secretCode}/Basketball/:teams`}
+        element={<NBAGamePage />}
+      />
+      <Route path={`/${secretCode}/Football`} element={<NFLHomePage />} />
+      <Route
+        path={`/${secretCode}/Football/:teams`}
+        element={<MatchupPage />}
+      />
       <Route path='*' element={<NoPage />} />
     </Routes>
   </BrowserRouter>

@@ -260,3 +260,5 @@ export const nbaTeamShortNames = {
   'Golden State Warriors': 'GSW',
   'Washington Wizards': 'WAS',
 };
+
+export const secretCode = '2332220';
