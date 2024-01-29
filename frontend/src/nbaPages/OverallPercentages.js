@@ -62,7 +62,7 @@ const OverallPercents = (props) => {
             >
               {'Too Many Percentages'}
             </button>
-            <table class='table table-striped table-dark'>
+            <table className='table table-striped table-dark'>
               <thead>
                 <tr>
                   <th scope='col'>Overall</th>
@@ -106,7 +106,7 @@ const OverallPercents = (props) => {
                 ))}
               </tbody>
             </table>
-            <table class='table table-striped table-dark'>
+            <table className='table table-striped table-dark'>
               <thead>
                 <tr>
                   <th scope='col'>Overall</th>

@@ -7,6 +7,7 @@ import {
   matchUpPageText1,
   matchUpPageText2,
   nbaTeamShortNames,
+  legalNbaTeamLogos,
 } from '../constants';
 import { useLayoutEffect } from 'react';
 import { todaysGames } from './todaysGames';
@@ -106,7 +107,6 @@ const NBAGamePage = () => {
     percentages[`${nbaTeamShortNames[homeTeamName]}_${todaysDayName}_parlay`];
 
   const correctWrongLogo = (value) => {
-    console.log(value);
     return value === 100 ? (
       <img src={Check} alt='check' />
     ) : (
@@ -125,13 +125,13 @@ const NBAGamePage = () => {
 
   return (
     <div className='nflSiteText pb-5 bg-black lightText container-fluid'>
-      <h1 className='pt-5'>{awayTeamName}</h1>
-      <h1> {' at the '}</h1>
-      <h1 className='pb-5'> {homeTeamName}</h1>
+      <h1 className='pt-5'>{legalNbaTeamLogos[awayTeamName]}</h1>
+      <h1> {' at '}</h1>
+      <h1 className='pb-5'> {legalNbaTeamLogos[homeTeamName]}</h1>
 
       <div className='row lightText'>
         <div className='col-12 timeText fs-3'>
-          {`${homeTeamName} predicted to ${homeCover} ${homeTeamSpread}`}
+          {`${legalNbaTeamLogos[homeTeamName]} predicted to ${homeCover} ${homeTeamSpread}`}
         </div>
         <div className='col-12 timeText fs-3'>
           {`Predicted ${overUnderCoverName} ${overUnder}`}
@@ -143,8 +143,8 @@ const NBAGamePage = () => {
       </div>
       <div className='row lightText'>
         <div className='col-sm-6'>
-          <div className='pt-3 pb-3'>{awayTeamName}</div>
-          <table class='table table-striped table-dark'>
+          <div className='pt-3 pb-3'>{legalNbaTeamLogos[awayTeamName]}</div>
+          <table className='table table-striped table-dark'>
             <thead>
               <tr>
                 <th scope='col'>#</th>
@@ -296,8 +296,8 @@ const NBAGamePage = () => {
           </table>
         </div>
         <div className='col-sm-6'>
-          <div className='pt-3 pb-3'>{homeTeamName}</div>
-          <table class='table table-striped table-dark'>
+          <div className='pt-3 pb-3'>{legalNbaTeamLogos[homeTeamName]}</div>
+          <table className='table table-striped table-dark'>
             <thead>
               <tr>
                 <th scope='col'>#</th>

@@ -9,11 +9,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './index.css';
-import { secretCode } from './constants';
+import { secretCode, parlaySecretCode, parlaySecretCode2 } from './constants';
 import HomeScreen from './digitPages/HomeScreen';
 import NFLHomePage from './nflPages/HomePage';
 import NBAHomePage from './nbaPages/HomePage';
 import NBAGamePage from './nbaPages/NBAGamePage';
+import ParlayPage from './nbaPages/ParlayPage';
+import ParlayBufferPage from './nbaPages/ParlayBufferPage';
 import GamblingHomePage from './gamblingPages/GamblingHomePage';
 import MatchupPage from './nflPages/MatchupPage';
 import GameContainer from './digitPages/GameContainer';
@@ -36,6 +38,14 @@ root.render(
       <Route
         path={`/${secretCode}/Football/:teams`}
         element={<MatchupPage />}
+      />
+      <Route
+        path={`/${secretCode}/Basketball/${parlaySecretCode}`}
+        element={<ParlayBufferPage />}
+      />
+      <Route
+        path={`/${secretCode}/Basketball/${parlaySecretCode}/${parlaySecretCode2}`}
+        element={<ParlayPage />}
       />
       <Route path='*' element={<NoPage />} />
     </Routes>

@@ -23,14 +23,16 @@
   }
 }
 
-@media (max-width: 550px) {
+@media (min-width: 550px) {
   .atSymbol {
-    padding-top: 10%;
+    width: 15%;
+    height: 70%;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 550px) {
   .atSymbol {
-    padding-top: 25%;
+    width: 20%;
+    height: 70%;
   }
 }
 @media (max-width: 550px) {
@@ -48,6 +50,16 @@
   .gamblingButton {
     width: 25%;
   }
+}
+
+@media (min-width: 460px) {
+  .legalTeamNames {
+    width: 200px;
+  }
+}
+
+.legalNFLTeamNames {
+  width: 160px;
 }
 
 .teamImgs {

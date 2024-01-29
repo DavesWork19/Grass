@@ -77,7 +77,7 @@ export const weekHeading = 'Week 14';
 export const footerMessage1 =
   '*Predicted results are subject to change until the start of each matchup.';
 export const footerMessage2 =
-  '**Percentages represent the accuracy of the model for the 2022 season.';
+  '**Percentages represent the accuracy of the model.';
 export const matchUpPageText1 =
   'Percentages represent win percentage for corresponding label';
 export const matchUpPageText2 =
@@ -261,4 +261,75 @@ export const nbaTeamShortNames = {
   'Washington Wizards': 'WAS',
 };
 
+export const legalNbaTeamLogos = {
+  'Milwaukee Bucks': 'Milwaukee',
+  'Chicago Bulls': 'Chicago',
+  'Cleveland Cavaliers': 'Cleveland',
+  'Boston Celtics': 'Boston',
+  'Los Angeles Clippers': 'West Scissors',
+  'Memphis Grizzlies': 'Memphis',
+  'Atlanta Hawks': 'Atlanta',
+  'Miami Heat': 'Miami',
+  'Charlotte Hornets': 'Charlotte',
+  'Utah Jazz': 'Utah',
+  'Sacramento Kings': 'Sacramento',
+  'New York Knicks': 'New York Shoes',
+  'Los Angeles Lakers': 'Le  Rivers',
+  'Orlando Magic': 'Orlando',
+  'Dallas Mavericks': 'Dallas',
+  'Brooklyn Nets': 'Brooklyn',
+  'Denver Nuggets': 'Denver',
+  'Indiana Pacers': 'Indiana',
+  'New Orleans Pelicans': 'New Orleans',
+  'Philadelphia 76ers': 'Philadelphia',
+  'Detroit Pistons': 'Detroit',
+  'Portland Trail Blazers': 'Portland',
+  'Toronto Raptors': 'Toronto',
+  'Houston Rockets': 'Houston',
+  'San Antonio Spurs': 'San Antonio',
+  'Phoenix Suns': 'Phoenix',
+  'Oklahoma City Thunder': 'Oklahoma City',
+  'Minnesota Timberwolves': 'Minnesota',
+  'Golden State Warriors': 'Golden State',
+  'Washington Wizards': 'Washington',
+};
+
+export const legalNFLTeams = {
+  Bills: 'Buffalo',
+  Dolphins: 'Miami',
+  Patriots: 'New England',
+  Jets: 'New York Planes',
+  Bengals: 'Cincinnati',
+  Browns: 'Cleveland',
+  Steelers: 'Pittsburgh',
+  Ravens: 'Baltimore',
+  Colts: 'Indianapolis',
+  Texans: 'Houston',
+  Jaguars: 'Jacksonville',
+  Titans: 'Tennessee',
+  Broncos: 'Denver',
+  Chiefs: 'Kansas',
+  Raiders: 'Las Vegas',
+  Chargers: 'Los Angles Bolts',
+  Cowboys: 'Dallas',
+  Giants: 'New York People',
+  Eagles: 'Philadelphia',
+  Washington: 'Washington',
+  Bears: 'Chicago',
+  Lions: 'Detriot',
+  Packers: 'Green Bay',
+  Vikings: 'Minnesota',
+  Falcons: 'Atlanta',
+  Panthers: 'Carolina',
+  Saints: 'New Orleans',
+  Buccaneers: 'Tampa Bay',
+  Cardinals: 'Arizona',
+  Rams: 'Los Angeles Lambs',
+  Seahawks: 'Seattle',
+  '49ers': 'San Francisco',
+};
+
 export const secretCode = '2332220';
+export const secretCode2 = '69';
+export const parlaySecretCode = '6969420';
+export const parlaySecretCode2 = '69urMom';

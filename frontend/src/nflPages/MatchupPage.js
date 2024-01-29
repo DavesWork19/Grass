@@ -15,6 +15,7 @@ import {
   homeTeamHomePercentText,
   winnerPredictedPercentText,
   loserPredictedPercentText,
+  legalNFLTeams,
 } from '../constants';
 import { useLayoutEffect } from 'react';
 
@@ -73,15 +74,15 @@ const MatchupPage = () => {
   return (
     <div className='nflSiteText pb-5 bg-black container-fluid'>
       <h1 className='lightText pb-5 pt-5'>
-        {awayTeam}
-        {' at the '}
-        {homeTeam}
+        {legalNFLTeams[awayTeam]}
+        {' at '}
+        {legalNFLTeams[homeTeam]}
       </h1>
 
       <div className='row lightText'>
         <div className='col-12 timeText fs-3'>
           {finalResultsPercent}%{' '}
-          <span className='nflSiteTextRaw'>{`chance of ${predictedWinner} winning`}</span>
+          <span className='nflSiteTextRaw'>{`chance of ${legalNFLTeams[predictedWinner]} winning`}</span>
         </div>
       </div>
       <div className='row lightText pt-5 pb-3 border-bottom'>
@@ -89,8 +90,8 @@ const MatchupPage = () => {
       </div>
       <div className='row lightText'>
         <div className='col-6'>
-          <div className='pt-3 pb-3'>{awayTeam}</div>
-          <TeamInfo
+          <div className='pt-3 pb-3'>{legalNFLTeams[awayTeam]}</div>
+          {/* <TeamInfo
             info={{ title: awayTeamInfo, percent: awayTeamDivisionPercent }}
           />
           <TeamInfo
@@ -98,7 +99,7 @@ const MatchupPage = () => {
               title: awayTeamConference,
               percent: awayTeamConferencePercent,
             }}
-          />
+          /> */}
           <TeamInfo
             info={{
               title: awayTeamAwayPercentText,
@@ -119,8 +120,8 @@ const MatchupPage = () => {
           />
         </div>
         <div className='col-6 border-start'>
-          <div className='pt-3 pb-3'>{homeTeam}</div>
-          <TeamInfo
+          <div className='pt-3 pb-3'>{legalNFLTeams[homeTeam]}</div>
+          {/* <TeamInfo
             info={{
               title: homeTeamInfo,
               percent: homeTeamDivisionPercent,
@@ -131,7 +132,7 @@ const MatchupPage = () => {
               title: homeTeamConference,
               percent: homeTeamConferencePercent,
             }}
-          />
+          /> */}
           <TeamInfo
             info={{
               title: homeTeamHomePercentText,

@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom';
 import '../Fonts.css';
 import NBAMatchups from './Matchups';
 import { todaysGames } from './todaysGames';
 import { footerMessage1, footerMessage2 } from '../constants';
 import NBAHeader from './Header';
 import OverallPercents from './OverallPercentages';
+import { secretCode, parlaySecretCode } from '../constants';
 
 const NBAHomePage = () => {
   const todaysDayName = todaysGames.slice(0, 1)[0];
@@ -32,6 +34,14 @@ const NBAHomePage = () => {
           {footerMessage2}
         </div>
       </footer>
+      <div className='text-start'>
+        <Link
+          to={`/${secretCode}/Basketball/${parlaySecretCode}`}
+          className='text-muted text-decoration-none'
+        >
+          {'Parlays'}
+        </Link>
+      </div>
     </main>
   );
 };
