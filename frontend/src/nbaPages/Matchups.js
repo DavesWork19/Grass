@@ -9,12 +9,14 @@ const NBAMatchups = () => {
     return (
       <div className={`legalTeamNames text-${textPos}`}>
         {/* <img className='teamImgs' src={nbaTeamLogos[team]} alt='logo' /> */}
-        {legalNbaTeamLogos[team]}
+        {team}
       </div>
     );
   };
   return todaysGames.slice(2).map((data) => {
-    const [gameTime, awayTeam, homeTeam] = data.split(',');
+    const [gameTime, awayTeamILL, homeTeamILL] = data.split(',');
+    const awayTeam = legalNbaTeamLogos[awayTeamILL];
+    const homeTeam = legalNbaTeamLogos[homeTeamILL];
     const link = `${awayTeam}AT${homeTeam}`;
 
     return (

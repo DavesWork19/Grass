@@ -1,19 +1,19 @@
-import { useNavigate, Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import '../Fonts.css';
 import {
-  backButton,
   teamStatsText,
   matchUpPageText1,
   matchUpPageText2,
   nbaTeamShortNames,
   legalNbaTeamLogos,
+  convertLegalNbaTeamLogos,
 } from '../constants';
 import { useLayoutEffect } from 'react';
 import { todaysGames } from './todaysGames';
 import { percentages } from './percentages';
 import Check from '../logos/Check.png';
 import XMark from '../logos/XMark.png';
+import NBAHeader from './Header';
 
 const NBAGamePage = () => {
   useLayoutEffect(() => {
@@ -24,12 +24,13 @@ const NBAGamePage = () => {
     });
   });
 
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const currentURL = pathname.split('/')[3];
   const [awayTeam, homeTeam] = currentURL.split('AT');
-  const awayTeamName = awayTeam.split('%20').join(' ');
-  const homeTeamName = homeTeam.split('%20').join(' ');
+  const awayTeamName =
+    convertLegalNbaTeamLogos[awayTeam.split('%20').join(' ')];
+  const homeTeamName =
+    convertLegalNbaTeamLogos[homeTeam.split('%20').join(' ')];
   const results = todaysGames.find(
     (element) =>
       element.split(',')[1] === awayTeamName ||
@@ -125,11 +126,11 @@ const NBAGamePage = () => {
 
   return (
     <div className='nflSiteText pb-5 bg-black lightText container-fluid'>
-      <h1 className='pt-5'>{legalNbaTeamLogos[awayTeamName]}</h1>
-      <h1> {' at '}</h1>
-      <h1 className='pb-5'> {legalNbaTeamLogos[homeTeamName]}</h1>
+      <NBAHeader
+        title={`${legalNbaTeamLogos[awayTeamName]} at ${legalNbaTeamLogos[homeTeamName]}`}
+      />
 
-      <div className='row lightText'>
+      <div className='row mt-5'>
         <div className='col-12 timeText fs-3'>
           {`${legalNbaTeamLogos[homeTeamName]} predicted to ${homeCover} ${homeTeamSpread}`}
         </div>
@@ -450,15 +451,6 @@ const NBAGamePage = () => {
         </div>
       </div>
 
-      <Link
-        to={'..'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate(-1);
-        }}
-      >
-        <button className='matchupButton nflSiteText'>{backButton}</button>
-      </Link>
       <div className='row pt-5 lightText smallText'>
         <div className='col-12 pt-5'>{matchUpPageText1}</div>
         <div className='col-12'>{matchUpPageText2}</div>

@@ -18,7 +18,7 @@ const NBAHomePage = () => {
 
   return (
     <main className='container-fluid nflSiteText bg-black lightText'>
-      <NBAHeader date={date} />
+      <NBAHeader title={date} link={'home'} />
 
       <div className='row'>
         <NBAMatchups />
@@ -39,7 +39,7 @@ const NBAHomePage = () => {
           to={`/${secretCode}/Basketball/${parlaySecretCode}`}
           className='text-muted text-decoration-none'
         >
-          {'Parlays'}
+          {'Ps'}
         </Link>
       </div>
     </main>

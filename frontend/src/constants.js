@@ -294,6 +294,39 @@ export const legalNbaTeamLogos = {
   'Washington Wizards': 'Washington',
 };
 
+export const convertLegalNbaTeamLogos = {
+  Milwaukee: 'Milwaukee Bucks',
+  Chicago: 'Chicago Bulls',
+  Cleveland: 'Cleveland Cavaliers',
+  Boston: 'Boston Celtics',
+  'West Scissors': 'Los Angeles Clippers',
+  Memphis: 'Memphis Grizzlies',
+  Atlanta: 'Atlanta Hawks',
+  Miami: 'Miami Heat',
+  Charlotte: 'Charlotte Hornets',
+  Utah: 'Utah Jazz',
+  Sacramento: 'Sacramento Kings',
+  'New York Shoes': 'New York Knicks',
+  'Le  Rivers': 'Los Angeles Lakers',
+  Orlando: 'Orlando Magic',
+  Dallas: 'Dallas Mavericks',
+  Brooklyn: 'Brooklyn Nets',
+  Denver: 'Denver Nuggets',
+  Indiana: 'Indiana Pacers',
+  'New Orleans': 'New Orleans Pelicans',
+  Philadelphia: 'Philadelphia 76ers',
+  Detroit: 'Detroit Pistons',
+  Portland: 'Portland Trail Blazers',
+  Toronto: 'Toronto Raptors',
+  Houston: 'Houston Rockets',
+  'San Antonio': 'San Antonio Spurs',
+  Phoenix: 'Phoenix Suns',
+  'Oklahoma City': 'Oklahoma City Thunder',
+  Minnesota: 'Minnesota Timberwolves',
+  'Golden State': 'Golden State Warriors',
+  Washington: 'Washington Wizards',
+};
+
 export const legalNFLTeams = {
   Bills: 'Buffalo',
   Dolphins: 'Miami',
@@ -330,6 +363,5 @@ export const legalNFLTeams = {
 };
 
 export const secretCode = '2332220';
-export const secretCode2 = '69';
-export const parlaySecretCode = '6969420';
-export const parlaySecretCode2 = '69urMom';
+export const parlaySecretCode = 'parlays';
+export const parlaySecretCode2 = '69694200';

@@ -1,13 +1,11 @@
 import '../Fonts.css';
 import { useLayoutEffect } from 'react';
-import SmallParlays from './SmallParlays';
 import { smallParlay } from './smallParlay';
-import DecentParlays from './DecentParlays';
 import { decentParlay } from './decentParlay';
-import LargeParlays from './LargeParlays';
 import { largeParlay } from './largeParlay';
-import MassiveParlays from './MassiveParlays';
 import { massiveParlay } from './massiveParlay';
+import NBAHeader from './Header';
+import Parlays from './Parlays';
 
 const ParlayPage = () => {
   useLayoutEffect(() => {
@@ -24,31 +22,32 @@ const ParlayPage = () => {
   const showMassiveParlay = massiveParlay.length > 0;
 
   return (
-    <div className='container-fluid'>
-      <h1 className=''>{'Whats good esse'}</h1>
+    <div className='container-fluid bg-black timeText lightText vh-100'>
+      <NBAHeader title={'Welcome Ése'} />
+
       <div>
         {showSmallParlay && (
           <div className='mt-5'>
             <h2>{'Parlay 1'}</h2>
-            <SmallParlays />
+            <Parlays parlay={smallParlay} />
           </div>
         )}
         {showDecentParlay && (
           <div className='mt-5'>
             <h2>{'Parlay 2'}</h2>
-            <DecentParlays />
+            <Parlays parlay={decentParlay} />
           </div>
         )}
         {showLargeParlay && (
           <div className='mt-5'>
             <h2>{'Parlay 3'}</h2>
-            <LargeParlays />
+            <Parlays parlay={largeParlay} />
           </div>
         )}
         {showMassiveParlay && (
           <div className='mt-5'>
             <h2>{'Parlay 4'}</h2>
-            <MassiveParlays />
+            <Parlays parlay={massiveParlay} />
           </div>
         )}
       </div>

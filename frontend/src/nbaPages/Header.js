@@ -6,6 +6,9 @@ import { secretCode } from '../constants';
 const NBAHeader = (props) => {
   const navigate = useNavigate();
 
+  const navLink =
+    props.link === 'home' ? `/${secretCode}` : `/${secretCode}/Basketball`;
+
   const handleHomeClick = (navigation) => {
     navigate(navigation);
   };
@@ -16,15 +19,12 @@ const NBAHeader = (props) => {
         <h1 className='col-9 fs-5 my-auto regularText'>
           {'The Numbers Game???'}
         </h1>
-        <div
-          className={'col-3'}
-          onClick={() => handleHomeClick(`/${secretCode}`)}
-        >
+        <div className={'col-3'} onClick={() => handleHomeClick(navLink)}>
           <HomeIcon color='slategray' />
         </div>
       </div>
       <div className={'row'}>
-        <div className='col-12 fs-2 regularText'>{props.date}</div>
+        <div className='col-12 fs-2 regularText'>{props.title}</div>
       </div>
     </div>
   );
