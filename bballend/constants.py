@@ -2,13 +2,23 @@ ALL_TEAMS = 'ALL_TEAMS'
 ALL_TEAMS_LEN = 30
 TEAM_STREAK_LEVEL = 100
 COLUMN_HOLDER = -.333999
+MASSIVE_PARLAY_THRESHOLD = 1.99
+LARGE_PARLAY_THRESHOLD = .77
+DECENT_PARLAY_THRESHOLD = .57
 
-
+PARLAY_NUMBERS = [1,2,3,4]
 
 ALL_YEARS = [2022,2023,2024]
 ALL_COLUMNS = ['id','gameNumber','teamNumber','isHome','oppTeamNumber','isWin','isOT','gameDayNumber','gameStartNumber','teamPoints','oppTeamPoints','teamWins','teamLosses','teamStreakCode','isInSeasonTournament','year','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual','spreadCalculated','overUnderCalculated','spreadActual','overUnderActual','date']
 ALL_COLUMNS_EXT = ['team_spread','team_overUnder','team_parlay','team_date_spread','team_date_overUnder','team_date_parlay','team_time_spread','team_time_overUnder','team_time_parlay','teamPast1DaySpread','teamPast1DayOverUnder','teamPast1DayParlay','teamPast2DaySpread','teamPast2DayOverUnder','teamPast2DayParlay','teamPast3DaySpread','teamPast3DayOverUnder','teamPast3DayParlay','teamPast4DaySpread','teamPast4DayOverUnder','teamPast4DayParlay','teamPast5DaySpread','teamPast5DayOverUnder','teamPast5DayParlay','overall_spread','overall_overUnder','overall_parlay','overall_date_spread','overall_date_overUnder','overall_date_parlay','overall_time_spread','overall_time_overUnder','overall_time_parlay','overallPast1DaySpread','overallPast1DayOverUnder','overallPast1DayParlay','overallPast2DaySpread','overallPast2DayOverUnder','overallPast2DayParlay','overallPast3DaySpread','overallPast3DayOverUnder','overallPast3DayParlay','overallPast4DaySpread','overallPast4DayOverUnder','overallPast4DayParlay','overallPast5DaySpread','overallPast5DayOverUnder','overallPast5DayParlay']
+PARLAY_COLUMNS = ['id','date','team1','team2','category','rideCalculated','rideActual']
 
+PARLAY_PERCENTAGES = {
+    'parlay1_overall': [0,0],
+    'parlay2_overall': [0,0],
+    'parlay3_overall': [0,0],
+    'parlay4_overall': [0,0],
+}
 
 TEAM_LAST_5_GAME_COUNT = {
     'BOS': 0,

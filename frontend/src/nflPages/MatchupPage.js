@@ -72,7 +72,7 @@ const MatchupPage = () => {
       : percentages[`${homeTeam}_predictedLoser`];
 
   return (
-    <div className='nflSiteText pb-5 bg-black container-fluid'>
+    <div className='boldText pb-5 bg-black container-fluid'>
       <h1 className='lightText pb-5 pt-5'>
         {legalNFLTeams[awayTeam]}
         {' at '}
@@ -80,9 +80,8 @@ const MatchupPage = () => {
       </h1>
 
       <div className='row lightText'>
-        <div className='col-12 timeText fs-3'>
-          {finalResultsPercent}%{' '}
-          <span className='nflSiteTextRaw'>{`chance of ${legalNFLTeams[predictedWinner]} winning`}</span>
+        <div className='col-12 fs-3'>
+          {`${finalResultsPercent}% chance of ${legalNFLTeams[predictedWinner]} winning`}
         </div>
       </div>
       <div className='row lightText pt-5 pb-3 border-bottom'>
@@ -160,7 +159,9 @@ const MatchupPage = () => {
           navigate(-1);
         }}
       >
-        <button className='matchupButton nflSiteText'>{backButton}</button>
+        <button className='matchupButton boldText text-black'>
+          {backButton}
+        </button>
       </Link>
       <div className='row pt-5 lightText smallText'>
         <div className='col-12 pt-5'>{matchUpPageText1}</div>

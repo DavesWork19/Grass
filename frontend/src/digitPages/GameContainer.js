@@ -66,7 +66,7 @@ const GameContainer = () => {
           updateTimer={updateTimer}
           handleTimerUpdate={handleTimerUpdate}
         />
-        <TheGame level={currentLevel.level} changeLevel={handleChangeLevel} />
+        <TheGame level={currentLevel} changeLevel={handleChangeLevel} />
       </main>
     </div>
   );

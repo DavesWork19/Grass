@@ -4,7 +4,8 @@ import { LEVEL_1, LEVEL_2 } from '../constants';
 
 const TheGame = (props) => {
   const [correctMathQuestions, setCorrectMathQuestions] = useState(0);
-  const level = props.level;
+  const level = props.level.level;
+  const levelColor = props.level.color;
   const changeLevel = props.changeLevel;
 
   const level1MaxNumber = 20;
@@ -104,10 +105,7 @@ const TheGame = (props) => {
   return (
     <div className='container text-center regularText'>
       <div className='row'>
-        <div className='col-12 fs-3'>
-          {correctMathQuestions}
-          {'   Correct'}
-        </div>
+        <div className='col-12 fs-3'>{`${correctMathQuestions}  Correct`}</div>
       </div>
       <div className='container'>
         <div className='row'>
@@ -118,6 +116,7 @@ const TheGame = (props) => {
               firstNumber,
               operation,
               secondNumber,
+              levelColor,
             ]}
           />
         </div>

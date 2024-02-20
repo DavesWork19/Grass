@@ -7,7 +7,7 @@ import { todaysGames } from './todaysGames';
 const NBAMatchups = () => {
   const setTeam = (team, textPos) => {
     return (
-      <div className={`legalTeamNames text-${textPos}`}>
+      <div className={`legalTeamNames boldText text-uppercase text-${textPos}`}>
         {/* <img className='teamImgs' src={nbaTeamLogos[team]} alt='logo' /> */}
         {team}
       </div>
@@ -21,8 +21,8 @@ const NBAMatchups = () => {
 
     return (
       <Link to={link} key={link} className='col-12'>
-        <button className='btn btn-light mt-1 mb-5 px-sm-5'>
-          <div className='timeText timeMobileText border-bottom border-black mb-3'>
+        <button className='btn btn-light mt-1 mb-5 px-sm-5 boldText'>
+          <div className='border-bottom border-black mb-3'>
             {`${gameTime}m EST`}
           </div>
           <div className='row'>

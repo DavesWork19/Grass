@@ -63,7 +63,6 @@ import TimberwolvesLogo from './logos/Timberwolves.png';
 import WarriorsLogo from './logos/Warriors.png';
 import WizardsLogo from './logos/Wizards.png';
 
-export const TIMER_TIME = 60;
 export const GAME_INFO_1 = '3 Levels';
 export const GAME_INFO_2 = '5 Questions Per Level';
 export const LEVEL_1_TIMER = 5;
@@ -73,11 +72,15 @@ export const LEVEL_3 = 3;
 export const STOP_GAME = 'StopGame';
 export const GREETINGS = ['Howdy!', 'Welcome!', 'Bonjour!', "What's up!"];
 
-export const weekHeading = 'Week 14';
+export const sportNumbersGameHeading = 'The Numbers Game???';
+export const tooManyPercentText = 'Too Many Percentages';
+export const showOverallpercentText = 'Show Overall Percentages';
+
 export const footerMessage1 =
   '*Predicted results are subject to change until the start of each matchup.';
 export const footerMessage2 =
   '**Percentages represent the accuracy of the model.';
+export const footerMessageParlayPage = '**  All times are in PM EST  **';
 export const matchUpPageText1 =
   'Percentages represent win percentage for corresponding label';
 export const matchUpPageText2 =

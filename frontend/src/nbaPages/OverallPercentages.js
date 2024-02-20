@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { percentages } from './percentages';
 import { todaysGames } from './todaysGames';
+import { tooManyPercentText, showOverallpercentText } from '../constants';
 import '../Fonts.css';
 
 const OverallPercents = (props) => {
@@ -43,16 +44,11 @@ const OverallPercents = (props) => {
   };
 
   const addPercentText = (text) => {
-    return (
-      <div>
-        <span>{text}</span>
-        <span className='timeText'>{'%'}</span>
-      </div>
-    );
+    return <div>{`${text}%`}</div>;
   };
 
   return (
-    <div className='lightText me-2'>
+    <div className='me-2'>
       {showPercentages ? (
         <div className='row'>
           <div className='col-12'>
@@ -60,33 +56,47 @@ const OverallPercents = (props) => {
               className='btn btn-light mb-5'
               onClick={handleTooManyPercentages}
             >
-              {'Too Many Percentages'}
+              {tooManyPercentText}
             </button>
             <table className='table table-striped table-dark'>
               <thead>
                 <tr>
-                  <th scope='col'>Overall</th>
-                  <th scope='col'>Spread</th>
-                  <th scope='col'>Over Under</th>
-                  <th scope='col'>Parlay</th>
+                  <th scope='col'></th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Spread
+                  </th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Over Under
+                  </th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Parlay
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope='row'>{`Overall`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`Overall`}</th>
                   <td>{addPercentText(spread)}</td>
                   <td>{addPercentText(overUnder)}</td>
                   <td>{addPercentText(parlay)}</td>
                 </tr>
                 <tr>
-                  <th scope='row'>{`When ${today}`}</th>
+                  <th scope='row' className='tableHeaderNormalWeight'>
+                    {today}
+                  </th>
                   <td>{addPercentText(daySpread)}</td>
                   <td>{addPercentText(dayOverUnder)}</td>
                   <td>{addPercentText(dayParlay)}</td>
                 </tr>
                 {hoursArray.map((hour) => (
                   <tr key={hour}>
-                    <th scope='row'>{`At ${hour}PM`}</th>
+                    <th
+                      scope='row'
+                      className='tableHeaderNormalWeight'
+                    >{`At ${hour}PM`}</th>
                     <td>
                       {addPercentText(
                         percentages[`overall_Time_${hour}_${hour}59_spread`]
@@ -109,39 +119,60 @@ const OverallPercents = (props) => {
             <table className='table table-striped table-dark'>
               <thead>
                 <tr>
-                  <th scope='col'>Overall</th>
-                  <th scope='col'>Spread</th>
-                  <th scope='col'>Over Under</th>
-                  <th scope='col'>Parlay</th>
+                  <th scope='col'></th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Spread
+                  </th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Over Under
+                  </th>
+                  <th scope='col' className='tableHeaderNormalWeight'>
+                    Parlay
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope='row'>{`1 Day Ago`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`1 Day Ago`}</th>
                   <td>{addPercentText(spread1dayago)}</td>
                   <td>{addPercentText(overUnder1dayago)}</td>
                   <td>{addPercentText(parlay1dayago)}</td>
                 </tr>
                 <tr>
-                  <th scope='row'>{`2 Days Ago`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`2 Days Ago`}</th>
                   <td>{addPercentText(spread2dayago)}</td>
                   <td>{addPercentText(overUnder2dayago)}</td>
                   <td>{addPercentText(parlay2dayago)}</td>
                 </tr>
                 <tr>
-                  <th scope='row'>{`3 Days Ago`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`3 Days Ago`}</th>
                   <td>{addPercentText(spread3dayago)}</td>
                   <td>{addPercentText(overUnder3dayago)}</td>
                   <td>{addPercentText(parlay3dayago)}</td>
                 </tr>
                 <tr>
-                  <th scope='row'>{`4 Days Ago`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`4 Days Ago`}</th>
                   <td>{addPercentText(spread4dayago)}</td>
                   <td>{addPercentText(overUnder4dayago)}</td>
                   <td>{addPercentText(parlay4dayago)}</td>
                 </tr>
                 <tr>
-                  <th scope='row'>{`5 Days Ago`}</th>
+                  <th
+                    scope='row'
+                    className='tableHeaderNormalWeight'
+                  >{`5 Days Ago`}</th>
                   <td>{addPercentText(spread5dayago)}</td>
                   <td>{addPercentText(overUnder5dayago)}</td>
                   <td>{addPercentText(parlay5dayago)}</td>
@@ -152,7 +183,7 @@ const OverallPercents = (props) => {
         </div>
       ) : (
         <button className='btn btn-light' onClick={handleShowPercentages}>
-          {'Show Overall Percentages'}
+          {showOverallpercentText}
         </button>
       )}
     </div>

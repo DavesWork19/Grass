@@ -116,80 +116,111 @@ const NBAGamePage = () => {
   };
 
   const addPercentText = (text) => {
-    return (
-      <div>
-        <span>{text}</span>
-        <span className='timeText'>{'%'}</span>
-      </div>
-    );
+    return <div>{`${text}%`}</div>;
   };
 
   return (
-    <div className='nflSiteText pb-5 bg-black lightText container-fluid'>
+    <div className='text lightText pb-5 bg-black  container-fluid'>
       <NBAHeader
         title={`${legalNbaTeamLogos[awayTeamName]} at ${legalNbaTeamLogos[homeTeamName]}`}
+        link={'gamePage'}
       />
 
       <div className='row mt-5'>
-        <div className='col-12 timeText fs-3'>
+        <div className='col-12  fs-3'>
           {`${legalNbaTeamLogos[homeTeamName]} predicted to ${homeCover} ${homeTeamSpread}`}
         </div>
-        <div className='col-12 timeText fs-3'>
+        <div className='col-12  fs-3'>
           {`Predicted ${overUnderCoverName} ${overUnder}`}
         </div>
       </div>
 
-      <div className='row lightText pt-5 pb-3 border-bottom'>
-        <div className='col-12'>{teamStatsText}</div>
-      </div>
-      <div className='row lightText'>
+      <div className='row pt-5 mt-5 pb-3'>
         <div className='col-sm-6'>
-          <div className='pt-3 pb-3'>{legalNbaTeamLogos[awayTeamName]}</div>
           <table className='table table-striped table-dark'>
             <thead>
               <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Spread</th>
-                <th scope='col'>Over Under</th>
-                <th scope='col'>Parlay</th>
+                <th scope='col' colSpan={4}>
+                  {legalNbaTeamLogos[awayTeamName]}
+                </th>
+              </tr>
+              <tr>
+                <th scope='col'></th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Spread
+                </th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Over Under
+                </th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Parlay
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope='row'>{`Team Overall`}</th>
-                <td>{addPercentText(awayTeamSpreadPercent)}</td>
-                <td>{addPercentText(awayTeamOverUnderPercent)}</td>
-                <td>{addPercentText(awayTeamParlayPercent)}</td>
+                <th
+                  scope='row'
+                  className='tableHeaderNormalWeight text-start'
+                >{`Team Overall`}</th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamSpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{`At ${hour}PM`}</th>
-                <td>{addPercentText(awayTeamTimeSpreadPercent)}</td>
-                <td>{addPercentText(awayTeamTimeOverUnderPercent)}</td>
-                <td>{addPercentText(awayTeamTimeParlayPercent)}</td>
+                <th
+                  scope='row'
+                  className='tableHeaderNormalWeight text-start'
+                >{`At ${hour}PM`}</th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamTimeSpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamTimeOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamTimeParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{`When ${todaysDayName}`}</th>
-                <td>{addPercentText(awayTeamDaySpreadPercent)}</td>
-                <td>{addPercentText(awayTeamDayOverUnderPercent)}</td>
-                <td>{addPercentText(awayTeamDayParlayPercent)}</td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {todaysDayName}
+                </th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamDaySpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamDayOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(awayTeamDayParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{'1 Game Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {'1 Game Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_spread_1`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_1`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_1`
@@ -198,22 +229,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'2 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {'2 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_spread_2`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_2`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_2`
@@ -222,22 +255,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'3 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {'3 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_spread_3`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_3`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_3`
@@ -246,22 +281,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'4 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {'4 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_spread_4`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_4`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_4`
@@ -270,22 +307,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'5 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight text-start'>
+                  {'5 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_spread_5`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_overUnder_5`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[awayTeamName]}_last_games_parlay_5`
@@ -297,52 +336,90 @@ const NBAGamePage = () => {
           </table>
         </div>
         <div className='col-sm-6'>
-          <div className='pt-3 pb-3'>{legalNbaTeamLogos[homeTeamName]}</div>
           <table className='table table-striped table-dark'>
             <thead>
               <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Spread</th>
-                <th scope='col'>Over Under</th>
-                <th scope='col'>Parlay</th>
+                <th scope='col' colSpan={4}>
+                  {legalNbaTeamLogos[homeTeamName]}
+                </th>
+              </tr>
+              <tr>
+                <th scope='col'></th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Spread
+                </th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Over Under
+                </th>
+                <th scope='col' className='tableHeaderNormalWeight'>
+                  Parlay
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope='row'>{`Team Overall`}</th>
-                <td>{addPercentText(homeTeamSpreadPercent)}</td>
-                <td>{addPercentText(homeTeamOverUnderPercent)}</td>
-                <td>{addPercentText(homeTeamParlayPercent)}</td>
+                <th
+                  scope='row'
+                  className='tableHeaderNormalWeight'
+                >{`Team Overall`}</th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamSpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{`At ${hour}PM`}</th>
-                <td>{addPercentText(homeTeamTimeSpreadPercent)}</td>
-                <td>{addPercentText(homeTeamTimeOverUnderPercent)}</td>
-                <td>{addPercentText(homeTeamTimeParlayPercent)}</td>
+                <th
+                  scope='row'
+                  className='tableHeaderNormalWeight'
+                >{`At ${hour}PM`}</th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamTimeSpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamTimeOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamTimeParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{`When ${todaysDayName}`}</th>
-                <td>{addPercentText(homeTeamDaySpreadPercent)}</td>
-                <td>{addPercentText(homeTeamDayOverUnderPercent)}</td>
-                <td>{addPercentText(homeTeamDayParlayPercent)}</td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {todaysDayName}
+                </th>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamDaySpreadPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamDayOverUnderPercent)}
+                </td>
+                <td className='tableHeaderNormalWeight'>
+                  {addPercentText(homeTeamDayParlayPercent)}
+                </td>
               </tr>
               <tr>
-                <th scope='row'>{'1 Game Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {'1 Game Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_spread_1`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_1`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_1`
@@ -351,22 +428,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'2 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {'2 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_spread_2`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_2`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_2`
@@ -375,22 +454,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'3 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {'3 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_spread_3`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_3`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_3`
@@ -399,22 +480,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'4 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {'4 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_spread_4`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_4`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_4`
@@ -423,22 +506,24 @@ const NBAGamePage = () => {
                 </td>
               </tr>
               <tr>
-                <th scope='row'>{'5 Games Ago'}</th>
-                <td>
+                <th scope='row' className='tableHeaderNormalWeight'>
+                  {'5 Games Ago'}
+                </th>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_spread_5`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_overUnder_5`
                     ]
                   )}
                 </td>
-                <td>
+                <td className='tableHeaderNormalWeight'>
                   {correctWrongLogo(
                     percentages[
                       `${nbaTeamShortNames[homeTeamName]}_last_games_parlay_5`
@@ -451,7 +536,7 @@ const NBAGamePage = () => {
         </div>
       </div>
 
-      <div className='row pt-5 lightText smallText'>
+      <div className='row pt-5  smallText'>
         <div className='col-12 pt-5'>{matchUpPageText1}</div>
         <div className='col-12'>{matchUpPageText2}</div>
       </div>

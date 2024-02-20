@@ -1,16 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.67bbcbba.css",
-    "main.js": "/static/js/main.1f2d610e.js",
+    "main.css": "/static/css/main.b784d6af.css",
+    "main.js": "/static/js/main.d53177ec.js",
     "static/js/787.e2d2a54f.chunk.js": "/static/js/787.e2d2a54f.chunk.js",
     "static/media/MavericksLogo.png": "/static/media/MavericksLogo.8f3b6f62f64c26eb4641.png",
     "static/media/Timberwolves.png": "/static/media/Timberwolves.8447f3f6a5d902de1b41.png",
     "static/media/Knicks.png": "/static/media/Knicks.aefaf8538cd2c8888f47.png",
+    "static/media/FallingSkyBold-zemL.ttf": "/static/media/FallingSkyBold-zemL.6d4c29913bc20b83dcbf.ttf",
     "static/media/Wizards.png": "/static/media/Wizards.960a18846b5372dead65.png",
     "static/media/Warriors.png": "/static/media/Warriors.d35e0d4570de856e1bd2.png",
     "static/media/Pelicans.png": "/static/media/Pelicans.ad73480d242ba0274e0c.png",
     "static/media/Pistons.png": "/static/media/Pistons.4c32cf7d0c3186995e63.png",
     "static/media/Rockets.png": "/static/media/Rockets.f223b212de21f128ae07.png",
+    "static/media/FallingSky-JKwK.ttf": "/static/media/FallingSky-JKwK.2f8ba3725fd1cc4c9c92.ttf",
     "static/media/Lakers.png": "/static/media/Lakers.e45e8cfaefbc63902737.png",
     "static/media/Thunder.png": "/static/media/Thunder.2c67e78bc5037111b31f.png",
     "static/media/Haarlem Sans.ttf": "/static/media/Haarlem Sans.1076a150795d99931887.ttf",
@@ -71,12 +73,12 @@
     "static/media/atLogo1.png": "/static/media/atLogo1.fe8fc43a53c88ec60a7d.png",
     "static/media/NumbersLogo.svg": "/static/media/NumbersLogo.df85ca0cfbe8d6c50711dd4858c16f11.svg",
     "index.html": "/index.html",
-    "main.67bbcbba.css.map": "/static/css/main.67bbcbba.css.map",
-    "main.1f2d610e.js.map": "/static/js/main.1f2d610e.js.map",
+    "main.b784d6af.css.map": "/static/css/main.b784d6af.css.map",
+    "main.d53177ec.js.map": "/static/js/main.d53177ec.js.map",
     "787.e2d2a54f.chunk.js.map": "/static/js/787.e2d2a54f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.67bbcbba.css",
-    "static/js/main.1f2d610e.js"
+    "static/css/main.b784d6af.css",
+    "static/js/main.d53177ec.js"
   ]
 }

@@ -5,25 +5,25 @@ import { secretCode } from '../constants';
 
 const GamblingHomePage = () => {
   return (
-    <main className='container-fluid vh-100 nflSiteTextRaw lightText bg-black'>
+    <main className='container-fluid vh-100 boldText lightText bg-black'>
       <GamblingHeader />
       <div className='pt-5'>
         <Link to={`/${secretCode}/Basketball`} className='pt-5 text-end'>
           <button className=' text-dark btn btn-outline-secondary btn-light gamblingButton'>
-            {'Basketball'}
+            {'BASKETBALL'}
           </button>
         </Link>
       </div>
       <div className='pt-5'>
         <Link to={`/${secretCode}/Football`} className='pt-5 text-end'>
-          <button className='nflSiteTextRaw btn btn-outline-secondary gamblingButton'>
-            {'Football'}
+          <button className='boldText btn btn-outline-secondary gamblingButton'>
+            {'FOOTBALL'}
           </button>
         </Link>
       </div>
       <div className='pt-5'>
         <Link to='/' className='pt-5 text-end'>
-          <button className='nflSiteTextRaw btn btn-outline-secondary gamblingButton'>
+          <button className='boldText btn btn-outline-secondary gamblingButton'>
             {'DIGITS'}
           </button>
         </Link>

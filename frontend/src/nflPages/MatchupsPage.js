@@ -35,8 +35,8 @@ const Matchups = () => {
     return (
       <Link to={link} key={link} className='col-12'>
         <button className='btn btn-light mt-1 mb-5 px-sm-5'>
-          <div className='timeText timeMobileText'>{date}</div>
-          <div className='timeText timeMobileText border-bottom border-black mb-1'>
+          <div className='timeMobileText'>{date}</div>
+          <div className='timeMobileText border-bottom border-black mb-1'>
             {timeLabel}
           </div>
           <div className='row'>

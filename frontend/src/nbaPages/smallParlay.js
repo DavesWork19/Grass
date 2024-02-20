@@ -1,4 +1,5 @@
 export const smallParlay = [
-  'Boston Celtics,Indiana Pacers,overUnder,0',
-  'Toronto Raptors,Chicago Bulls,overUnder,0',
+'Milwaukee Bucks,Memphis Grizzlies,spread,1',
+'Golden State Warriors,Utah Jazz,spread,0',
+'Portland Trail Blazers,Minnesota Timberwolves,overUnder,1',
 ];

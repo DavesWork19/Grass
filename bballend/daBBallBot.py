@@ -28,7 +28,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from legends import *
-from constants import ALL_TEAMS, ALL_YEARS, ALL_COLUMNS, ALL_PERCENTAGES, TEAM_LAST_5_GAME_COUNT, ALL_COLUMNS_EXT
+from constants import *
 
 
 sleepTimes = [17,23,27]
@@ -281,6 +281,8 @@ def getGamblingData():
         moreSpread = someSpread.find('div', class_='sportsbook-outcome-body-wrapper')
         spread, spreadOdds = moreSpread.find_all('span')
         spread = spread.text
+        #ADD A CHECK FOR PK VALUES
+
         spreadOdds = spreadOdds.text
         time.sleep(random.choice(sleepTimes))
 
@@ -344,7 +346,7 @@ def getGamblingData():
            
         time.sleep(random.choice(sleepTimes))
     driver.quit()
-    print('All gambling data has been saved!')
+    print('(2/8) All gambling data has been saved!')
 
 
 
@@ -624,11 +626,10 @@ def runML():
             gamesAlreadyPredicted.append(team1)
             gamesAlreadyPredicted.append(team2)
 
-    todaysGamesFile.write('];')
+    todaysGamesFile.write(f"]")
     todaysGamesFile.close()
 
-    print('All games today have been predicted!')
-
+    print('(3/8) All games today have been predicted!')
 
             
 def updateDatabaseActualResults():
@@ -682,7 +683,7 @@ def updateDatabaseActualResults():
         mycursor.execute(updateData)
         mydb.commit()
 
-    print('All actual results have been saved to database!')
+    print('(4/8) All actual results have been saved to database!')
     
 
 
@@ -717,17 +718,11 @@ def updatePercentages(save = 'dont'):
     teams = getTeam(ALL_TEAMS)
 
     todaysDate = date.today()
-    past1Day = int(todaysDate.strftime('%d')) - 1
-    past1Date = todaysDate.replace(day=past1Day)
-    past2Day = int(todaysDate.strftime('%d')) - 2
-    past2Date = todaysDate.replace(day=past2Day)
-    past3Day = int(todaysDate.strftime('%d')) - 3
-    past3Date = todaysDate.replace(day=past3Day)
-    past4Day = int(todaysDate.strftime('%d')) - 4
-    past4Date = todaysDate.replace(day=past4Day)
-    past5Day = int(todaysDate.strftime('%d')) - 5
-    past5Date = todaysDate.replace(day=past5Day)
-    
+    past1Date = todaysDate - timedelta(days=1)
+    past2Date = todaysDate - timedelta(days=2)
+    past3Date = todaysDate - timedelta(days=3)
+    past4Date = todaysDate - timedelta(days=4)
+    past5Date = todaysDate - timedelta(days=5)
     past5Days = [past1Date.strftime('%m/%d/%y'), past2Date.strftime('%m/%d/%y'), past3Date.strftime('%m/%d/%y'), past4Date.strftime('%m/%d/%y'), past5Date.strftime('%m/%d/%y')]
 
     #Get todays date for overall last 5 days
@@ -994,7 +989,7 @@ def updatePercentages(save = 'dont'):
         percentagesFile.write('}')
         percentagesFile.close()
 
-    print('All percentages have been sent to the frontend!')
+    print('(5/8) All percentages have been sent to the frontend!')
  
 
 
@@ -1043,16 +1038,11 @@ def updatePercentConstsForParlay():
     allTeamsDF['date'] = pd.to_datetime(allTeamsDF['date'], format='%m/%d/%y')
     
     for theDate in dateColumn:
-        past1Day = int(theDate.strftime('%d')) - 1
-        past1Date = theDate.replace(day=past1Day)
-        past2Day = int(theDate.strftime('%d')) - 2
-        past2Date = theDate.replace(day=past2Day)
-        past3Day = int(theDate.strftime('%d')) - 3
-        past3Date = theDate.replace(day=past3Day)
-        past4Day = int(theDate.strftime('%d')) - 4
-        past4Date = theDate.replace(day=past4Day)
-        past5Day = int(theDate.strftime('%d')) - 5
-        past5Date = theDate.replace(day=past5Day)
+        past1Date = theDate - timedelta(days=1)
+        past2Date = theDate - timedelta(days=2)
+        past3Date = theDate - timedelta(days=3)
+        past4Date = theDate - timedelta(days=4)
+        past5Date = theDate - timedelta(days=5)
         
         past5Days = [past1Date, past2Date, past3Date, past4Date, past5Date]
 
@@ -1844,16 +1834,16 @@ def runParlays():
                 KNNParams = [{'n_neighbors' : neighbors}]
                 
                 #Models
-                SVCModel = SVC(random_state=19)
+                SVCModel = SVC(probability=True, random_state=19)
                 KNN = KNeighborsClassifier()
                 LogReg = LogisticRegression(max_iter=7000, random_state=19)
-                SGDCModel = SGDClassifier(max_iter=7000, tol=1e-3, random_state=19)
+                SGDCModel = SGDClassifier(loss='log', max_iter=7000, tol=1e-3, random_state=19)
                 
                 #CV 2 folds
                 #Support Vector Machines
                 SVCGS2 = GridSearchCV(SVCModel, CParams, cv=2)
                 SVCGS2.fit(X_train, y_train)
-                bestSVC2 = SVC(C = SVCGS2.best_params_['C'], random_state=19)
+                bestSVC2 = SVC(C = SVCGS2.best_params_['C'], probability=True, random_state=19)
                 #K Nearest Neighbor
                 KNNGS2 = GridSearchCV(KNN, KNNParams, cv=2)
                 KNNGS2.fit(X_train, y_train)
@@ -1865,13 +1855,13 @@ def runParlays():
                 #Stochastic Gradient Descent 
                 SGDCGS2 = GridSearchCV(SGDCModel, alphaParams, cv=2)
                 SGDCGS2.fit(X_train, y_train)
-                bestSGDC2 = SGDClassifier(alpha = SGDCGS2.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                bestSGDC2 = SGDClassifier(loss='log', alpha = SGDCGS2.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
 
                 #CV 3 folds
                 #Support Vector Machines
                 SVCGS3 = GridSearchCV(SVCModel, CParams, cv=3)
                 SVCGS3.fit(X_train, y_train)
-                bestSVC3 = SVC(C = SVCGS3.best_params_['C'], random_state=19)
+                bestSVC3 = SVC(C = SVCGS3.best_params_['C'], probability=True, random_state=19)
                 #K Nearest Neighbor
                 KNNGS3 = GridSearchCV(KNN, KNNParams, cv=3)
                 KNNGS3.fit(X_train, y_train)
@@ -1883,13 +1873,13 @@ def runParlays():
                 #Stochastic Gradient Descent 
                 SGDCGS3 = GridSearchCV(SGDCModel, alphaParams, cv=3)
                 SGDCGS3.fit(X_train, y_train)
-                bestSGDC3 = SGDClassifier(alpha = SGDCGS3.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                bestSGDC3 = SGDClassifier(loss='log', alpha = SGDCGS3.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
 
                 #CV 5 folds
                 #Support Vector Machines
                 SVCGS5 = GridSearchCV(SVCModel, CParams, cv=5)
                 SVCGS5.fit(X_train, y_train)
-                bestSVC5 = SVC(C = SVCGS5.best_params_['C'], random_state=19)
+                bestSVC5 = SVC(C = SVCGS5.best_params_['C'], probability=True, random_state=19)
                 #K Nearest Neighbor
                 KNNGS5 = GridSearchCV(KNN, KNNParams, cv=5)
                 KNNGS5.fit(X_train, y_train)
@@ -1901,13 +1891,13 @@ def runParlays():
                 #Stochastic Gradient Descent 
                 SGDCGS5 = GridSearchCV(SGDCModel, alphaParams, cv=5)
                 SGDCGS5.fit(X_train, y_train)
-                bestSGDC5 = SGDClassifier(alpha = SGDCGS5.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                bestSGDC5 = SGDClassifier(loss='log', alpha = SGDCGS5.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
 
                 #CV 7 folds
                 #Support Vector Machines
                 SVCGS7 = GridSearchCV(SVCModel, CParams, cv=7)
                 SVCGS7.fit(X_train, y_train)
-                bestSVC7 = SVC(C = SVCGS7.best_params_['C'], random_state=19)
+                bestSVC7 = SVC(C = SVCGS7.best_params_['C'], probability=True, random_state=19)
                 #K Nearest Neighbor
                 KNNGS7 = GridSearchCV(KNN, KNNParams, cv=7)
                 KNNGS7.fit(X_train, y_train)
@@ -1919,7 +1909,7 @@ def runParlays():
                 #Stochastic Gradient Descent 
                 SGDCGS7 = GridSearchCV(SGDCModel, alphaParams, cv=7)
                 SGDCGS7.fit(X_train, y_train)
-                bestSGDC7 = SGDClassifier(alpha = SGDCGS7.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                bestSGDC7 = SGDClassifier(loss='log', alpha = SGDCGS7.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
 
                 bestSVC2.fit(X_train, y_train)
                 bestSVC2Score = accuracy_score(y_test, bestSVC2.predict(X_test))
@@ -1962,6 +1952,7 @@ def runParlays():
 
                 bestScore = max(allScores, key=allScores.get)
                 bestModel = allBestModels[bestScore]
+                firstClass, secondClass = bestModel.classes_
 
                 #Scale todays games
                 team1DF = upcomingGames[upcomingGames['teamNumber'] == team1]
@@ -1973,97 +1964,137 @@ def runParlays():
                 scaledteam2DF = featureSelection.transform(scaledteam2DF)
 
                 if column == 'spreadActual':
-                    if bestScore not in ['bestKNN2Score','bestKNN3Score','bestKNN5Score','bestKNN7Score']:
-                        team1Prediction = bestModel.predict(scaledteam1DF)[0]
-                        team1DecisionFun = bestModel.decision_function(scaledteam1DF)[0]
-                        team2Prediction = bestModel.predict(scaledteam2DF)[0]
-                        team2DecisionFun = bestModel.decision_function(scaledteam2DF)[0]
+                    team1Prediction = bestModel.predict(scaledteam1DF)[0]
+                    team1PredictionProb = bestModel.predict_proba(scaledteam1DF)
+                    team2Prediction = bestModel.predict(scaledteam2DF)[0]
+                    team2PredictionProb = bestModel.predict_proba(scaledteam2DF)
 
-                        if (team1DF['spreadCalculated'].values[0] == team1Prediction) and (team2DF['spreadCalculated'].values[0] == team2Prediction):
+                    team1PredictionProbFor0Class = -1
+                    team1PredictionProbFor1Class = -1
+                    team2PredictionProbFor0Class = -1
+                    team2PredictionProbFor1Class = -1
 
-                            if (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -100) and (team2DecisionFun < -100):
-                                largeP.append(f"1_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -10) and (team2DecisionFun < -10):
-                                decentP.append(f"1_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -1) and (team2DecisionFun < -1):
-                                smallP.append(f"1_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
+                    if firstClass == 0:
+                        team1PredictionProbFor0Class = team1PredictionProb[0][0]
+                        team1PredictionProbFor1Class = team1PredictionProb[0][1]
+                        team2PredictionProbFor0Class = team2PredictionProb[0][0]
+                        team2PredictionProbFor1Class = team2PredictionProb[0][1]
+                    else:
+                        team1PredictionProbFor0Class = team1PredictionProb[0][1]
+                        team1PredictionProbFor1Class = team1PredictionProb[0][0]
+                        team2PredictionProbFor0Class = team2PredictionProb[0][1]
+                        team2PredictionProbFor1Class = team2PredictionProb[0][0]
 
-                            
-                            if (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 100) and (team2DecisionFun > 100):
+
+                    if (team1DF['spreadCalculated'].values[0] == team1Prediction) and (team2DF['spreadCalculated'].values[0] == team2Prediction):
+                        if (team1Prediction == 0) and (team2Prediction == 1):
+                            if (team2PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD):
                                 largeP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 10) and (team2DecisionFun > 10):
+                            elif (team2PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD):
                                 decentP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 1) and (team2DecisionFun > 1):
+                            else:
                                 smallP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
 
-                        elif (team1DF['spreadCalculated'].values[0] == team2Prediction) and (team2DF['spreadCalculated'].values[0] == team1Prediction):
+                        elif (team1Prediction == 1) and (team2Prediction == 0):
+                            if (team2PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD):
+                                largeP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD):
+                                decentP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            else:
+                                smallP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
 
-                            if (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -100) and (team2DecisionFun < -100):
-                                largeP.append(f"0_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -10) and (team2DecisionFun < -10):
-                                decentP.append(f"0_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team2Prediction == 1) and (team1DecisionFun < -1) and (team2DecisionFun < -1):
-                                smallP.append(f"0_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-
-                            
-                            if (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 100) and (team2DecisionFun > 100):
+                    elif (team1DF['spreadCalculated'].values[0] == team2Prediction) and (team2DF['spreadCalculated'].values[0] == team1Prediction):
+                        if (team1Prediction == 0) and (team2Prediction == 1):
+                            if (team2PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD):
                                 largeP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 10) and (team2DecisionFun > 10):
+                            elif (team2PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD):
                                 decentP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0) and (team1DecisionFun > 1) and (team2DecisionFun > 1):
+                            else:
+                                smallP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            
+                        elif (team1Prediction == 1) and (team2Prediction == 0):
+                            if (team2PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD):
+                                largeP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD):
+                                decentP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            else:
                                 smallP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
 
 
-                    else:
-                        team1Prediction = bestModel.predict(scaledteam1DF)[0]
-                        team2Prediction = bestModel.predict(scaledteam2DF)[0]
-
-                        if (team1DF['spreadCalculated'].values[0] == team1Prediction) and (team2DF['spreadCalculated'].values[0] == team2Prediction):
-                            if (team1Prediction == 0) and (team2Prediction == 1):
-                                massiveP.append(f"1_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0):
-                                massiveP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-
-                        elif (team1DF['spreadCalculated'].values[0] == team2Prediction) and (team2DF['spreadCalculated'].values[0] == team1Prediction):
-                            if (team1Prediction == 0) and (team2Prediction == 1):
-                                massiveP.append(f"0_{getTeam(str(team2))['fullName']}_{getTeam(str(team1))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team2Prediction == 0):
-                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                
                 elif column == 'overUnderActual':
-                    if bestScore not in ['bestKNN2Score','bestKNN3Score','bestKNN5Score','bestKNN7Score']:        
-                        team1Prediction = bestModel.predict(scaledteam1DF)[0]
-                        team1DecisionFun = bestModel.decision_function(scaledteam1DF)[0]
-                        team2Prediction = bestModel.predict(scaledteam2DF)[0]
-                        team2DecisionFun = bestModel.decision_function(scaledteam2DF)[0]
+                    team1Prediction = bestModel.predict(scaledteam1DF)[0]
+                    team1PredictionProb = bestModel.predict_proba(scaledteam1DF)
+                    team2Prediction = bestModel.predict(scaledteam2DF)[0]
+                    team2PredictionProb = bestModel.predict_proba(scaledteam2DF)
 
-                        if (team1DF['overUnderCalculated'].values[0] == team1Prediction) and (team2DF['overUnderCalculated'].values[0] == team2Prediction):
+                    team1PredictionProbFor0Class = -1
+                    team1PredictionProbFor1Class = -1
+                    team2PredictionProbFor0Class = -1
+                    team2PredictionProbFor1Class = -1
 
-                            if (team1Prediction == 0) and (team1DecisionFun < -100) and (team2DecisionFun < -100):
-                                largeP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team1DecisionFun < -10) and (team2DecisionFun < -10):
-                                decentP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 0) and (team1DecisionFun < -1) and (team2DecisionFun < -1):
-                                smallP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                    if firstClass == 0:
+                        team1PredictionProbFor0Class = team1PredictionProb[0][0]
+                        team1PredictionProbFor1Class = team1PredictionProb[0][1]
+                        team2PredictionProbFor0Class = team2PredictionProb[0][0]
+                        team2PredictionProbFor1Class = team2PredictionProb[0][1]
+                    else:
+                        team1PredictionProbFor0Class = team1PredictionProb[0][1]
+                        team1PredictionProbFor1Class = team1PredictionProb[0][0]
+                        team2PredictionProbFor0Class = team2PredictionProb[0][1]
+                        team2PredictionProbFor1Class = team2PredictionProb[0][0]
 
-                            
-                            if (team1Prediction == 1) and (team1DecisionFun > 100) and (team2DecisionFun > 100):
+                    if (team1DF['overUnderCalculated'].values[0] == team1Prediction) and (team2DF['overUnderCalculated'].values[0] == team2Prediction):
+                        if (team1Prediction == 0) and (team2Prediction == 0):
+                            if (team2PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD):
                                 largeP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team1DecisionFun > 10) and (team2DecisionFun > 10):
+                            elif (team2PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD):
                                 decentP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1) and (team1DecisionFun > 1) and (team2DecisionFun > 1):
+                            else:
                                 smallP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
 
-                    else:
-                        team1Prediction = bestModel.predict(scaledteam1DF)[0]
-                        team2Prediction = bestModel.predict(scaledteam2DF)[0]
-
-                        if (team1DF['overUnderCalculated'].values[0] == team1Prediction) and (team2DF['overUnderCalculated'].values[0] == team2Prediction):
-                            if (team1Prediction == 0):
-                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-                            elif (team1Prediction == 1):
+                        elif (team1Prediction == 1) and (team2Prediction == 1):
+                            if (team2PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD):
                                 massiveP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
-            
+                            elif (team2PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD):
+                                largeP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD):
+                                decentP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            else:
+                                smallP.append(f"1_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+
+                    elif ((1 - team1DF['overUnderCalculated'].values[0]) == team1Prediction) and ((1 - team2DF['overUnderCalculated'].values[0]) == team2Prediction):
+                        if (team1Prediction == 0) and (team2Prediction == 0):
+                            if (team2PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > LARGE_PARLAY_THRESHOLD):
+                                largeP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor0Class > DECENT_PARLAY_THRESHOLD):
+                                decentP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            else:
+                                smallP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+
+                        elif (team1Prediction == 1) and (team2Prediction == 1):
+                            if (team2PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > MASSIVE_PARLAY_THRESHOLD):
+                                massiveP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > LARGE_PARLAY_THRESHOLD):
+                                largeP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            elif (team2PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD) and (team1PredictionProbFor1Class > DECENT_PARLAY_THRESHOLD):
+                                decentP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+                            else:
+                                smallP.append(f"0_{getTeam(str(team1))['fullName']}_{getTeam(str(team2))['fullName']}_{column.split('A')[0]}")
+
+                    
+
             gamesAlreadyPredicted.append(team1)
             gamesAlreadyPredicted.append(team2)
     
@@ -2116,7 +2147,7 @@ def runParlays():
         rideCalculated, team1, team2, category = game.split('_')
 
         insertData = (
-            f"INSERT INTO nbaParlay1 "
+            f"INSERT INTO nbaParlay2 "
             f"("
             f"date, "
             f"team1, "
@@ -2153,7 +2184,7 @@ def runParlays():
         rideCalculated, team1, team2, category = game.split('_')
 
         insertData = (
-            f"INSERT INTO nbaParlay1 "
+            f"INSERT INTO nbaParlay3 "
             f"("
             f"date, "
             f"team1, "
@@ -2190,7 +2221,7 @@ def runParlays():
         rideCalculated, team1, team2, category = game.split('_')
 
         insertData = (
-            f"INSERT INTO nbaParlay1 "
+            f"INSERT INTO nbaParlay4 "
             f"("
             f"date, "
             f"team1, "
@@ -2217,15 +2248,240 @@ def runParlays():
 
     massiveParlayFile.write('];')
 
-    print('All parlays today have been predicted!')
+    print('(6/8) All parlays today have been predicted!')
 
 
-  
+def updateDatabaseParlays():
+    todaysDate = date.today()
+    yesterdaysDate = todaysDate - timedelta(days=1)
+    yesterdayParlayDate = yesterdaysDate.strftime('%B %d %Y')
+    yesterdayStatsDate = yesterdaysDate.strftime('%m/%d/%y')
+
+    #Connect to MySQL Database
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NBA'
+        )
+    mycursor = mydb.cursor()
+
+    #Get all data from Database
+    mycursor.execute(f"SELECT * FROM nbaStats WHERE date = '{yesterdayStatsDate}';")
+    teamData = mycursor.fetchall()
+    teamsDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
+
+    for parlayNumber in PARLAY_NUMBERS:
+
+        mycursor.execute(f"SELECT * FROM nbaParlay{parlayNumber} WHERE date = '{yesterdayParlayDate}';")
+        parlayData = mycursor.fetchall()
+        parlayDF = pd.DataFrame(parlayData, columns = PARLAY_COLUMNS)
+
+        for values in parlayDF.values:
+            id, gameDate, team1, team2, category, rideCalculated, rideActual = values
+            team1Number = getTeam(team1)['number']
+            team2Number = getTeam(team2)['number']
+
+            updatedTeamsDF = teamsDF[(teamsDF['teamNumber'] == team1Number) | (teamsDF['teamNumber'] == team2Number)]
+
+            if category == 'spread':
+                if rideCalculated == 1:        
+                    if list(updatedTeamsDF['spreadCalculated'].values == updatedTeamsDF['spreadActual'].values) == [True, True]:
+                        #rideActual = 1
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 1 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                    else:
+                        #rideActual = 0
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 0 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                else:
+                    if list(updatedTeamsDF['spreadCalculated'].values == updatedTeamsDF['spreadActual'].values) == [False, False]:
+                        #rideActual = 1
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 1 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                    else:
+                        #rideActual = 0
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 0 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+            else:
+                #OverUnder
+                if rideCalculated == 1:
+                    if list(updatedTeamsDF['overUnderCalculated'].values == updatedTeamsDF['overUnderActual'].values) == [True, True]:
+                        #rideActual = 1
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 1 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                    else:
+                        #rideActual = 0
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 0 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                else:
+                    if list(updatedTeamsDF['overUnderCalculated'].values == updatedTeamsDF['overUnderActual'].values) == [True, True]:
+                        #rideActual = 1
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 1 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+                    else:
+                        #rideActual = 0
+                        updateData = (
+                            f"UPDATE nbaParlay{parlayNumber} "
+                            f"SET rideActual = 0 "
+                            f"WHERE id = {id};"
+                        )
+                        mycursor.execute(updateData)
+                        mydb.commit()
+
+
+    print('(7/8) All parlays have been updated to the database!')
+
+
+def parlayPercentHelper(win, parlayPercents, name):
+    if win == True:
+        parlayPercents[name] = [parlayPercents[name][0] + 100, parlayPercents[name][1] + 1] 
+    else:
+        parlayPercents[name] = [parlayPercents[name][0], parlayPercents[name][1] + 1]
+
+
+def updateParlayPercentages():
+    parlayPercents = {}
+
+
+    #Connect to MySQL Database
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NBA'
+        )
+    mycursor = mydb.cursor()
+
+
+    for parlayNumber in PARLAY_NUMBERS:
+        parlayName = f'Parlay {parlayNumber}'
+        overallName = 'Overall'
+
+        mycursor.execute(f"SELECT * FROM nbaParlay{parlayNumber} WHERE rideActual is not NULL;")
+        parlayData = mycursor.fetchall()
+        parlayDF = pd.DataFrame(parlayData, columns = PARLAY_COLUMNS)
+
+        storedValues = []
+
+        for row in parlayDF.sort_values(by=['date']).values:
+            id, date, team1, team2, category, rideCalculated, rideActual = row
+            parlayFullName = f'{parlayName}_{date}_{overallName}'
+            parlayCategoryName = ''
+            if category == 'spread':
+                parlayCategoryName = f'{parlayName}_{date}_Spreads'
+                if parlayCategoryName not in storedValues:
+                    parlayPercents[parlayCategoryName] = [0,0]
+                    storedValues.append(parlayCategoryName)
+            elif category == 'overUnder':
+                parlayCategoryName = f'{parlayName}_{date}_Over Unders'
+                if parlayCategoryName not in storedValues:
+                    parlayPercents[parlayCategoryName] = [0,0]
+                    storedValues.append(parlayCategoryName)
+
+            
+
+            
+            if date in storedValues:
+                #same date
+                parlayPercentHelper(rideCalculated == rideActual, parlayPercents, parlayCategoryName)
+                parlayPercentHelper(rideCalculated == rideActual, parlayPercents, parlayFullName)
+            else:
+                #first date
+                parlayPercents[parlayFullName] = [0,0]
+
+                parlayPercentHelper(rideCalculated == rideActual, parlayPercents, parlayCategoryName)
+                parlayPercentHelper(rideCalculated == rideActual, parlayPercents, parlayFullName)
+                
+                storedValues.append(date)
+
+    finalParlayPercents = {}
+    for percent in parlayPercents:
+        if parlayPercents[percent][1] != 0:
+            finalParlayPercents[percent] = round(parlayPercents[percent][0] / parlayPercents[percent][1], 2)
+        else:
+            finalParlayPercents[percent] = 'NA'
+
+
+    #Update file with parlay percentages
+    parlayPercentsFilename = '../frontend/src/nbaPages/parlayPercentages.js'
+    parlayPercentsFile = open(parlayPercentsFilename, 'w')
+    
+    for parlayNumber in PARLAY_NUMBERS:
+        parlayPercentsFile.write(f'export const parlay{parlayNumber}Percentages = [\n')
+        for percent in finalParlayPercents:
+            parlay, parlayDate, parlayCategory = percent.split('_')
+            if parlay == f'Parlay {parlayNumber}':
+                percentCorrect = finalParlayPercents[percent]
+                if percentCorrect == 100:
+                    
+                    parlayTotalCalls = parlayPercents[percent][1]
+
+                    parlayPercentsFile.write(f"'{parlay},")
+                    parlayPercentsFile.write(f"{parlayCategory},")
+                    parlayPercentsFile.write(f"{parlayDate},")
+                    parlayPercentsFile.write(f"{parlayTotalCalls}',\n")
+
+        parlayPercentsFile.write('];\n')
+    
+    
+    parlayPercentsFile.close()
+
+    print('(8/8) All parlays have been updated to the frontend file!')
+
+
+            
+
+        
+
+
+
+
+
+
+
+
 
 updateNBAGames()
-getGamblingData()
-runML()
-updateDatabaseActualResults()
-updatePercentages('save')
-runParlays()
-
+getGamblingData()                   #2/8
+runML()                             #3/8
+updateDatabaseActualResults()       #4/8
+updatePercentages('save')           #5/8
+runParlays()                        #6/8
+updateDatabaseParlays()             #7/8
+updateParlayPercentages()           #8/8

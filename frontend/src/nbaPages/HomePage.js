@@ -17,7 +17,7 @@ const NBAHomePage = () => {
   const unqiueHours = new Set(hours);
 
   return (
-    <main className='container-fluid nflSiteText bg-black lightText'>
+    <main className='container-fluid text bg-black lightText'>
       <NBAHeader title={date} link={'home'} />
 
       <div className='row'>
@@ -39,7 +39,7 @@ const NBAHomePage = () => {
           to={`/${secretCode}/Basketball/${parlaySecretCode}`}
           className='text-muted text-decoration-none'
         >
-          {'Ps'}
+          {'Parlays'}
         </Link>
       </div>
     </main>

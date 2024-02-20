@@ -8,7 +8,7 @@ import NFLHeader from './Header';
 
 const NFLHomePage = () => {
   return (
-    <main className='container-fluid nflSiteText bg-black lightText'>
+    <main className='container-fluid boldText bg-black lightText'>
       <NFLHeader week={upcomingWeekData[0]} />
 
       <div className='row'>
