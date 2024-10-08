@@ -17,7 +17,6 @@ from Legends import *
 #Go to website and scrape all data for given team
 #Find previous week if its not a by week
 #Save weeks data to database
-
 class storeTeamData:
     def __init__(self, table, week, year):
         self.teams = ['dal','tam','nor','atl','car','min','gnb','det','chi','ram','crd','sfo','sea','oti','clt','jax','kan','rai','sdg','den','phi','was','nyg','nyj','mia','nwe','buf','cin','pit','rav','cle','htx']
@@ -310,7 +309,7 @@ class updateWeatherData:
         }
         page = requests.get(URL, headers=HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
-        time.sleep(3)
+        time.sleep(7)
         moreSoup = soup.find('div', class_='container-game-box')
 
         matchUp = moreSoup.div 
@@ -1410,7 +1409,7 @@ def updateTeamData(week):
 
 
 week = int(sys.argv[1])
-year = 2023
+year = 2024
 table = 'productionNFL'
 
 storeDataObj = storeTeamData(table, week, year)

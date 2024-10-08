@@ -3,14 +3,14 @@ import '../Fonts.css';
 import NBAMatchups from './Matchups';
 import { todaysGames } from './todaysGames';
 import { footerMessage1, footerMessage2 } from '../constants';
-import NBAHeader from './Header';
+import GamblingHeader from '../commonComps/GamblingHeader';
 import OverallPercents from './OverallPercentages';
 import { secretCode, parlaySecretCode } from '../constants';
 
 const NBAHomePage = () => {
   const todaysDayName = todaysGames.slice(0, 1)[0];
   const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
-  const date = `${todaysDayName} ${todaysDate}`;
+  const date = `${todaysDayName}, ${todaysDate}`;
 
   const times = todaysGames.slice(2).map((data) => data.split(',')[0]);
   const hours = times.map((data) => data.split(':')[0]);
@@ -18,7 +18,7 @@ const NBAHomePage = () => {
 
   return (
     <main className='container-fluid text bg-black lightText'>
-      <NBAHeader title={date} link={'home'} />
+      <GamblingHeader title={date} link={'gamblingHomePage'} />
 
       <div className='row'>
         <NBAMatchups />

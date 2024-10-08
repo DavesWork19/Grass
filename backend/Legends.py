@@ -91,7 +91,7 @@ def getTeam(team):
         return 17
     elif 'Eagles' in team:
         return 18
-    elif 'Washington' in team:
+    elif ('Washington' in team) or ('Commanders' in team):
         return 19
     elif 'Bears' in team:
         return 20
@@ -117,6 +117,72 @@ def getTeam(team):
         return 30
     elif '49ers' in team:
         return 31
+
+def getTeamName(teamNumber):
+    if teamNumber == 0:
+        return 'Bills'
+    elif teamNumber == 1:
+        return 'Dolphins'
+    elif teamNumber == 2:
+        return 'Patriots'
+    elif teamNumber == 3:
+        return 'Jets'
+    elif teamNumber == 4:
+        return 'Bengals'
+    elif teamNumber == 5:
+        return 'Browns'
+    elif teamNumber == 6:
+        return 'Steelers'
+    elif teamNumber == 7:
+        return 'Ravens'
+    elif teamNumber == 8:
+        return 'Colts'
+    elif teamNumber == 9:
+        return 'Texans'
+    elif teamNumber == 10:
+        return 'Jaguars'
+    elif teamNumber == 11:
+        return 'Titans'
+    elif teamNumber == 12:
+        return 'Broncos'
+    elif teamNumber == 13:
+        return 'Chiefs'
+    elif teamNumber == 14:
+        return 'Raiders'
+    elif teamNumber == 15:
+        return 'Chargers'
+    elif teamNumber == 16:
+        return 'Cowboys'
+    elif teamNumber == 17:
+        return 'Giants'
+    elif teamNumber == 18:
+        return 'Eagles'
+    elif teamNumber == 19:
+        return 'Commanders'
+    elif teamNumber == 20:
+        return 'Bears'
+    elif teamNumber == 21:
+        return 'Lions'
+    elif teamNumber == 22:
+        return 'Packers'
+    elif teamNumber == 23:
+        return 'Vikings'
+    elif teamNumber == 24:
+        return 'Falcons'
+    elif teamNumber == 25:
+        return 'Panthers'
+    elif teamNumber == 26:
+        return 'Saints'
+    elif teamNumber == 27: 
+        return 'Buccaneers'
+    elif teamNumber == 28:
+        return 'Cardinals'
+    elif teamNumber == 29:
+        return 'Rams'
+    elif teamNumber == 30: 
+        return 'Seahawks'
+    elif teamNumber == 31:
+        return '49ers'
 
 
 def getTeamFromSmallName(team):
@@ -312,26 +378,38 @@ def getTime(time, am_pm):
             return 0
         elif time == 10:
             return 1
+        elif time == 11:
+            return 2
     else:
         if time == 12:
-            return 2
-        elif time == 1:
             return 3
-        elif time == 2:
+        elif time == 1:
             return 4
-        elif time == 3:
+        elif time == 2:
             return 5
-        elif time == 4:
+        elif time == 3:
             return 6
-        elif time == 5:
+        elif time == 4:
             return 7
-        elif time == 7:
+        elif time == 5:
             return 8
-        elif time == 8:
+        elif time == 6:
             return 9
-        elif time == 9:
+        elif time == 7:
             return 10
-        elif time == 10:
+        elif time == 8:
             return 11
+        elif time == 9:
+            return 12
+        elif time == 10:
+            return 13
+        elif time == 11:
+            return 14
 
 
+
+def convertProbZero(prob):
+    if prob == 0:
+        return 0.01
+    else:
+        return prob

@@ -1,191 +1,38 @@
-import { useState } from 'react';
-import { percentages } from './percentages';
-import { todaysGames } from './todaysGames';
-import { tooManyPercentText, showOverallpercentText } from '../constants';
 import '../Fonts.css';
+import PercentDataTable from '../commonComps/PercentDataTable';
 
 const OverallPercents = (props) => {
-  const [showPercentages, setShowPercentages] = useState(false);
-
-  const spread = percentages['overall_spread'];
-  const overUnder = percentages['overall_overUnder'];
-  const parlay = percentages['overall_parlay'];
-  const today = todaysGames.slice(0, 1)[0];
-
-  const daySpread = percentages[`overall_${today}_spread`];
-  const dayOverUnder = percentages[`overall_${today}_overUnder`];
-  const dayParlay = percentages[`overall_${today}_parlay`];
-
-  const spread1dayago = percentages[`overall_last_games_spread_1`];
-  const overUnder1dayago = percentages[`overall_last_games_overUnder_1`];
-  const parlay1dayago = percentages[`overall_last_games_parlay_1`];
-  const spread2dayago = percentages[`overall_last_games_spread_2`];
-  const overUnder2dayago = percentages[`overall_last_games_overUnder_2`];
-  const parlay2dayago = percentages[`overall_last_games_parlay_2`];
-  const spread3dayago = percentages[`overall_last_games_spread_3`];
-  const overUnder3dayago = percentages[`overall_last_games_overUnder_3`];
-  const parlay3dayago = percentages[`overall_last_games_parlay_3`];
-  const spread4dayago = percentages[`overall_last_games_spread_4`];
-  const overUnder4dayago = percentages[`overall_last_games_overUnder_4`];
-  const parlay4dayago = percentages[`overall_last_games_parlay_4`];
-  const spread5dayago = percentages[`overall_last_games_spread_5`];
-  const overUnder5dayago = percentages[`overall_last_games_overUnder_5`];
-  const parlay5dayago = percentages[`overall_last_games_parlay_5`];
-
   const hours = props.hours;
-  const hoursArray = [...hours];
-
-  const handleShowPercentages = () => {
-    setShowPercentages(true);
-  };
-
-  const handleTooManyPercentages = () => {
-    setShowPercentages(false);
-  };
-
-  const addPercentText = (text) => {
-    return <div>{`${text}%`}</div>;
-  };
 
   return (
-    <div className='me-2'>
-      {showPercentages ? (
-        <div className='row'>
-          <div className='col-12'>
-            <button
-              className='btn btn-light mb-5'
-              onClick={handleTooManyPercentages}
-            >
-              {tooManyPercentText}
-            </button>
-            <table className='table table-striped table-dark'>
-              <thead>
-                <tr>
-                  <th scope='col'></th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Spread
-                  </th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Over Under
-                  </th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Parlay
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`Overall`}</th>
-                  <td>{addPercentText(spread)}</td>
-                  <td>{addPercentText(overUnder)}</td>
-                  <td>{addPercentText(parlay)}</td>
-                </tr>
-                <tr>
-                  <th scope='row' className='tableHeaderNormalWeight'>
-                    {today}
-                  </th>
-                  <td>{addPercentText(daySpread)}</td>
-                  <td>{addPercentText(dayOverUnder)}</td>
-                  <td>{addPercentText(dayParlay)}</td>
-                </tr>
-                {hoursArray.map((hour) => (
-                  <tr key={hour}>
-                    <th
-                      scope='row'
-                      className='tableHeaderNormalWeight'
-                    >{`At ${hour}PM`}</th>
-                    <td>
-                      {addPercentText(
-                        percentages[`overall_Time_${hour}_${hour}59_spread`]
-                      )}
-                    </td>
-                    <td>
-                      {addPercentText(
-                        percentages[`overall_Time_${hour}_${hour}59_overUnder`]
-                      )}
-                    </td>
-                    <td>
-                      {addPercentText(
-                        percentages[`overall_Time_${hour}_${hour}59_parlay`]
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <table className='table table-striped table-dark'>
-              <thead>
-                <tr>
-                  <th scope='col'></th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Spread
-                  </th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Over Under
-                  </th>
-                  <th scope='col' className='tableHeaderNormalWeight'>
-                    Parlay
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`1 Day Ago`}</th>
-                  <td>{addPercentText(spread1dayago)}</td>
-                  <td>{addPercentText(overUnder1dayago)}</td>
-                  <td>{addPercentText(parlay1dayago)}</td>
-                </tr>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`2 Days Ago`}</th>
-                  <td>{addPercentText(spread2dayago)}</td>
-                  <td>{addPercentText(overUnder2dayago)}</td>
-                  <td>{addPercentText(parlay2dayago)}</td>
-                </tr>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`3 Days Ago`}</th>
-                  <td>{addPercentText(spread3dayago)}</td>
-                  <td>{addPercentText(overUnder3dayago)}</td>
-                  <td>{addPercentText(parlay3dayago)}</td>
-                </tr>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`4 Days Ago`}</th>
-                  <td>{addPercentText(spread4dayago)}</td>
-                  <td>{addPercentText(overUnder4dayago)}</td>
-                  <td>{addPercentText(parlay4dayago)}</td>
-                </tr>
-                <tr>
-                  <th
-                    scope='row'
-                    className='tableHeaderNormalWeight'
-                  >{`5 Days Ago`}</th>
-                  <td>{addPercentText(spread5dayago)}</td>
-                  <td>{addPercentText(overUnder5dayago)}</td>
-                  <td>{addPercentText(parlay5dayago)}</td>
-                </tr>
-              </tbody>
-            </table>
+    <div className='accordion bg-black' id='overallAccordion'>
+      <div className='accordion-item border-black'>
+        <h2 className='accordion-header'>
+          <button
+            className='accordion-button collapsed slateGrayBackground boldText text-black'
+            type='button'
+            data-bs-toggle='collapse'
+            data-bs-target='#overallStats'
+            aria-expanded='false'
+            aria-controls='overallStats'
+          >
+            {'Overall Stats'}
+          </button>
+        </h2>
+        <div
+          id='overallStats'
+          className='accordion-collapse collapse bg-black'
+          data-bs-parent='#overallAccordion'
+        >
+          <div className='accordion-body p-0 lightText'>
+            <PercentDataTable
+              title=''
+              percentagesName='overall'
+              hours={hours}
+            />
           </div>
         </div>
-      ) : (
-        <button className='btn btn-light' onClick={handleShowPercentages}>
-          {showOverallpercentText}
-        </button>
-      )}
+      </div>
     </div>
   );
 };

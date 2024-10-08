@@ -1,8 +1,6 @@
 import '../Fonts.css';
-import { useState } from 'react';
-import NBAHeader from './Header';
-import Parlays from './Parlays';
-import ParlayPercents from './ParlayPercents';
+import GamblingHeader from '../commonComps/GamblingHeader';
+import Parlays from '../commonComps/Parlays';
 import { smallParlay } from './smallParlay';
 import { decentParlay } from './decentParlay';
 import { largeParlay } from './largeParlay';
@@ -13,14 +11,14 @@ import {
   parlay3Percentages,
   parlay4Percentages,
 } from './parlayPercentages';
-import { footerMessageParlayPage } from '../constants';
+import {
+  footerMessageParlayPage,
+  footerParlayHitMessageParlay,
+} from '../constants';
+import ParlayHitsTable from '../commonComps/ParlayHitsTable';
 
-const ParlayPage = () => {
-  const [showParlay1Percents, setShowParlay1Percents] = useState(false);
-  const [showParlay2Percents, setShowParlay2Percents] = useState(false);
-  const [showParlay3Percents, setShowParlay3Percents] = useState(false);
-  const [showParlay4Percents, setShowParlay4Percents] = useState(false);
-
+const BBBallParlayPage = (props) => {
+  const sport = props.sport;
   const showSmallParlay = smallParlay.length > 0;
   const showDecentParlay = decentParlay.length > 0;
   const showLargeParlay = largeParlay.length > 0;
@@ -33,37 +31,9 @@ const ParlayPage = () => {
   const parlay3PCopy = [...parlay3Percentages];
   const parlay4PCopy = [...parlay4Percentages];
 
-  const handleShowPercentages = (parlay, showOrHide) => {
-    if (parlay === 1) {
-      if (showOrHide === 1) {
-        setShowParlay1Percents(true);
-      } else {
-        setShowParlay1Percents(false);
-      }
-    } else if (parlay === 2) {
-      if (showOrHide === 1) {
-        setShowParlay2Percents(true);
-      } else {
-        setShowParlay2Percents(false);
-      }
-    } else if (parlay === 3) {
-      if (showOrHide === 1) {
-        setShowParlay3Percents(true);
-      } else {
-        setShowParlay3Percents(false);
-      }
-    } else if (parlay === 4) {
-      if (showOrHide === 1) {
-        setShowParlay4Percents(true);
-      } else {
-        setShowParlay4Percents(false);
-      }
-    }
-  };
-
   return (
     <div className='container-fluid bg-black text lightText'>
-      <NBAHeader title={'Welcome Ése'} />
+      <GamblingHeader title={'Welcome Ése'} link={sport} />
 
       <div className='pt-3'>
         <h2>{"Today's Parlays"}</h2>
@@ -93,99 +63,27 @@ const ParlayPage = () => {
         )}
       </div>
 
-      <div className='mt-5 pt-5'>
-        <h2>{'Parlay Hits'}</h2>
-        <div className='my-3 py-3'>
-          {showParlay1Percents ? (
-            <div>
-              <button
-                className={'btn bg-dark lightText'}
-                onClick={() => handleShowPercentages(1, 0)}
-              >
-                {'Hide Parlay 1'}
-              </button>
-              <ParlayPercents parlay={parlay1PCopy.reverse()} />
-            </div>
-          ) : (
-            <button
-              className={'btn bg-dark lightText'}
-              onClick={() => handleShowPercentages(1, 1)}
-            >
-              {'Parlay 1'}
-            </button>
-          )}
-        </div>
-        <div className='my-3 py-3'>
-          {showParlay2Percents ? (
-            <div>
-              <button
-                className='btn bg-dark lightText'
-                onClick={() => handleShowPercentages(2, 0)}
-              >
-                {'Hide Parlay 2'}
-              </button>
-              <ParlayPercents parlay={parlay2PCopy.reverse()} />
-            </div>
-          ) : (
-            <button
-              className='btn bg-dark lightText'
-              onClick={() => handleShowPercentages(2, 1)}
-            >
-              {'Parlay 2'}
-            </button>
-          )}
-        </div>
-        {showP3 && (
-          <div className='my-3 py-3'>
-            {showParlay3Percents ? (
-              <div>
-                <button
-                  className='btn bg-dark lightText'
-                  onClick={() => handleShowPercentages(3, 0)}
-                >
-                  {'Hide Parlay 4'}
-                </button>
-                <ParlayPercents parlay={parlay3PCopy.reverse()} />
-              </div>
-            ) : (
-              <button
-                className='btn bg-dark lightText'
-                onClick={() => handleShowPercentages(3, 1)}
-              >
-                {'Parlay 3'}
-              </button>
-            )}
-          </div>
-        )}
-        {showP4 && (
-          <div className='my-3 py-3'>
-            {showParlay4Percents ? (
-              <div>
-                <button
-                  className='btn bg-dark lightText'
-                  onClick={() => handleShowPercentages(4, 0)}
-                >
-                  {'Hide Parlay 4'}
-                </button>
-                <ParlayPercents parlay={parlay4PCopy.reverse()} />
-              </div>
-            ) : (
-              <button
-                className='btn bg-dark lightText'
-                onClick={() => handleShowPercentages(4, 1)}
-              >
-                {'Parlay 4'}
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+      <ParlayHitsTable title='Parlay 1 Hits' parlay={parlay1PCopy.reverse()} />
+      <ParlayHitsTable title='Parlay 2 Hits' parlay={parlay2PCopy.reverse()} />
+      {showP3 && (
+        <ParlayHitsTable
+          title='Parlay 3 Hits'
+          parlay={parlay3PCopy.reverse()}
+        />
+      )}
+      {showP4 && (
+        <ParlayHitsTable
+          title='Parlay 4 Hits'
+          parlay={parlay4PCopy.reverse()}
+        />
+      )}
 
       <footer className='row mt-5 pt-5'>
         <div className='col-12 lightText'>{footerMessageParlayPage}</div>
+        <div className='col-12 lightText'>{footerParlayHitMessageParlay}</div>
       </footer>
     </div>
   );
 };
 
-export default ParlayPage;
+export default BBBallParlayPage;

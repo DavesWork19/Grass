@@ -21,7 +21,7 @@ const NBAMatchups = () => {
 
     return (
       <Link to={link} key={link} className='col-12'>
-        <button className='btn btn-light mt-1 mb-5 px-sm-5 boldText'>
+        <button className='btn btn-light mt-1 mb-5 px-sm-5 boldText border-dark slateGrayBackground'>
           <div className='border-bottom border-black mb-3'>
             {`${gameTime}m EST`}
           </div>

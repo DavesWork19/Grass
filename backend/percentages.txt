@@ -492,3 +492,375 @@ Chiefs,Chargers,
 49ers,Rams,
 Cowboys,Washington,
 Bills,Dolphins,
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+rav,cover Spread,kan,not cover Spread,
+rav,cover OverUnder,kan,not cover OverUnder,
+gnb,cover Spread,phi,not cover Spread,
+phi,cover OverUnder,gnb,not cover OverUnder,
+pit,cover Spread,atl,not cover Spread,
+pit,cover OverUnder,atl,not cover OverUnder,
+buf,cover Spread,crd,not cover Spread,
+buf,cover OverUnder,crd,not cover OverUnder,
+oti,cover Spread,chi,not cover Spread,
+oti,cover OverUnder,chi,not cover OverUnder,
+nwe,cover Spread,cin,not cover Spread,
+cin,cover OverUnder,nwe,not cover OverUnder,
+htx,cover Spread,clt,not cover Spread,
+htx,cover OverUnder,clt,not cover OverUnder,
+jax,cover Spread,mia,not cover Spread,
+mia,cover OverUnder,jax,not cover OverUnder,
+car,cover Spread,nor,not cover Spread,
+car,cover OverUnder,nor,not cover OverUnder,
+nyg,cover Spread,min,not cover Spread,
+nyg,cover OverUnder,min,not cover OverUnder,
+sdg,cover Spread,rai,not cover Spread,
+rai,cover OverUnder,sdg,not cover OverUnder,
+sea,cover Spread,den,not cover Spread,
+sea,cover OverUnder,den,not cover OverUnder,
+cle,cover Spread,dal,not cover Spread,
+dal,cover OverUnder,cle,not cover OverUnder,
+was,cover Spread,tam,not cover Spread,
+tam,cover OverUnder,was,not cover OverUnder,
+ram,cover Spread,det,not cover Spread,
+det,cover OverUnder,ram,not cover OverUnder,
+sfo,cover Spread,nyj,not cover Spread,
+nyj,cover OverUnder,sfo,not cover OverUnder,
+1
+rav,cover Spread,kan,not cover Spread,
+kan,cover OverUnder,rav,not cover OverUnder,
+gnb,cover Spread,phi,not cover Spread,
+phi,cover OverUnder,gnb,not cover OverUnder,
+atl,cover Spread,pit,not cover Spread,
+pit,cover OverUnder,atl,not cover OverUnder,
+buf,cover Spread,crd,not cover Spread,
+crd,cover OverUnder,buf,not cover OverUnder,
+oti,cover Spread,chi,not cover Spread,
+oti,cover OverUnder,chi,not cover OverUnder,
+cin,cover Spread,nwe,not cover Spread,
+cin,cover OverUnder,nwe,not cover OverUnder,
+clt,cover Spread,htx,not cover Spread,
+htx,cover OverUnder,clt,not cover OverUnder,
+mia,cover Spread,jax,not cover Spread,
+mia,cover OverUnder,jax,not cover OverUnder,
+nor,cover Spread,car,not cover Spread,
+car,cover OverUnder,nor,not cover OverUnder,
+min,cover Spread,nyg,not cover Spread,
+nyg,cover OverUnder,min,not cover OverUnder,
+sdg,cover Spread,rai,not cover Spread,
+rai,cover OverUnder,sdg,not cover OverUnder,
+den,cover Spread,sea,not cover Spread,
+sea,cover OverUnder,den,not cover OverUnder,
+dal,cover Spread,cle,not cover Spread,
+dal,cover OverUnder,cle,not cover OverUnder,
+was,cover Spread,tam,not cover Spread,
+was,cover OverUnder,tam,not cover OverUnder,
+det,cover Spread,ram,not cover Spread,
+ram,cover OverUnder,det,not cover OverUnder,
+nyj,cover Spread,sfo,not cover Spread,
+nyj,cover OverUnder,sfo,not cover OverUnder,
+1
+kan,cover Spread,rav,not cover Spread,
+rav,cover OverUnder,kan,not cover OverUnder,
+phi,cover Spread,gnb,not cover Spread,
+phi,cover OverUnder,gnb,not cover OverUnder,
+pit,cover Spread,atl,not cover Spread,
+atl,cover OverUnder,pit,not cover OverUnder,
+crd,cover Spread,buf,not cover Spread,
+buf,cover OverUnder,crd,not cover OverUnder,
+chi,cover Spread,oti,not cover Spread,
+oti,cover OverUnder,chi,not cover OverUnder,
+cin,cover Spread,nwe,not cover Spread,
+cin,cover OverUnder,nwe,not cover OverUnder,
+clt,cover Spread,htx,not cover Spread,
+htx,cover OverUnder,clt,not cover OverUnder,
+jax,cover Spread,mia,not cover Spread,
+mia,cover OverUnder,jax,not cover OverUnder,
+nor,cover Spread,car,not cover Spread,
+nor,cover OverUnder,car,not cover OverUnder,
+min,cover Spread,nyg,not cover Spread,
+min,cover OverUnder,nyg,not cover OverUnder,
+sdg,cover Spread,rai,not cover Spread,
+sdg,cover OverUnder,rai,not cover OverUnder,
+den,cover Spread,sea,not cover Spread,
+den,cover OverUnder,sea,not cover OverUnder,
+dal,cover Spread,cle,not cover Spread,
+dal,cover OverUnder,cle,not cover OverUnder,
+tam,cover Spread,was,not cover Spread,
+tam,cover OverUnder,was,not cover OverUnder,
+det,cover Spread,ram,not cover Spread,
+ram,cover OverUnder,det,not cover OverUnder,
+sfo,cover Spread,nyj,not cover Spread,
+nyj,cover OverUnder,sfo,not cover OverUnder,
+2
+2
+1
+1
+rav,cover Spread,kan,not cover Spread,
+rav,cover OverUnder,kan,not cover OverUnder,
+1
+rav,cover Spread,kan,not cover Spread,
+rav,cover OverUnder,kan,not cover OverUnder,
+phi,cover Spread,gnb,not cover Spread,
+gnb,cover OverUnder,phi,not cover OverUnder,
+pit,cover Spread,atl,not cover Spread,
+pit,cover OverUnder,atl,not cover OverUnder,
+buf,cover Spread,crd,not cover Spread,
+crd,cover OverUnder,buf,not cover OverUnder,
+chi,cover Spread,oti,not cover Spread,
+chi,cover OverUnder,oti,not cover OverUnder,
+cin,cover Spread,nwe,not cover Spread,
+cin,cover OverUnder,nwe,not cover OverUnder,
+htx,cover Spread,clt,not cover Spread,
+htx,cover OverUnder,clt,not cover OverUnder,
+mia,cover Spread,jax,not cover Spread,
+mia,cover OverUnder,jax,not cover OverUnder,
+car,cover Spread,nor,not cover Spread,
+car,cover OverUnder,nor,not cover OverUnder,
+nyg,cover Spread,min,not cover Spread,
+nyg,cover OverUnder,min,not cover OverUnder,
+rai,cover Spread,sdg,not cover Spread,
+sdg,cover OverUnder,rai,not cover OverUnder,
+den,cover Spread,sea,not cover Spread,
+den,cover OverUnder,sea,not cover OverUnder,
+dal,cover Spread,cle,not cover Spread,
+dal,cover OverUnder,cle,not cover OverUnder,
+tam,cover Spread,was,not cover Spread,
+was,cover OverUnder,tam,not cover OverUnder,
+det,cover Spread,ram,not cover Spread,
+det,cover OverUnder,ram,not cover OverUnder,
+sfo,cover Spread,nyj,not cover Spread,
+sfo,cover OverUnder,nyj,not cover OverUnder,
+2
+2
+2
+2
+2
+1
+1
+1
+1
+rav,cover Spread,kan,not cover Spread,
+rav,not cover OverUnder,kan,not cover OverUnder,
+phi,cover Spread,gnb,not cover Spread,
+phi,cover OverUnder,gnb,cover OverUnder,
+pit,cover Spread,atl,not cover Spread,
+pit,not cover OverUnder,atl,not cover OverUnder,
+crd,cover Spread,buf,not cover Spread,
+crd,not cover OverUnder,buf,not cover OverUnder,
+oti,cover Spread,chi,not cover Spread,
+oti,not cover OverUnder,chi,not cover OverUnder,
+cin,cover Spread,nwe,not cover Spread,
+nwe,not cover OverUnder,cin,not cover OverUnder,
+htx,cover Spread,clt,not cover Spread,
+clt,cover OverUnder,htx,cover OverUnder,
+mia,cover Spread,jax,not cover Spread,
+jax,not cover OverUnder,mia,not cover OverUnder,
+car,cover Spread,nor,not cover Spread,
+car,not cover OverUnder,nor,not cover OverUnder,
+min,cover Spread,nyg,not cover Spread,
+min,not cover OverUnder,nyg,not cover OverUnder,
+rai,cover Spread,sdg,not cover Spread,
+rai,not cover OverUnder,sdg,not cover OverUnder,
+sea,cover Spread,den,not cover Spread,
+den,not cover OverUnder,sea,not cover OverUnder,
+dal,cover Spread,cle,not cover Spread,
+dal,not cover OverUnder,cle,not cover OverUnder,
+tam,cover Spread,was,not cover Spread,
+was,not cover OverUnder,tam,not cover OverUnder,
+ram,cover Spread,det,not cover Spread,
+ram,not cover OverUnder,det,not cover OverUnder,
+sfo,cover Spread,nyj,not cover Spread,
+nyj,not cover OverUnder,sfo,not cover OverUnder,
+2
+2
+2
+2
+2
+2
+mia,cover Spread,buf,not cover Spread,
+buf,not cover OverUnder,mia,not cover OverUnder,
+dal,cover Spread,nor,not cover Spread,
+nor,not cover OverUnder,dal,not cover OverUnder,
+det,cover Spread,tam,not cover Spread,
+tam,not cover OverUnder,det,not cover OverUnder,
+clt,cover Spread,gnb,not cover Spread,
+gnb,cover OverUnder,clt,cover OverUnder,
+oti,cover Spread,nyj,not cover Spread,
+nyj,not cover OverUnder,oti,not cover OverUnder,
+sfo,cover Spread,min,not cover Spread,
+sfo,not cover OverUnder,min,not cover OverUnder,
+sea,cover Spread,nwe,not cover Spread,
+sea,not cover OverUnder,nwe,not cover OverUnder,
+nyg,cover Spread,was,not cover Spread,
+nyg,not cover OverUnder,was,not cover OverUnder,
+sdg,cover Spread,car,not cover Spread,
+sdg,not cover OverUnder,car,not cover OverUnder,
+rav,cover Spread,rai,not cover Spread,
+rai,not cover OverUnder,rav,not cover OverUnder,
+cle,cover Spread,jax,not cover Spread,
+cle,not cover OverUnder,jax,not cover OverUnder,
+ram,cover Spread,crd,not cover Spread,
+crd,cover OverUnder,ram,cover OverUnder,
+pit,cover Spread,den,not cover Spread,
+pit,not cover OverUnder,den,not cover OverUnder,
+cin,cover Spread,kan,not cover Spread,
+cin,not cover OverUnder,kan,not cover OverUnder,
+chi,cover Spread,htx,not cover Spread,
+htx,cover OverUnder,chi,cover OverUnder,
+phi,cover Spread,atl,not cover Spread,
+phi,cover OverUnder,atl,cover OverUnder,
+3
+nyj,cover Spread,nwe,not cover Spread,
+nyj,cover OverUnder,nwe,cover OverUnder,
+nyg,cover Spread,cle,not cover Spread,
+nyg,not cover OverUnder,cle,not cover OverUnder,
+oti,cover Spread,gnb,not cover Spread,
+gnb,not cover OverUnder,oti,not cover OverUnder,
+chi,cover Spread,clt,not cover Spread,
+chi,not cover OverUnder,clt,not cover OverUnder,
+min,cover Spread,htx,not cover Spread,
+htx,not cover OverUnder,min,not cover OverUnder,
+nor,cover Spread,phi,not cover Spread,
+nor,cover OverUnder,phi,cover OverUnder,
+pit,cover Spread,sdg,not cover Spread,
+sdg,not cover OverUnder,pit,not cover OverUnder,
+tam,cover Spread,den,not cover Spread,
+den,not cover OverUnder,tam,not cover OverUnder,
+rai,cover Spread,car,not cover Spread,
+car,not cover OverUnder,rai,not cover OverUnder,
+sea,cover Spread,mia,not cover Spread,
+sea,cover OverUnder,mia,cover OverUnder,
+dal,cover Spread,rav,not cover Spread,
+dal,cover OverUnder,rav,cover OverUnder,
+sfo,cover Spread,ram,not cover Spread,
+sfo,not cover OverUnder,ram,not cover OverUnder,
+det,cover Spread,crd,not cover Spread,
+crd,cover OverUnder,det,cover OverUnder,
+atl,cover Spread,kan,not cover Spread,
+atl,cover OverUnder,kan,cover OverUnder,
+buf,cover Spread,jax,not cover Spread,
+jax,not cover OverUnder,buf,not cover OverUnder,
+cin,cover Spread,was,not cover Spread,
+was,not cover OverUnder,cin,not cover OverUnder,
+4
+nwe,cover Spread,nyj,not cover Spread,
+nyj,cover OverUnder,nwe,cover OverUnder,
+4
+dal,cover Spread,nyg,not cover Spread,
+dal,not cover OverUnder,nyg,not cover OverUnder,
+4
+4
+4
+4
+dal,cover Spread,nyg,not cover Spread,
+dal,not cover OverUnder,nyg,not cover OverUnder,
+nor,cover Spread,atl,not cover Spread,
+nor,not cover OverUnder,atl,not cover OverUnder,
+chi,cover Spread,ram,not cover Spread,
+ram,not cover OverUnder,chi,not cover OverUnder,
+gnb,cover Spread,min,not cover Spread,
+min,not cover OverUnder,gnb,not cover OverUnder,
+pit,cover Spread,clt,not cover Spread,
+pit,not cover OverUnder,clt,not cover OverUnder,
+nyj,cover Spread,den,not cover Spread,
+den,not cover OverUnder,nyj,not cover OverUnder,
+phi,cover Spread,tam,not cover Spread,
+phi,not cover OverUnder,tam,not cover OverUnder,
+cin,cover Spread,car,not cover Spread,
+cin,not cover OverUnder,car,not cover OverUnder,
+jax,cover Spread,htx,not cover Spread,
+jax,not cover OverUnder,htx,not cover OverUnder,
+was,cover Spread,crd,not cover Spread,
+crd,cover OverUnder,was,cover OverUnder,
+sfo,cover Spread,nwe,not cover Spread,
+sfo,cover OverUnder,nwe,cover OverUnder,
+cle,cover Spread,rai,not cover Spread,
+cle,not cover OverUnder,rai,not cover OverUnder,
+kan,cover Spread,sdg,not cover Spread,
+kan,not cover OverUnder,sdg,not cover OverUnder,
+rav,cover Spread,buf,not cover Spread,
+buf,not cover OverUnder,rav,not cover OverUnder,
+oti,cover Spread,mia,not cover Spread,
+oti,not cover OverUnder,mia,not cover OverUnder,
+det,cover Spread,sea,not cover Spread,
+sea,not cover OverUnder,det,not cover OverUnder,
+5
+tam,cover Spread,atl,not cover Spread,
+tam,not cover OverUnder,atl,not cover OverUnder,
+tam,cover Spread,atl,not cover Spread,
+tam,not cover OverUnder,atl,not cover OverUnder,
+min,cover Spread,nyj,not cover Spread,
+nyj,not cover OverUnder,min,not cover OverUnder,
+chi,cover Spread,car,not cover Spread,
+chi,cover OverUnder,car,cover OverUnder,
+cin,cover Spread,rav,not cover Spread,
+cin,cover OverUnder,rav,cover OverUnder,
+mia,cover Spread,nwe,not cover Spread,
+mia,not cover OverUnder,nwe,not cover OverUnder,
+cle,cover Spread,was,not cover Spread,
+cle,not cover OverUnder,was,not cover OverUnder,
+htx,cover Spread,buf,not cover Spread,
+buf,not cover OverUnder,htx,not cover OverUnder,
+clt,cover Spread,jax,not cover Spread,
+clt,not cover OverUnder,jax,not cover OverUnder,
+rai,cover Spread,den,not cover Spread,
+rai,not cover OverUnder,den,not cover OverUnder,
+sfo,cover Spread,crd,not cover Spread,
+sfo,cover OverUnder,crd,cover OverUnder,
+ram,cover Spread,gnb,not cover Spread,
+ram,cover OverUnder,gnb,cover OverUnder,
+sea,cover Spread,nyg,not cover Spread,
+nyg,not cover OverUnder,sea,not cover OverUnder,
+pit,cover Spread,dal,not cover Spread,
+dal,not cover OverUnder,pit,not cover OverUnder,
+kan,cover Spread,nor,not cover Spread,
+nor,not cover OverUnder,kan,not cover OverUnder,

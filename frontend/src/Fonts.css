@@ -66,10 +66,20 @@
     width: 200px;
   }
 }
+@media (min-width: 770px) {
+  .cardWidth {
+    width: 47%;
+  }
+}
+@media (max-width: 770px) {
+  .cardWidth {
+    width: 87%;
+  }
+}
 
 /* Static CSS */
 .legalNFLTeamNames {
-  width: 160px;
+  width: 800px;
 }
 .lightText {
   color: slategray;
@@ -87,4 +97,25 @@
 }
 .tableHeaderNormalWeight {
   font-weight: 600;
+}
+.dataTableBuffer {
+  height: 24px;
+}
+table {
+  border-spacing: 0px;
+}
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border: none;
+}
+
+.slateGrayBackground {
+  background-color: lightslategray;
+}
+.gameDayCSS {
+  width: 29%;
 }

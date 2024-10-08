@@ -1,5 +1,5 @@
 import '../Fonts.css';
-import { todaysGames } from './todaysGames';
+import { todaysGames } from '../nbaPages/todaysGames';
 import { legalNbaTeamLogos } from '../constants';
 
 const Parlays = (props) => {

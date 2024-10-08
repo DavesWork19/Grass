@@ -81,6 +81,8 @@ export const footerMessage1 =
 export const footerMessage2 =
   '**Percentages represent the accuracy of the model.';
 export const footerMessageParlayPage = '**  All times are in PM EST  **';
+export const footerParlayHitMessageParlay =
+  '** Parlay Hits are calculated from previous parlay calls - A Hit occurs when all legs were successful in a respective category **';
 export const matchUpPageText1 =
   'Percentages represent win percentage for corresponding label';
 export const matchUpPageText2 =
@@ -141,6 +143,7 @@ export const teamLogos = {
   Giants: nygLogo,
   Eagles: phiLogo,
   Washington: wasLogo,
+  Commanders: wasLogo,
   Bears: chiLogo,
   Lions: detLogo,
   Packers: gnbLogo,
@@ -176,6 +179,7 @@ export const teamInfo = {
   Giants: 'NFC East',
   Eagles: 'NFC East',
   Washington: 'NFC East',
+  Commanders: 'NFC East',
   Bears: 'NFC North',
   Lions: 'NFC North',
   Packers: 'NFC North',
@@ -346,11 +350,12 @@ export const legalNFLTeams = {
   Broncos: 'Denver',
   Chiefs: 'Kansas',
   Raiders: 'Las Vegas',
-  Chargers: 'Los Angles Bolts',
+  Chargers: 'LA Bolts',
   Cowboys: 'Dallas',
   Giants: 'New York People',
   Eagles: 'Philadelphia',
   Washington: 'Washington',
+  Commanders: 'Washington',
   Bears: 'Chicago',
   Lions: 'Detriot',
   Packers: 'Green Bay',
@@ -360,7 +365,7 @@ export const legalNFLTeams = {
   Saints: 'New Orleans',
   Buccaneers: 'Tampa Bay',
   Cardinals: 'Arizona',
-  Rams: 'Los Angeles Lambs',
+  Rams: 'LA Lambs',
   Seahawks: 'Seattle',
   '49ers': 'San Francisco',
 };

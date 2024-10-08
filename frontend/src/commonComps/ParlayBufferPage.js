@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parlaySecretCode2 } from '../constants';
-import NBAHeader from './Header';
+import GamblingHeader from './GamblingHeader';
 
 const ParlayBufferPage = () => {
   useLayoutEffect(() => {
@@ -108,7 +108,7 @@ const ParlayBufferPage = () => {
 
   return (
     <div className='bg-black py-5 lightText vh-100'>
-      <NBAHeader title={'Parlays'} />
+      <GamblingHeader title={'Parlays'} link={'back'} />
       <div className='container pt-5'>
         <div className='row'>
           <div className='col-12 p-2 fs-3'>{!!guess ? guess : '_'}</div>

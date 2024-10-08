@@ -253,11 +253,6 @@ class getUpcomingWeekData:
         teamDataFilename = 'teamDataHolder.txt'
         teamDataFile = open(teamDataFilename, 'w')
 
-        upcomingWeekFrontendFilename = '../frontend/src/nflPages/upcomingWeekData.js'
-        upcomingWeekFrontendFile = open(upcomingWeekFrontendFilename, 'w')
-        upcomingWeekFrontendFile.write('export const upcomingWeekData = [\n')
-        upcomingWeekFrontendFile.write(f"'{self.week}',\n")
-
         mydb = mysql.connector.connect(
         host='127.0.0.1',
         user='davidcarney',
@@ -303,8 +298,8 @@ class getUpcomingWeekData:
             temp = None
             weather = None
             if len(weatherInfo) == 0:
-                # temp = 73
-                # weather = 'Overcast'
+                temp = 62
+                weather = 'Cloudy'
                 print('ERROR : WEATHER INFO LEN IS 0')
             elif len(weatherInfo) == 1:
                 temp = int(weatherInfo[0].text.split(' ')[0])
@@ -344,6 +339,7 @@ class getUpcomingWeekData:
             insertHomeData = (
                         f"INSERT INTO productionNFL "
                         f"("
+                        f"DateTime, "
                         f"Week, "
                         f"Day, "
                         f"At, "
@@ -358,6 +354,7 @@ class getUpcomingWeekData:
                         f"Wind "
                         f") "
                         f"VALUES ("
+                        f"'{' '.join(dateAndTime)}',"
                         f"{self.week},"
                         f"{dayCode},"
                         f"{1},"
@@ -379,6 +376,7 @@ class getUpcomingWeekData:
             insertAwayData = (
                         f"INSERT INTO productionNFL "
                         f"("
+                        f"DateTime, "
                         f"Week, "
                         f"Day, "
                         f"At, "
@@ -393,6 +391,7 @@ class getUpcomingWeekData:
                         f"Wind "
                         f") "
                         f"VALUES ("
+                        f"'{' '.join(dateAndTime)}',"
                         f"{self.week},"
                         f"{dayCode},"
                         f"{0},"
@@ -425,31 +424,7 @@ class getUpcomingWeekData:
             teamDataFile.write(f'{wind}')
             teamDataFile.write('\n')
 
-            upcomingWeekFrontendFile.write("'")
-            upcomingWeekFrontendFile.write(f'{dateAndTime[0]}')
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(f'{dateAndTime[1]}')
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(f'{dateAndTime[2]}')
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(f'{dateAndTime[3]}')
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(awayTeam)
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(homeTeam)
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(f'{temp}')
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(weather)
-            upcomingWeekFrontendFile.write('_')
-            upcomingWeekFrontendFile.write(f'{wind}')
-            upcomingWeekFrontendFile.write("',")
-            upcomingWeekFrontendFile.write('\n')
-
             matchUp = matchUp.next_sibling.next_sibling
-
-        upcomingWeekFrontendFile.write('];')
-        upcomingWeekFrontendFile.close()
 
         print(f'Essential Data has been saved!')
 
@@ -1206,7 +1181,7 @@ class getPredictions:
         mycursor.execute(f"SELECT * FROM productionNFL WHERE Team = '{teamName}' and Year > 2021 and WinLoss is not NULL")
         teamData = mycursor.fetchall()
         teamDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
-        teamDF = teamDF.drop(columns=['spreadOdds','totalOdds','ML','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','spreadCalculated','totalCalculated'])
+        teamDF = teamDF.drop(columns=['DateTime','spreadOdds','totalOdds','ML','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','spreadCalculated','totalCalculated'])
  
         upcomingWeekData = [[self.year, self.week, day, at, oppTeamNumber, time, channel, temp, weather, wind, spread, total]]
         upcomingWeekColumns = ['Year','Week','Day', 'At', 'OppTeam', 'Time', 'Channel', 'Temp', 'Weather', 'Wind', 'spread', 'total']
@@ -1399,6 +1374,26 @@ class getPredictions:
 
 
 
+# def getParlays():
+#     mydb = mysql.connector.connect(
+#         host='127.0.0.1',
+#         user='davidcarney',
+#         password='Sinorrabb1t',
+#         database='NFL'
+#     )
+#     mycursor = mydb.cursor()
+
+#     insertData = f"UPDATE productionNFL SET favored = 1 WHERE favored is NULL and spread LIKE '%-%'"
+#     mycursor.execute(insertData)
+#     mydb.commit()
+
+
+
+
+
+
+
+
 def updateTeamData(week):
     teamDataFilename = 'teamData.txt'
     percentFilename = 'percentages.txt'
@@ -1423,6 +1418,89 @@ def updateTeamData(week):
     teamDataFile.write(f'{week}\n')
     for (teamDataLine, predLine) in zip(teamDataHolderFile, predictions):
         teamDataFile.write(f'{teamDataLine.rstrip()}_{predLine[0]}_{predLine[1]}_\n')
+
+
+
+
+def updateFrontend(week):
+    upcomingWeekFrontendFilename = '../frontend/src/nflPages/upcomingWeekData.js'
+    upcomingWeekFrontendFile = open(upcomingWeekFrontendFilename, 'w')
+    upcomingWeekFrontendFile.write('export const upcomingWeekData = [\n')
+    upcomingWeekFrontendFile.write(f"'{week}',\n")
+
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NFL'
+        )
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT DateTime, At, OppTeam, Team, spread, total, spreadCalculated, totalCalculated FROM productionNFL WHERE winLoss is NULL")
+    columns = ['DateTime', 'At', 'OppTeam', 'Team', 'spread', 'total', 'spreadCalculated', 'totalCalculated']
+    teamData = mycursor.fetchall()
+    nextGames = pd.DataFrame(teamData, columns = columns)
+
+    matchUps = []
+    for game in nextGames.iterrows():
+        game = game[1]
+        dateTime, At, OppTeam, Team, spread, total, spreadCalculated, totalCalculated = game
+        teamName = getTeamName(getTeamFromSmallName(Team))
+        oppTeamName = getTeamName(OppTeam)
+
+        dateTimeStr = dateTime.split(' ')[0]
+        dateTimeObj = datetime.strptime(dateTimeStr,'%m/%d/%y')
+        weekDay = dateTimeObj.strftime('%A')
+        abbrevMonth = dateTimeObj.strftime('%b')
+        actualDay = dateTimeObj.strftime('%d')
+        actualTime = ' '.join(dateTime.split(' ')[1:])
+
+        if teamName not in matchUps:
+            homeTeam = ''
+            awayTeam = ''
+
+            if At == 1:
+                homeTeam = teamName
+                awayTeam = oppTeamName
+
+            else:
+                homeTeam = oppTeamName
+                awayTeam = teamName
+                
+            upcomingWeekFrontendFile.write("'")
+            upcomingWeekFrontendFile.write(f'{weekDay}, {abbrevMonth} {actualDay}')
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(str(actualTime))
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(awayTeam)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(homeTeam)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(teamName)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(spread)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(str(spreadCalculated))
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(total)
+            upcomingWeekFrontendFile.write('_')
+            upcomingWeekFrontendFile.write(str(totalCalculated))
+            upcomingWeekFrontendFile.write("',")
+            upcomingWeekFrontendFile.write('\n')
+
+
+            matchUps.append(teamName)
+            matchUps.append(oppTeamName)
+
+
+    upcomingWeekFrontendFile.write('];')
+    upcomingWeekFrontendFile.close()
+
+    print('Fontend has been updated!')
+
+
+
+
 
 
 
@@ -1460,6 +1538,11 @@ predictions = getPredictions(week, year)
 predictions.doit()
 
 updateTeamData(week)
+
+# getParlays()
+
+# Update frontend
+updateFrontend(week)
 
 
 print(f'End time : {time.localtime()}')
