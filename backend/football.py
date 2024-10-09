@@ -1878,34 +1878,34 @@ table = 'productionNFL'
 
 print(f'Start Time : {time.localtime()}')
 
-# # 1/4
-# #Store old game data
-# storeDataObj = storeTeamData(table, week, year)
-# storeDataObj.storeAllTeamsData()
-# updateCoveredValues()
+# 1/4
+#Store old game data
+storeDataObj = storeTeamData(table, week, year)
+storeDataObj.storeAllTeamsData()
+updateCoveredValues()
 
-# # 2/4
-# #Store new game data
-# storeUpcomingWeekData = getUpcomingWeekData(week, year)
-# storeUpcomingWeekData.getWeatherByWeek()
-# storeUpcomingWeekData.getGamblingData()
+# 2/4
+#Store new game data
+storeUpcomingWeekData = getUpcomingWeekData(week, year)
+storeUpcomingWeekData.getWeatherByWeek()
+storeUpcomingWeekData.getGamblingData()
 
-# # 3/4
-# updatePercentages()
-# updateFavored()
+# 3/4
+updatePercentages()
+updateFavored()
 
 
-# # 4/4
-# #Get predictions
-# predictions = getPredictions(week, year)
-# predictions.doit()
+# 4/4
+#Get predictions
+predictions = getPredictions(week, year)
+predictions.doit()
 
-# updateTeamData(week)
+updateTeamData(week)
 
-# # getParlays()
+# getParlays()
 
-# # Update frontend
-# updateFrontend(week)
+# Update frontend
+updateFrontend(week)
 updatePercentagesFrontend()
 
 
