@@ -80,6 +80,9 @@ from constants import *
 week = 2
 
 
+d = {'f':1,'e':2}
+
+print(len(d))
 
 
 
@@ -89,29 +92,108 @@ week = 2
 
 
 
+# mydb = mysql.connector.connect(
+#     host='127.0.0.1',
+#     user='davidcarney',
+#     password='Sinorrabb1t',
+#     database='NFL'
+# )
+# mycursor = mydb.cursor()
+
+# mycursor.execute("SELECT DateTime, Week, At, OppTeam, Team, spread, total, spreadCalculated, totalCalculated, spreadCovered, totalCovered FROM productionNFL WHERE spreadCalculated is NOT NULL and spreadCovered is NOT NULL")
+# columns = ['DateTime', 'Week', 'At', 'OppTeam', 'Team', 'spread', 'total', 'spreadCalculated', 'totalCalculated', 'spreadCovered', 'totalCovered']
+# teamData = mycursor.fetchall()
+# percentages = pd.DataFrame(teamData, columns = columns)
+
+# percentData = {}
+# for team in ALL_TEAMS:
+#     team = getTeamName(getTeamFromSmallName(team))
+#     percentData[f'{team}_spread'] = [0,0]
+#     percentData[f'{team}_total'] = [0,0]
+
+#     percentData[f'{team}_home_spread'] = [0,0]
+#     percentData[f'{team}_away_spread'] = [0,0]
+#     percentData[f'{team}_home_total'] = [0,0]
+#     percentData[f'{team}_away_total'] = [0,0]
+
+# for week in ALL_WEEKS:
+#     percentData[f'Week_{week}_spread'] = [0,0]
+#     percentData[f'Week_{week}_total'] = [0,0]
+
+# percentData['home_spread'] = [0,0]
+# percentData['away_spread'] = [0,0]
+# percentData['home_total'] = [0,0]
+# percentData['away_total'] = [0,0]
+
+# percentData['overall_spread'] = [0,0]
+# percentData['overall_total'] = [0,0]
 
 
+# for stat in percentages.iterrows():
+#     stat = stat[1]
+#     dateTime, week, at, oppTeam, team, spread, total, spreadCalculated, totalCalculated, spreadCovered, totalCovered = stat
+#     team = getTeamName(getTeamFromSmallName(team))
 
-parlayCoin = [1,3]
-parlayNumbers = [1,2,3,4,5,6,7,8,9,10]
+#     if spreadCalculated == spreadCovered:
+#         percentData[f'{team}_spread'] = [percentData[f'{team}_spread'][0] + 100, percentData[f'{team}_spread'][1] + 1]
+#         percentData[f'Week_{week}_spread'] = [percentData[f'Week_{week}_spread'][0] + 100, percentData[f'Week_{week}_spread'][1] + 1]
+#         percentData['overall_spread'] = [percentData['overall_spread'][0] + 100, percentData['overall_spread'][1] + 1]
 
-mydb = mysql.connector.connect(
-        host='127.0.0.1',
-    user='davidcarney',
-    password='Sinorrabb1t',
-    database='NFL'
-)
-mycursor = mydb.cursor()
+#         if at:
+#             percentData[f'{team}_home_spread'] = [percentData[f'{team}_home_spread'][0] + 100, percentData[f'{team}_home_spread'][1] + 1]
+#             percentData['home_spread'] = [percentData['home_spread'][0] + 100, percentData['home_spread'][1] + 1]
+#         else:
+#             percentData[f'{team}_away_spread'] = [percentData[f'{team}_away_spread'][0] + 100, percentData[f'{team}_away_spread'][1] + 1]
+#             percentData['away_spread'] = [percentData['away_spread'][0] + 100, percentData['away_spread'][1] + 1]
 
-for team in ALL_TEAMS:
-    mycursor.execute(f"SELECT Week, Day, Team, spread, spreadCalculated, spreadCovered, total, totalCalculated, totalCovered FROM productionNFL WHERE totalCovered is not NULL and totalCalculated is not NULL and team = '{team}'")
-    columns = ['Week', 'Day', 'Team', 'spread', 'spreadCalculated', 'spreadCovered', 'total', 'totalCalculated', 'totalCovered']
-    allDataDB = mycursor.fetchall()
-    allData = pd.DataFrame(allDataDB, columns = columns)
+#     else:
+#         percentData[f'{team}_spread'] = [percentData[f'{team}_spread'][0], percentData[f'{team}_spread'][1] + 1]
+#         percentData[f'Week_{week}_spread'] = [percentData[f'Week_{week}_spread'][0], percentData[f'Week_{week}_spread'][1] + 1]
+#         percentData['overall_spread'] = [percentData['overall_spread'][0], percentData['overall_spread'][1] + 1]
 
-    print(allData)
+#         if at:
+#             percentData[f'{team}_home_spread'] = [percentData[f'{team}_home_spread'][0], percentData[f'{team}_home_spread'][1] + 1]
+#             percentData['home_spread'] = [percentData['home_spread'][0], percentData['home_spread'][1] + 1]
+#         else:
+#             percentData[f'{team}_away_spread'] = [percentData[f'{team}_away_spread'][0], percentData[f'{team}_away_spread'][1] + 1]
+#             percentData['away_spread'] = [percentData['away_spread'][0], percentData['away_spread'][1] + 1]
 
-    break
+    
+#     if totalCalculated == totalCovered:
+#         percentData[f'{team}_total'] = [percentData[f'{team}_total'][0] + 100, percentData[f'{team}_total'][1] + 1]
+#         percentData[f'Week_{week}_total'] = [percentData[f'Week_{week}_total'][0] + 100, percentData[f'Week_{week}_total'][1] + 1]
+#         percentData['overall_total'] = [percentData['overall_total'][0] + 100, percentData['overall_total'][1] + 1]
+
+#         if at:
+#             percentData[f'{team}_home_total'] = [percentData[f'{team}_home_total'][0] + 100, percentData[f'{team}_home_total'][1] + 1]
+#             percentData['home_total'] = [percentData['home_total'][0] + 100, percentData['home_total'][1] + 1]
+#         else:
+#             percentData[f'{team}_away_total'] = [percentData[f'{team}_away_total'][0] + 100, percentData[f'{team}_away_total'][1] + 1]
+#             percentData['away_total'] = [percentData['away_total'][0] + 100, percentData['away_total'][1] + 1]
+
+
+#     else:
+#         percentData[f'{team}_total'] = [percentData[f'{team}_total'][0], percentData[f'{team}_total'][1] + 1]
+#         percentData[f'Week_{week}_total'] = [percentData[f'Week_{week}_total'][0], percentData[f'Week_{week}_total'][1] + 1]
+#         percentData['overall_total'] = [percentData['overall_total'][0], percentData['overall_total'][1] + 1]
+
+#         if at:
+#             percentData[f'{team}_home_total'] = [percentData[f'{team}_home_total'][0], percentData[f'{team}_home_total'][1] + 1]
+#             percentData['home_total'] = [percentData['home_total'][0], percentData['home_total'][1] + 1]
+#         else:
+#             percentData[f'{team}_away_total'] = [percentData[f'{team}_away_total'][0], percentData[f'{team}_away_total'][1] + 1]
+#             percentData['away_total'] = [percentData['away_total'][0], percentData['away_total'][1] + 1]
+
+
+# for data in percentData:
+#     try:
+#         percentData[data] = round(percentData[data][0] / percentData[data][1], 2)
+#     except:
+#         percentData[data] = -1
+
+    
+# for data in percentData:
+#     print(data,percentData[data])
 
 
 # for parlay in range(1,5):

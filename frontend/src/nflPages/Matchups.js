@@ -1,27 +1,16 @@
 import { Link } from 'react-router-dom';
 import { upcomingWeekData } from './upcomingWeekData.js';
-import { legalNFLTeams } from '../constants';
 import ATLogo from '../logos/atLogo1.png';
 import '../Fonts.css';
 
 const Matchups = (props) => {
   const givenDay = props.day;
 
-  const times = upcomingWeekData.slice(1).map((data) => {
-    const splitData = data.split('_');
-    if (givenDay === splitData[0]) return splitData[1];
-    return -1;
-  });
-  const timeSet = [...new Set(times)];
-  const uniqueWeekTimes = timeSet.filter((time) => time !== -1);
-
-  console.log(uniqueWeekTimes);
-
   const setTeam = (team, textPos) => {
     return (
       <div className={`boldText text-${textPos}`}>
         {/* <img className='teamImgs' src={teamLogos[team]} alt='logo' /> */}
-        <div>{legalNFLTeams[team]}</div>
+        <div>{team}</div>
       </div>
     );
   };
@@ -42,13 +31,17 @@ const Matchups = (props) => {
           selectedTotal,
           selectedTotalCall,
         ] = data.split('_');
-        const link = `${awayTeam}At${homeTeam}`;
         const day = weekDay.split(' - ')[0];
-        const updatedTime = time[0] === '0' ? time.slice(1) : time;
 
         if (day !== givenDay) {
           return null;
         }
+        const link = `${awayTeam}At${homeTeam}`;
+        const updatedTime = time[0] === '0' ? time.slice(1) : time;
+        const homeCover = +selectedSpreadCall ? true : false;
+        const homeSpreadCall = homeCover ? 'Cover' : null;
+        const awaySpreadCall = homeCover ? null : 'Cover';
+        const overUnderCoverName = +selectedTotalCall ? 'Over' : 'Under';
 
         return (
           <div key={link} className='row'>
@@ -68,10 +61,10 @@ const Matchups = (props) => {
               className='col-12'
             >
               <button className='btn btn-light mt-1 mb-5 px-sm-5 boldText border-dark slateGrayBackground col-12 col-sm-8'>
-                <div className='border-bottom border-black mb-1'>
-                  {updatedTime}
+                <div className='row border-bottom border-black mx-2 mx-sm-0 pb-1'>
+                  <div className='col-12'>{updatedTime}</div>
                 </div>
-                <div className='row'>
+                <div className='row py-1'>
                   <div className='col-5 col-sm-4'>
                     {setTeam(awayTeam, 'start')}
                   </div>
@@ -80,6 +73,15 @@ const Matchups = (props) => {
                   </div>
                   <div className='col-5 col-sm-4'>
                     {setTeam(homeTeam, 'end')}
+                  </div>
+                </div>
+                <div className='row border-top border-black mx-2 mx-sm-0 py-1'>
+                  <div className='col-4'>
+                    {awaySpreadCall ?? `${overUnderCoverName} ${selectedTotal}`}
+                  </div>
+                  <div className='col-4'>{selectedSpread}</div>
+                  <div className='col-4'>
+                    {homeSpreadCall ?? `${overUnderCoverName} ${selectedTotal}`}
                   </div>
                 </div>
               </button>

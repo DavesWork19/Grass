@@ -1499,6 +1499,369 @@ def updateFrontend(week):
     print('Fontend has been updated!')
 
 
+def updatePercentagesFrontend():
+    percentFrontendFilename = '../frontend/src/nflPages/percentages.json'
+    percentFrontendFile = open(percentFrontendFilename, 'w')
+    percentFrontendFile.write('{')
+
+    mydb = mysql.connector.connect(
+        host='127.0.0.1',
+        user='davidcarney',
+        password='Sinorrabb1t',
+        database='NFL'
+    )
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT DateTime, Week, Day, At, OppTeam, Team, spread, total, spreadCalculated, totalCalculated, spreadCovered, totalCovered FROM productionNFL WHERE spreadCalculated is NOT NULL and spreadCovered is NOT NULL")
+    columns = ['DateTime', 'Week', 'Day', 'At', 'OppTeam', 'Team', 'spread', 'total', 'spreadCalculated', 'totalCalculated', 'spreadCovered', 'totalCovered']
+    teamData = mycursor.fetchall()
+    percentages = pd.DataFrame(teamData, columns = columns)
+
+    percentData = {}
+    for team in ALL_TEAMS:
+        team = getTeamName(getTeamFromSmallName(team))
+        percentData[f'{team}_spread'] = [0,0]
+        percentData[f'{team}_total'] = [0,0]
+        percentData[f'{team}_parlay'] = [0,0]
+
+        percentData[f'{team}_home_spread'] = [0,0]
+        percentData[f'{team}_away_spread'] = [0,0]
+        percentData[f'{team}_home_total'] = [0,0]
+        percentData[f'{team}_away_total'] = [0,0]
+        percentData[f'{team}_home_parlay'] = [0,0]
+        percentData[f'{team}_away_parlay'] = [0,0]
+
+        percentData[f'{team}_Mon_spread'] = [0,0]
+        percentData[f'{team}_Tue_spread'] = [0,0]
+        percentData[f'{team}_Wed_spread'] = [0,0]
+        percentData[f'{team}_Thu_spread'] = [0,0]
+        percentData[f'{team}_Fri_spread'] = [0,0]
+        percentData[f'{team}_Sat_spread'] = [0,0]
+        percentData[f'{team}_Sun_spread'] = [0,0]
+        percentData[f'{team}_Mon_total'] = [0,0]
+        percentData[f'{team}_Tue_total'] = [0,0]
+        percentData[f'{team}_Wed_total'] = [0,0]
+        percentData[f'{team}_Thu_total'] = [0,0]
+        percentData[f'{team}_Fri_total'] = [0,0]
+        percentData[f'{team}_Sat_total'] = [0,0]
+        percentData[f'{team}_Sun_total'] = [0,0]
+        percentData[f'{team}_Mon_parlay'] = [0,0]
+        percentData[f'{team}_Tue_parlay'] = [0,0]
+        percentData[f'{team}_Wed_parlay'] = [0,0]
+        percentData[f'{team}_Thu_parlay'] = [0,0]
+        percentData[f'{team}_Fri_parlay'] = [0,0]
+        percentData[f'{team}_Sat_parlay'] = [0,0]
+        percentData[f'{team}_Sun_parlay'] = [0,0]
+
+        percentData[f'{team}_8_spread'] = [0,0]
+        percentData[f'{team}_9_spread'] = [0,0]
+        percentData[f'{team}_10_spread'] = [0,0]
+        percentData[f'{team}_11_spread'] = [0,0]
+        percentData[f'{team}_12_spread'] = [0,0]
+        percentData[f'{team}_13_spread'] = [0,0]
+        percentData[f'{team}_14_spread'] = [0,0]
+        percentData[f'{team}_15_spread'] = [0,0]
+        percentData[f'{team}_16_spread'] = [0,0]
+        percentData[f'{team}_17_spread'] = [0,0]
+        percentData[f'{team}_18_spread'] = [0,0]
+        percentData[f'{team}_19_spread'] = [0,0]
+        percentData[f'{team}_20_spread'] = [0,0]
+        percentData[f'{team}_21_spread'] = [0,0]
+        percentData[f'{team}_22_spread'] = [0,0]
+        percentData[f'{team}_23_spread'] = [0,0]
+        percentData[f'{team}_24_spread'] = [0,0]
+        percentData[f'{team}_8_total'] = [0,0]
+        percentData[f'{team}_9_total'] = [0,0]
+        percentData[f'{team}_10_total'] = [0,0]
+        percentData[f'{team}_11_total'] = [0,0]
+        percentData[f'{team}_12_total'] = [0,0]
+        percentData[f'{team}_13_total'] = [0,0]
+        percentData[f'{team}_14_total'] = [0,0]
+        percentData[f'{team}_15_total'] = [0,0]
+        percentData[f'{team}_16_total'] = [0,0]
+        percentData[f'{team}_17_total'] = [0,0]
+        percentData[f'{team}_18_total'] = [0,0]
+        percentData[f'{team}_19_total'] = [0,0]
+        percentData[f'{team}_20_total'] = [0,0]
+        percentData[f'{team}_21_total'] = [0,0]
+        percentData[f'{team}_22_total'] = [0,0]
+        percentData[f'{team}_23_total'] = [0,0]
+        percentData[f'{team}_24_total'] = [0,0]
+        percentData[f'{team}_8_parlay'] = [0,0]
+        percentData[f'{team}_9_parlay'] = [0,0]
+        percentData[f'{team}_10_parlay'] = [0,0]
+        percentData[f'{team}_11_parlay'] = [0,0]
+        percentData[f'{team}_12_parlay'] = [0,0]
+        percentData[f'{team}_13_parlay'] = [0,0]
+        percentData[f'{team}_14_parlay'] = [0,0]
+        percentData[f'{team}_15_parlay'] = [0,0]
+        percentData[f'{team}_16_parlay'] = [0,0]
+        percentData[f'{team}_17_parlay'] = [0,0]
+        percentData[f'{team}_18_parlay'] = [0,0]
+        percentData[f'{team}_19_parlay'] = [0,0]
+        percentData[f'{team}_20_parlay'] = [0,0]
+        percentData[f'{team}_21_parlay'] = [0,0]
+        percentData[f'{team}_22_parlay'] = [0,0]
+        percentData[f'{team}_23_parlay'] = [0,0]
+        percentData[f'{team}_24_parlay'] = [0,0]
+
+
+    for week in ALL_WEEKS:
+        percentData[f'Week_{week}_spread'] = [0,0]
+        percentData[f'Week_{week}_total'] = [0,0]
+        percentData[f'Week_{week}_parlay'] = [0,0]
+
+    percentData['home_spread'] = [0,0]
+    percentData['away_spread'] = [0,0]
+    percentData['home_total'] = [0,0]
+    percentData['away_total'] = [0,0]
+    percentData['home_parlay'] = [0,0]
+    percentData['away_parlay'] = [0,0]
+    percentData['overall_spread'] = [0,0]
+    percentData['overall_total'] = [0,0]
+    percentData['overall_parlay'] = [0,0]
+
+    percentData['overall_Mon_spread'] = [0,0]
+    percentData['overall_Tue_spread'] = [0,0]
+    percentData['overall_Wed_spread'] = [0,0]
+    percentData['overall_Thu_spread'] = [0,0]
+    percentData['overall_Fri_spread'] = [0,0]
+    percentData['overall_Sat_spread'] = [0,0]
+    percentData['overall_Sun_spread'] = [0,0]
+    percentData['overall_Mon_total'] = [0,0]
+    percentData['overall_Tue_total'] = [0,0]
+    percentData['overall_Wed_total'] = [0,0]
+    percentData['overall_Thu_total'] = [0,0]
+    percentData['overall_Fri_total'] = [0,0]
+    percentData['overall_Sat_total'] = [0,0]
+    percentData['overall_Sun_total'] = [0,0]
+    percentData['overall_Mon_parlay'] = [0,0]
+    percentData['overall_Tue_parlay'] = [0,0]
+    percentData['overall_Wed_parlay'] = [0,0]
+    percentData['overall_Thu_parlay'] = [0,0]
+    percentData['overall_Fri_parlay'] = [0,0]
+    percentData['overall_Sat_parlay'] = [0,0]
+    percentData['overall_Sun_parlay'] = [0,0]
+
+    percentData['overall_8_spread'] = [0,0]
+    percentData['overall_9_spread'] = [0,0]
+    percentData['overall_10_spread'] = [0,0]
+    percentData['overall_11_spread'] = [0,0]
+    percentData['overall_12_spread'] = [0,0]
+    percentData['overall_13_spread'] = [0,0]
+    percentData['overall_14_spread'] = [0,0]
+    percentData['overall_15_spread'] = [0,0]
+    percentData['overall_16_spread'] = [0,0]
+    percentData['overall_17_spread'] = [0,0]
+    percentData['overall_18_spread'] = [0,0]
+    percentData['overall_19_spread'] = [0,0]
+    percentData['overall_20_spread'] = [0,0]
+    percentData['overall_21_spread'] = [0,0]
+    percentData['overall_22_spread'] = [0,0]
+    percentData['overall_23_spread'] = [0,0]
+    percentData['overall_24_spread'] = [0,0]
+    percentData['overall_8_total'] = [0,0]
+    percentData['overall_9_total'] = [0,0]
+    percentData['overall_10_total'] = [0,0]
+    percentData['overall_11_total'] = [0,0]
+    percentData['overall_12_total'] = [0,0]
+    percentData['overall_13_total'] = [0,0]
+    percentData['overall_14_total'] = [0,0]
+    percentData['overall_15_total'] = [0,0]
+    percentData['overall_16_total'] = [0,0]
+    percentData['overall_17_total'] = [0,0]
+    percentData['overall_18_total'] = [0,0]
+    percentData['overall_19_total'] = [0,0]
+    percentData['overall_20_total'] = [0,0]
+    percentData['overall_21_total'] = [0,0]
+    percentData['overall_22_total'] = [0,0]
+    percentData['overall_23_total'] = [0,0]
+    percentData['overall_24_total'] = [0,0]
+    percentData['overall_8_parlay'] = [0,0]
+    percentData['overall_9_parlay'] = [0,0]
+    percentData['overall_10_parlay'] = [0,0]
+    percentData['overall_11_parlay'] = [0,0]
+    percentData['overall_12_parlay'] = [0,0]
+    percentData['overall_13_parlay'] = [0,0]
+    percentData['overall_14_parlay'] = [0,0]
+    percentData['overall_15_parlay'] = [0,0]
+    percentData['overall_16_parlay'] = [0,0]
+    percentData['overall_17_parlay'] = [0,0]
+    percentData['overall_18_parlay'] = [0,0]
+    percentData['overall_19_parlay'] = [0,0]
+    percentData['overall_20_parlay'] = [0,0]
+    percentData['overall_21_parlay'] = [0,0]
+    percentData['overall_22_parlay'] = [0,0]
+    percentData['overall_23_parlay'] = [0,0]
+    percentData['overall_24_parlay'] = [0,0]
+
+
+    for stat in percentages.iterrows():
+        stat = stat[1]
+        dateTime, week, day, at, oppTeam, team, spread, total, spreadCalculated, totalCalculated, spreadCovered, totalCovered = stat
+        team = getTeamName(getTeamFromSmallName(team))
+        day = str(day)
+
+        updatedTime = datetime.strptime(' '.join(dateTime.split(' ')[1:3]), '%I:%M %p')
+        updatedHour = int(updatedTime.strftime('%H:%M').split(':')[0])
+
+        teamSpread = f'{team}_spread'
+        teamTotal = f'{team}_total'
+        teamParlay = f'{team}_parlay'
+        teamDaySpread = f'{team}_{getDayFromCode(day)}_spread'
+        teamDayTotal = f'{team}_{getDayFromCode(day)}_total'
+        teamDayParlay = f'{team}_{getDayFromCode(day)}_parlay'
+        teamTimeSpread = f'{team}_{updatedHour}_spread'
+        teamTimeTotal = f'{team}_{updatedHour}_total'
+        teamTimeParlay = f'{team}_{updatedHour}_parlay'
+
+        teamHomeSpread = f'{team}_home_spread'
+        teamHomeTotal = f'{team}_home_total'
+        teamHomeParlay = f'{team}_home_parlay'
+        teamAwaySpread = f'{team}_away_spread'
+        teamAwayTotal = f'{team}_away_total'
+        teamAwayParlay = f'{team}_away_parlay'
+
+        homeSpread = 'home_spread'
+        homeTotal = 'home_total'
+        homeParlay = 'home_parlay'
+        awaySpread = 'away_spread'
+        awayTotal = 'away_total'
+        awayParlay = 'away_parlay'
+
+        weekSpread = f'Week_{week}_spread'
+        weekTotal = f'Week_{week}_total'
+        weekParlay = f'Week_{week}_parlay'
+
+        overallSpread = 'overall_spread'
+        overallTotal = 'overall_total'
+        overallParlay = 'overall_parlay'
+        overallDaySpread = f'overall_{getDayFromCode(day)}_spread'
+        overallDayTotal = f'overall_{getDayFromCode(day)}_total'
+        overallDayParlay = f'overall_{getDayFromCode(day)}_parlay'
+        overallTimeSpread = f'overall_{updatedHour}_spread'
+        overallTimeTotal = f'overall_{updatedHour}_total'
+        overallTimeParlay = f'overall_{updatedHour}_parlay'
+
+        if spreadCalculated == spreadCovered:
+            percentData[teamSpread] = [percentData[teamSpread][0] + 100, percentData[teamSpread][1] + 1]
+            percentData[teamDaySpread] = [percentData[teamDaySpread][0] + 100, percentData[teamDaySpread][1] + 1]
+            percentData[teamTimeSpread] = [percentData[teamTimeSpread][0] + 100, percentData[teamTimeSpread][1] + 1]
+            percentData[weekSpread] = [percentData[weekSpread][0] + 100, percentData[weekSpread][1] + 1]
+            percentData[overallSpread] = [percentData[overallSpread][0] + 100, percentData[overallSpread][1] + 1]
+            percentData[overallDaySpread] = [percentData[overallDaySpread][0] + 100, percentData[overallDaySpread][1] + 1]
+            percentData[overallTimeSpread] = [percentData[overallTimeSpread][0] + 100, percentData[overallTimeSpread][1] + 1]
+
+            if at:
+                percentData[teamHomeSpread] = [percentData[teamHomeSpread][0] + 100, percentData[teamHomeSpread][1] + 1]
+                percentData[homeSpread] = [percentData[homeSpread][0] + 100, percentData[homeSpread][1] + 1]
+            else:
+                percentData[teamAwaySpread] = [percentData[teamAwaySpread][0] + 100, percentData[teamAwaySpread][1] + 1]
+                percentData[awaySpread] = [percentData[awaySpread][0] + 100, percentData[awaySpread][1] + 1]
+
+        else:
+            percentData[teamSpread] = [percentData[teamSpread][0], percentData[teamSpread][1] + 1]
+            percentData[teamDaySpread] = [percentData[teamDaySpread][0], percentData[teamDaySpread][1] + 1]
+            percentData[teamTimeSpread] = [percentData[teamTimeSpread][0], percentData[teamTimeSpread][1] + 1]            
+            percentData[weekSpread] = [percentData[weekSpread][0], percentData[weekSpread][1] + 1]
+            percentData[overallSpread] = [percentData[overallSpread][0], percentData[overallSpread][1] + 1]
+            percentData[overallDaySpread] = [percentData[overallDaySpread][0], percentData[overallDaySpread][1] + 1]
+            percentData[overallTimeSpread] = [percentData[overallTimeSpread][0], percentData[overallTimeSpread][1] + 1]
+
+            if at:
+                percentData[teamHomeSpread] = [percentData[teamHomeSpread][0], percentData[teamHomeSpread][1] + 1]
+                percentData[homeSpread] = [percentData[homeSpread][0], percentData[homeSpread][1] + 1]
+            else:
+                percentData[teamAwaySpread] = [percentData[teamAwaySpread][0], percentData[teamAwaySpread][1] + 1]
+                percentData[awaySpread] = [percentData[awaySpread][0], percentData[awaySpread][1] + 1]
+
+        
+        if totalCalculated == totalCovered:
+            percentData[teamTotal] = [percentData[teamTotal][0] + 100, percentData[teamTotal][1] + 1]
+            percentData[teamDayTotal] = [percentData[teamDayTotal][0] + 100, percentData[teamDayTotal][1] + 1]            
+            percentData[teamTimeTotal] = [percentData[teamTimeTotal][0] + 100, percentData[teamTimeTotal][1] + 1]
+            percentData[weekTotal] = [percentData[weekTotal][0] + 100, percentData[weekTotal][1] + 1]
+            percentData[overallTotal] = [percentData[overallTotal][0] + 100, percentData[overallTotal][1] + 1]
+            percentData[overallDayTotal] = [percentData[overallDayTotal][0] + 100, percentData[overallDayTotal][1] + 1]
+            percentData[overallTimeTotal] = [percentData[overallTimeTotal][0] + 100, percentData[overallTimeTotal][1] + 1]
+
+            if at:
+                percentData[teamHomeTotal] = [percentData[teamHomeTotal][0] + 100, percentData[teamHomeTotal][1] + 1]
+                percentData[homeTotal] = [percentData[homeTotal][0] + 100, percentData[homeTotal][1] + 1]
+            else:
+                percentData[teamAwayTotal] = [percentData[teamAwayTotal][0] + 100, percentData[teamAwayTotal][1] + 1]
+                percentData[awayTotal] = [percentData[awayTotal][0] + 100, percentData[awayTotal][1] + 1]
+
+        else:
+            percentData[teamTotal] = [percentData[teamTotal][0], percentData[teamTotal][1] + 1]
+            percentData[teamDayTotal] = [percentData[teamDayTotal][0], percentData[teamDayTotal][1] + 1]            
+            percentData[teamTimeTotal] = [percentData[teamTimeTotal][0], percentData[teamTimeTotal][1] + 1]
+            percentData[weekTotal] = [percentData[weekTotal][0], percentData[weekTotal][1] + 1]
+            percentData[overallTotal] = [percentData[overallTotal][0], percentData[overallTotal][1] + 1]
+            percentData[overallDayTotal] = [percentData[overallDayTotal][0], percentData[overallDayTotal][1] + 1]
+            percentData[overallTimeTotal] = [percentData[overallTimeTotal][0], percentData[overallTimeTotal][1] + 1]
+
+            if at:
+                percentData[teamHomeTotal] = [percentData[teamHomeTotal][0], percentData[teamHomeTotal][1] + 1]
+                percentData[homeTotal] = [percentData[homeTotal][0], percentData[homeTotal][1] + 1]
+            else:
+                percentData[teamAwayTotal] = [percentData[teamAwayTotal][0], percentData[teamAwayTotal][1] + 1]
+                percentData[awayTotal] = [percentData[awayTotal][0], percentData[awayTotal][1] + 1]
+
+
+        if (spreadCalculated == spreadCovered) and (totalCalculated == totalCovered):
+            percentData[teamParlay] = [percentData[teamParlay][0] + 100, percentData[teamParlay][1] + 1]
+            percentData[teamDayParlay] = [percentData[teamDayParlay][0] + 100, percentData[teamDayParlay][1] + 1]            
+            percentData[teamTimeParlay] = [percentData[teamTimeParlay][0] + 100, percentData[teamTimeParlay][1] + 1]
+            percentData[weekParlay] = [percentData[weekParlay][0] + 100, percentData[weekParlay][1] + 1]
+            percentData[overallParlay] = [percentData[overallParlay][0] + 100, percentData[overallParlay][1] + 1]
+            percentData[overallDayParlay] = [percentData[overallDayParlay][0] + 100, percentData[overallDayParlay][1] + 1]
+            percentData[overallTimeParlay] = [percentData[overallTimeParlay][0] + 100, percentData[overallTimeParlay][1] + 1]
+
+            if at:
+                percentData[teamHomeParlay] = [percentData[teamHomeParlay][0] + 100, percentData[teamHomeParlay][1] + 1]
+                percentData[homeParlay] = [percentData[homeParlay][0] + 100, percentData[homeParlay][1] + 1]
+            else:
+                percentData[teamAwayParlay] = [percentData[teamAwayParlay][0] + 100, percentData[teamAwayParlay][1] + 1]
+                percentData[awayParlay] = [percentData[awayParlay][0] + 100, percentData[awayParlay][1] + 1]
+
+        else:
+            percentData[teamParlay] = [percentData[teamParlay][0], percentData[teamParlay][1] + 1]
+            percentData[teamDayParlay] = [percentData[teamDayParlay][0], percentData[teamDayParlay][1] + 1]            
+            percentData[teamTimeParlay] = [percentData[teamTimeParlay][0], percentData[teamTimeParlay][1] + 1]
+            percentData[weekParlay] = [percentData[weekParlay][0], percentData[weekParlay][1] + 1]
+            percentData[overallParlay] = [percentData[overallParlay][0], percentData[overallParlay][1] + 1]
+            percentData[overallDayParlay] = [percentData[overallDayParlay][0], percentData[overallDayParlay][1] + 1]
+            percentData[overallTimeParlay] = [percentData[overallTimeParlay][0], percentData[overallTimeParlay][1] + 1]
+
+            if at:
+                percentData[teamHomeParlay] = [percentData[teamHomeParlay][0], percentData[teamHomeParlay][1] + 1]
+                percentData[homeParlay] = [percentData[homeParlay][0], percentData[homeParlay][1] + 1]
+            else:
+                percentData[teamAwayParlay] = [percentData[teamAwayParlay][0], percentData[teamAwayParlay][1] + 1]
+                percentData[awayParlay] = [percentData[awayParlay][0], percentData[awayParlay][1] + 1]
+
+
+    for data in percentData:
+        try:
+            percentData[data] = round(percentData[data][0] / percentData[data][1], 2)
+        except:
+            percentData[data] = -1
+
+    count = 1
+    for data in percentData:
+        if count == len(percentData):
+            percentFrontendFile.write(f'"{data}" : {percentData[data]}')
+        else:
+            percentFrontendFile.write(f'"{data}" : {percentData[data]},')
+
+        count = count + 1
+
+
+    percentFrontendFile.write('}')
+    percentFrontendFile.close()
+
+    print('Percentages on the fontend have been updated!')
 
 
 
@@ -1515,34 +1878,35 @@ table = 'productionNFL'
 
 print(f'Start Time : {time.localtime()}')
 
-# 1/4
-#Store old game data
-storeDataObj = storeTeamData(table, week, year)
-storeDataObj.storeAllTeamsData()
-updateCoveredValues()
+# # 1/4
+# #Store old game data
+# storeDataObj = storeTeamData(table, week, year)
+# storeDataObj.storeAllTeamsData()
+# updateCoveredValues()
 
-# 2/4
-#Store new game data
-storeUpcomingWeekData = getUpcomingWeekData(week, year)
-storeUpcomingWeekData.getWeatherByWeek()
-storeUpcomingWeekData.getGamblingData()
+# # 2/4
+# #Store new game data
+# storeUpcomingWeekData = getUpcomingWeekData(week, year)
+# storeUpcomingWeekData.getWeatherByWeek()
+# storeUpcomingWeekData.getGamblingData()
 
-# 3/4
-updatePercentages()
-updateFavored()
+# # 3/4
+# updatePercentages()
+# updateFavored()
 
 
-# 4/4
-#Get predictions
-predictions = getPredictions(week, year)
-predictions.doit()
+# # 4/4
+# #Get predictions
+# predictions = getPredictions(week, year)
+# predictions.doit()
 
-updateTeamData(week)
+# updateTeamData(week)
 
-# getParlays()
+# # getParlays()
 
-# Update frontend
-updateFrontend(week)
+# # Update frontend
+# updateFrontend(week)
+updatePercentagesFrontend()
 
 
 print(f'End time : {time.localtime()}')

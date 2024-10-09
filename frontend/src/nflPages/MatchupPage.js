@@ -4,6 +4,7 @@ import '../Fonts.css';
 import { matchUpPageText1, matchUpPageText2 } from '../constants';
 import { useLayoutEffect } from 'react';
 import GamblingHeader from '../commonComps/GamblingHeader';
+import PercentDataTable from './PercentDataTable';
 
 const MatchupPage = (props) => {
   useLayoutEffect(() => {
@@ -47,22 +48,22 @@ const MatchupPage = (props) => {
       </div>
 
       <div className='row pt-5 mt-5 pb-3'>
-        {/* <div className='col-md-6'>
+        <div className='col-md-6'>
           <PercentDataTable
-            title={legalNbaTeamLogos[awayTeamName]}
-            percentagesName={nbaTeamShortNames[awayTeamName]}
-            hours={new Set([hour])}
-            checksAndXs={true}
+            team={awayTeam}
+            homeTeam={false}
+            weekDay={weekDay}
+            time={updatedTime}
           />
         </div>
         <div className='col-md-6 mt-sm-0 mt-5'>
           <PercentDataTable
-            title={legalNbaTeamLogos[homeTeamName]}
-            percentagesName={nbaTeamShortNames[homeTeamName]}
-            hours={new Set([hour])}
-            checksAndXs={true}
+            team={homeTeam}
+            homeTeam={true}
+            weekDay={weekDay}
+            time={updatedTime}
           />
-        </div> */}
+        </div>
       </div>
 
       <div className='row pt-5 smallText'>
