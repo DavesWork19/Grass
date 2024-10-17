@@ -1,0 +1,23 @@
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+];export const parlayResults1 = [
+export const parlayResults1 = [
+];export const parlayResults1 = [
+export const parlayResults1 = [
+];export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+export const parlayResults1 = [
+];

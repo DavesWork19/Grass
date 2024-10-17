@@ -1,16 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.db17fd98.css",
-    "main.js": "/static/js/main.03df7f30.js",
+    "main.css": "/static/css/main.e262713d.css",
+    "main.js": "/static/js/main.24b5b586.js",
     "static/js/787.e2d2a54f.chunk.js": "/static/js/787.e2d2a54f.chunk.js",
     "static/media/MavericksLogo.png": "/static/media/MavericksLogo.8f3b6f62f64c26eb4641.png",
     "static/media/Timberwolves.png": "/static/media/Timberwolves.8447f3f6a5d902de1b41.png",
     "static/media/Knicks.png": "/static/media/Knicks.aefaf8538cd2c8888f47.png",
+    "static/media/FallingSkyBold-zemL.ttf": "/static/media/FallingSkyBold-zemL.6d4c29913bc20b83dcbf.ttf",
     "static/media/Wizards.png": "/static/media/Wizards.960a18846b5372dead65.png",
     "static/media/Warriors.png": "/static/media/Warriors.d35e0d4570de856e1bd2.png",
     "static/media/Pelicans.png": "/static/media/Pelicans.ad73480d242ba0274e0c.png",
     "static/media/Pistons.png": "/static/media/Pistons.4c32cf7d0c3186995e63.png",
     "static/media/Rockets.png": "/static/media/Rockets.f223b212de21f128ae07.png",
+    "static/media/FallingSky-JKwK.ttf": "/static/media/FallingSky-JKwK.2f8ba3725fd1cc4c9c92.ttf",
     "static/media/Lakers.png": "/static/media/Lakers.e45e8cfaefbc63902737.png",
     "static/media/Thunder.png": "/static/media/Thunder.2c67e78bc5037111b31f.png",
     "static/media/Haarlem Sans.ttf": "/static/media/Haarlem Sans.1076a150795d99931887.ttf",
@@ -58,7 +60,6 @@
     "static/media/nygLogo.png": "/static/media/nygLogo.87c4ec46c27b9449c767.png",
     "static/media/Bucks.png": "/static/media/Bucks.760a07ed691113c51ef1.png",
     "static/media/wasLogo.png": "/static/media/wasLogo.2125bf2a7a2ea2fb844b.png",
-    "static/media/Pop Warner.ttf": "/static/media/Pop Warner.8800cb61751c81499540.ttf",
     "static/media/Pacers.png": "/static/media/Pacers.dc4b2f92fd2136acaa4e.png",
     "static/media/Jazz.png": "/static/media/Jazz.d4cfdb2534543373b879.png",
     "static/media/Hornets.png": "/static/media/Hornets.4d9b79b8342fcd3c054f.png",
@@ -67,16 +68,15 @@
     "static/media/Clippers.png": "/static/media/Clippers.b088b4c3903e8e0264dc.png",
     "static/media/Suns.png": "/static/media/Suns.94d1652bc6ab4ee6ceaa.png",
     "static/media/Heat.png": "/static/media/Heat.4690b9b084dcd75cd141.png",
-    "static/media/EASPORTS15.ttf": "/static/media/EASPORTS15.f44e9a9e4817ce1ce19b.ttf",
     "static/media/atLogo1.png": "/static/media/atLogo1.fe8fc43a53c88ec60a7d.png",
     "static/media/NumbersLogo.svg": "/static/media/NumbersLogo.df85ca0cfbe8d6c50711dd4858c16f11.svg",
     "index.html": "/index.html",
-    "main.db17fd98.css.map": "/static/css/main.db17fd98.css.map",
-    "main.03df7f30.js.map": "/static/js/main.03df7f30.js.map",
+    "main.e262713d.css.map": "/static/css/main.e262713d.css.map",
+    "main.24b5b586.js.map": "/static/js/main.24b5b586.js.map",
     "787.e2d2a54f.chunk.js.map": "/static/js/787.e2d2a54f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.db17fd98.css",
-    "static/js/main.03df7f30.js"
+    "static/css/main.e262713d.css",
+    "static/js/main.24b5b586.js"
   ]
 }

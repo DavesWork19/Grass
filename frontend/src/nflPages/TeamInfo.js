@@ -14,7 +14,7 @@ const TeamInfo = (props) => {
       <div className='col-8'>{title}</div>
       <div className='col-2 ps-0'>
         {percent}
-        {showPercent && <span className='timeText'>{'%'}</span>}
+        {showPercent && <span>{'%'}</span>}
       </div>
     </div>
   );

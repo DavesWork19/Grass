@@ -63,7 +63,6 @@ import TimberwolvesLogo from './logos/Timberwolves.png';
 import WarriorsLogo from './logos/Warriors.png';
 import WizardsLogo from './logos/Wizards.png';
 
-export const TIMER_TIME = 60;
 export const GAME_INFO_1 = '3 Levels';
 export const GAME_INFO_2 = '5 Questions Per Level';
 export const LEVEL_1_TIMER = 5;
@@ -73,11 +72,17 @@ export const LEVEL_3 = 3;
 export const STOP_GAME = 'StopGame';
 export const GREETINGS = ['Howdy!', 'Welcome!', 'Bonjour!', "What's up!"];
 
-export const weekHeading = 'Week 14';
+export const sportNumbersGameHeading = 'The Numbers Game???';
+export const tooManyPercentText = 'Too Many Percentages';
+export const showOverallpercentText = 'Show Overall Percentages';
+
 export const footerMessage1 =
   '*Predicted results are subject to change until the start of each matchup.';
 export const footerMessage2 =
-  '**Percentages represent the accuracy of the model for the 2022 season.';
+  '**Percentages represent the accuracy of the model.';
+export const footerMessageParlayPage = '**  All times are in PM EST  **';
+export const footerParlayHitMessageParlay =
+  '** Parlay Hits are calculated from previous parlay calls - A Hit occurs when all legs were successful in a respective category **';
 export const matchUpPageText1 =
   'Percentages represent win percentage for corresponding label';
 export const matchUpPageText2 =
@@ -138,6 +143,7 @@ export const teamLogos = {
   Giants: nygLogo,
   Eagles: phiLogo,
   Washington: wasLogo,
+  Commanders: wasLogo,
   Bears: chiLogo,
   Lions: detLogo,
   Packers: gnbLogo,
@@ -173,6 +179,7 @@ export const teamInfo = {
   Giants: 'NFC East',
   Eagles: 'NFC East',
   Washington: 'NFC East',
+  Commanders: 'NFC East',
   Bears: 'NFC North',
   Lions: 'NFC North',
   Packers: 'NFC North',
@@ -228,3 +235,141 @@ export const nbaTeamLogos = {
   'Golden State Warriors': WarriorsLogo,
   'Washington Wizards': WizardsLogo,
 };
+export const nbaTeamShortNames = {
+  'Milwaukee Bucks': 'MIL',
+  'Chicago Bulls': 'CHI',
+  'Cleveland Cavaliers': 'CLE',
+  'Boston Celtics': 'BOS',
+  'Los Angeles Clippers': 'LAC',
+  'Memphis Grizzlies': 'MEM',
+  'Atlanta Hawks': 'ATL',
+  'Miami Heat': 'MIA',
+  'Charlotte Hornets': 'CHO',
+  'Utah Jazz': 'UTA',
+  'Sacramento Kings': 'SAC',
+  'New York Knicks': 'NYK',
+  'Los Angeles Lakers': 'LAL',
+  'Orlando Magic': 'ORL',
+  'Dallas Mavericks': 'DAL',
+  'Brooklyn Nets': 'BRK',
+  'Denver Nuggets': 'DEN',
+  'Indiana Pacers': 'IND',
+  'New Orleans Pelicans': 'NOP',
+  'Philadelphia 76ers': 'PHI',
+  'Detroit Pistons': 'DET',
+  'Portland Trail Blazers': 'POR',
+  'Toronto Raptors': 'TOR',
+  'Houston Rockets': 'HOU',
+  'San Antonio Spurs': 'SAS',
+  'Phoenix Suns': 'PHO',
+  'Oklahoma City Thunder': 'OKC',
+  'Minnesota Timberwolves': 'MIN',
+  'Golden State Warriors': 'GSW',
+  'Washington Wizards': 'WAS',
+};
+
+export const legalNbaTeamLogos = {
+  'Milwaukee Bucks': 'Milwaukee',
+  'Chicago Bulls': 'Chicago',
+  'Cleveland Cavaliers': 'Cleveland',
+  'Boston Celtics': 'Boston',
+  'Los Angeles Clippers': 'West Scissors',
+  'Memphis Grizzlies': 'Memphis',
+  'Atlanta Hawks': 'Atlanta',
+  'Miami Heat': 'Miami',
+  'Charlotte Hornets': 'Charlotte',
+  'Utah Jazz': 'Utah',
+  'Sacramento Kings': 'Sacramento',
+  'New York Knicks': 'New York Shoes',
+  'Los Angeles Lakers': 'Le  Rivers',
+  'Orlando Magic': 'Orlando',
+  'Dallas Mavericks': 'Dallas',
+  'Brooklyn Nets': 'Brooklyn',
+  'Denver Nuggets': 'Denver',
+  'Indiana Pacers': 'Indiana',
+  'New Orleans Pelicans': 'New Orleans',
+  'Philadelphia 76ers': 'Philadelphia',
+  'Detroit Pistons': 'Detroit',
+  'Portland Trail Blazers': 'Portland',
+  'Toronto Raptors': 'Toronto',
+  'Houston Rockets': 'Houston',
+  'San Antonio Spurs': 'San Antonio',
+  'Phoenix Suns': 'Phoenix',
+  'Oklahoma City Thunder': 'Oklahoma City',
+  'Minnesota Timberwolves': 'Minnesota',
+  'Golden State Warriors': 'Golden State',
+  'Washington Wizards': 'Washington',
+};
+
+export const convertLegalNbaTeamLogos = {
+  Milwaukee: 'Milwaukee Bucks',
+  Chicago: 'Chicago Bulls',
+  Cleveland: 'Cleveland Cavaliers',
+  Boston: 'Boston Celtics',
+  'West Scissors': 'Los Angeles Clippers',
+  Memphis: 'Memphis Grizzlies',
+  Atlanta: 'Atlanta Hawks',
+  Miami: 'Miami Heat',
+  Charlotte: 'Charlotte Hornets',
+  Utah: 'Utah Jazz',
+  Sacramento: 'Sacramento Kings',
+  'New York Shoes': 'New York Knicks',
+  'Le  Rivers': 'Los Angeles Lakers',
+  Orlando: 'Orlando Magic',
+  Dallas: 'Dallas Mavericks',
+  Brooklyn: 'Brooklyn Nets',
+  Denver: 'Denver Nuggets',
+  Indiana: 'Indiana Pacers',
+  'New Orleans': 'New Orleans Pelicans',
+  Philadelphia: 'Philadelphia 76ers',
+  Detroit: 'Detroit Pistons',
+  Portland: 'Portland Trail Blazers',
+  Toronto: 'Toronto Raptors',
+  Houston: 'Houston Rockets',
+  'San Antonio': 'San Antonio Spurs',
+  Phoenix: 'Phoenix Suns',
+  'Oklahoma City': 'Oklahoma City Thunder',
+  Minnesota: 'Minnesota Timberwolves',
+  'Golden State': 'Golden State Warriors',
+  Washington: 'Washington Wizards',
+};
+
+export const legalNFLTeams = {
+  Bills: 'Buffalo',
+  Dolphins: 'Miami',
+  Patriots: 'New England',
+  Jets: 'New York Planes',
+  Bengals: 'Cincinnati',
+  Browns: 'Cleveland',
+  Steelers: 'Pittsburgh',
+  Ravens: 'Baltimore',
+  Colts: 'Indianapolis',
+  Texans: 'Houston',
+  Jaguars: 'Jacksonville',
+  Titans: 'Tennessee',
+  Broncos: 'Denver',
+  Chiefs: 'Kansas',
+  Raiders: 'Las Vegas',
+  Chargers: 'LA Bolts',
+  Cowboys: 'Dallas',
+  Giants: 'New York People',
+  Eagles: 'Philadelphia',
+  Washington: 'Washington',
+  Commanders: 'Washington',
+  Bears: 'Chicago',
+  Lions: 'Detriot',
+  Packers: 'Green Bay',
+  Vikings: 'Minnesota',
+  Falcons: 'Atlanta',
+  Panthers: 'Carolina',
+  Saints: 'New Orleans',
+  Buccaneers: 'Tampa Bay',
+  Cardinals: 'Arizona',
+  Rams: 'LA Lambs',
+  Seahawks: 'Seattle',
+  '49ers': 'San Francisco',
+};
+
+export const secretCode = '2332220';
+export const parlaySecretCode = 'parlays';
+export const parlaySecretCode2 = '69694200';

@@ -1,0 +1,210 @@
+id,date,team1,team2,category,rideCalculated,rideActual
+487,"January 31 2024","Cleveland Cavaliers","Detroit Pistons",spread,1,1
+488,"January 31 2024","Cleveland Cavaliers","Detroit Pistons",overUnder,0,1
+489,"January 31 2024","Chicago Bulls","Charlotte Hornets",overUnder,0,1
+490,"January 31 2024","Los Angeles Clippers","Washington Wizards",spread,0,0
+491,"January 31 2024","Los Angeles Clippers","Washington Wizards",overUnder,1,1
+492,"January 31 2024","Sacramento Kings","Miami Heat",overUnder,1,1
+493,"January 31 2024","New Orleans Pelicans","Houston Rockets",spread,0,0
+494,"January 31 2024","New Orleans Pelicans","Houston Rockets",overUnder,1,1
+495,"January 31 2024","Dallas Mavericks","Minnesota Timberwolves",spread,1,0
+496,"January 31 2024","Dallas Mavericks","Minnesota Timberwolves",overUnder,0,0
+497,"January 31 2024","Oklahoma City Thunder","Denver Nuggets",overUnder,0,0
+498,"January 31 2024","San Antonio Spurs","Orlando Magic",spread,1,0
+499,"January 31 2024","San Antonio Spurs","Orlando Magic",overUnder,0,0
+500,"January 31 2024","Phoenix Suns","Brooklyn Nets",spread,1,0
+501,"January 31 2024","Phoenix Suns","Brooklyn Nets",overUnder,1,0
+502,"January 31 2024","Portland Trail Blazers","Milwaukee Bucks",overUnder,0,0
+503,"February 01 2024","Boston Celtics","Los Angeles Lakers",overUnder,1,1
+504,"February 01 2024","New York Knicks","Indiana Pacers",overUnder,0,0
+505,"February 01 2024","Cleveland Cavaliers","Memphis Grizzlies",spread,0,0
+506,"February 01 2024","Cleveland Cavaliers","Memphis Grizzlies",overUnder,0,0
+507,"February 01 2024","Philadelphia 76ers","Utah Jazz",spread,1,0
+508,"February 01 2024","Philadelphia 76ers","Utah Jazz",overUnder,1,0
+509,"February 02 2024","Detroit Pistons","Los Angeles Clippers",overUnder,0,1
+510,"February 02 2024","Washington Wizards","Miami Heat",overUnder,0,0
+511,"February 02 2024","Toronto Raptors","Houston Rockets",overUnder,0,1
+512,"February 02 2024","Memphis Grizzlies","Golden State Warriors",overUnder,0,0
+513,"February 02 2024","Orlando Magic","Minnesota Timberwolves",overUnder,0,1
+514,"February 03 2024","Philadelphia 76ers","Brooklyn Nets",spread,1,1
+515,"February 03 2024","Philadelphia 76ers","Brooklyn Nets",overUnder,1,0
+516,"February 03 2024","Golden State Warriors","Atlanta Hawks",overUnder,1,0
+517,"February 03 2024","Chicago Bulls","Sacramento Kings",spread,1,1
+518,"February 03 2024","Chicago Bulls","Sacramento Kings",overUnder,1,0
+519,"February 03 2024","Cleveland Cavaliers","San Antonio Spurs",overUnder,1,1
+520,"February 03 2024","Milwaukee Bucks","Dallas Mavericks",spread,1,0
+521,"February 03 2024","Milwaukee Bucks","Dallas Mavericks",overUnder,1,1
+522,"February 03 2024","New York Knicks","Los Angeles Lakers",overUnder,0,0
+523,"February 04 2024","Detroit Pistons","Orlando Magic",overUnder,0,0
+524,"February 04 2024","Washington Wizards","Phoenix Suns",spread,1,0
+525,"February 04 2024","Washington Wizards","Phoenix Suns",overUnder,1,0
+526,"February 04 2024","Boston Celtics","Memphis Grizzlies",overUnder,0,1
+527,"February 04 2024","Indiana Pacers","Charlotte Hornets",overUnder,1,1
+528,"February 04 2024","Los Angeles Clippers","Miami Heat",overUnder,1,1
+529,"February 04 2024","Toronto Raptors","Oklahoma City Thunder",overUnder,1,0
+530,"February 04 2024","Houston Rockets","Minnesota Timberwolves",overUnder,0,0
+531,"February 04 2024","Milwaukee Bucks","Utah Jazz",overUnder,1,1
+532,"February 04 2024","Portland Trail Blazers","Denver Nuggets",overUnder,0,0
+533,"February 05 2024","Cleveland Cavaliers","Sacramento Kings",overUnder,1,0
+534,"February 05 2024","Philadelphia 76ers","Dallas Mavericks",overUnder,1,1
+535,"February 05 2024","Charlotte Hornets","Los Angeles Lakers",overUnder,0,1
+536,"February 05 2024","Brooklyn Nets","Golden State Warriors",overUnder,1,1
+537,"February 05 2024","Los Angeles Clippers","Atlanta Hawks",overUnder,1,0
+538,"February 05 2024","Toronto Raptors","New Orleans Pelicans",overUnder,0,1
+539,"February 06 2024","Indiana Pacers","Houston Rockets",overUnder,1,0
+540,"February 06 2024","Brooklyn Nets","Dallas Mavericks",spread,1,0
+541,"February 06 2024","Brooklyn Nets","Dallas Mavericks",overUnder,1,1
+542,"February 06 2024","New York Knicks","Memphis Grizzlies",spread,0,0
+543,"February 06 2024","New York Knicks","Memphis Grizzlies",overUnder,0,1
+544,"February 06 2024","Orlando Magic","Miami Heat",spread,1,0
+545,"February 06 2024","Orlando Magic","Miami Heat",overUnder,0,1
+546,"February 06 2024","Chicago Bulls","Minnesota Timberwolves",spread,1,1
+547,"February 06 2024","Chicago Bulls","Minnesota Timberwolves",overUnder,0,1
+548,"February 06 2024","Oklahoma City Thunder","Utah Jazz",overUnder,1,0
+549,"February 06 2024","Milwaukee Bucks","Phoenix Suns",spread,1,0
+550,"February 06 2024","Milwaukee Bucks","Phoenix Suns",overUnder,1,1
+563,"February 07 2024","Toronto Raptors","Charlotte Hornets",overUnder,1,1
+564,"February 07 2024","Philadelphia 76ers","Golden State Warriors",overUnder,0,1
+565,"February 07 2024","Boston Celtics","Atlanta Hawks",overUnder,1,1
+566,"February 07 2024","Detroit Pistons","Sacramento Kings",overUnder,0,1
+567,"February 08 2024","Indiana Pacers","Golden State Warriors",overUnder,1,1
+568,"February 08 2024","Cleveland Cavaliers","Brooklyn Nets",overUnder,0,0
+569,"February 08 2024","Milwaukee Bucks","Minnesota Timberwolves",spread,1,1
+570,"February 08 2024","Chicago Bulls","Memphis Grizzlies",overUnder,0,1
+571,"February 08 2024","Utah Jazz","Phoenix Suns",overUnder,1,0
+572,"February 09 2024","Toronto Raptors","Houston Rockets",overUnder,0,0
+573,"February 10 2024","Dallas Mavericks","Oklahoma City Thunder",overUnder,1,0
+574,"February 10 2024","San Antonio Spurs","Brooklyn Nets",overUnder,1,1
+575,"February 10 2024","Orlando Magic","Chicago Bulls",overUnder,0,1
+576,"February 10 2024","Washington Wizards","Philadelphia 76ers",overUnder,1,1
+577,"February 10 2024","Memphis Grizzlies","Charlotte Hornets",overUnder,0,1
+578,"February 10 2024","Indiana Pacers","New York Knicks",overUnder,0,1
+579,"February 10 2024","Toronto Raptors","Cleveland Cavaliers",overUnder,1,1
+580,"February 10 2024","Houston Rockets","Atlanta Hawks",overUnder,1,1
+581,"February 10 2024","Phoenix Suns","Golden State Warriors",overUnder,1,1
+582,"February 10 2024","Portland Trail Blazers","New Orleans Pelicans",overUnder,1,0
+583,"February 11 2024","Sacramento Kings","Oklahoma City Thunder",overUnder,0,0
+584,"February 12 2024","Indiana Pacers","Charlotte Hornets",spread,1,1
+585,"February 12 2024","Atlanta Hawks","Chicago Bulls",spread,0,0
+586,"February 12 2024","Memphis Grizzlies","New Orleans Pelicans",spread,1,1
+587,"February 12 2024","Milwaukee Bucks","Denver Nuggets",spread,1,0
+588,"February 12 2024","Milwaukee Bucks","Denver Nuggets",overUnder,0,0
+589,"February 12 2024","Washington Wizards","Dallas Mavericks",overUnder,0,1
+590,"February 12 2024","Golden State Warriors","Utah Jazz",overUnder,1,1
+591,"February 13 2024","Detroit Pistons","Los Angeles Lakers",spread,0,1
+592,"February 14 2024","Philadelphia 76ers","Miami Heat",overUnder,0,0
+593,"February 14 2024","New York Knicks","Orlando Magic",overUnder,0,1
+594,"February 14 2024","Atlanta Hawks","Charlotte Hornets",overUnder,1,1
+595,"February 14 2024","Cleveland Cavaliers","Chicago Bulls",overUnder,1,1
+596,"February 14 2024","Brooklyn Nets","Boston Celtics",overUnder,0,0
+597,"February 14 2024","Toronto Raptors","Indiana Pacers",overUnder,1,0
+598,"February 14 2024","Memphis Grizzlies","Houston Rockets",overUnder,0,1
+599,"February 14 2024","New Orleans Pelicans","Washington Wizards",overUnder,1,0
+600,"February 14 2024","San Antonio Spurs","Dallas Mavericks",overUnder,1,1
+601,"February 14 2024","Sacramento Kings","Denver Nuggets",overUnder,0,0
+602,"February 14 2024","Utah Jazz","Los Angeles Lakers",overUnder,0,1
+603,"February 14 2024","Phoenix Suns","Detroit Pistons",overUnder,0,0
+604,"February 14 2024","Los Angeles Clippers","Golden State Warriors",overUnder,0,1
+605,"February 15 2024","Milwaukee Bucks","Memphis Grizzlies",spread,1,1
+606,"February 15 2024","Golden State Warriors","Utah Jazz",spread,0,0
+607,"February 15 2024","Portland Trail Blazers","Minnesota Timberwolves",overUnder,1,1
+608,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+609,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+610,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+611,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+612,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+613,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+614,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+615,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+616,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+617,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+618,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+619,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+620,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+621,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+622,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+623,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+624,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+625,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+626,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+627,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+628,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+629,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+630,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+631,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+632,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+633,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+634,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+635,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+636,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+637,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+638,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+639,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+640,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+641,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+642,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+643,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+644,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+645,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+646,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+647,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+648,"February 22 2024","Cleveland Cavaliers","Orlando Magic",overUnder,0,1
+649,"February 22 2024","Brooklyn Nets","Toronto Raptors",spread,0,1
+650,"February 22 2024","Detroit Pistons","Indiana Pacers",overUnder,1,1
+651,"February 22 2024","Dallas Mavericks","Phoenix Suns",overUnder,1,1
+652,"February 22 2024","Chicago Bulls","Boston Celtics",spread,1,0
+653,"February 22 2024","Chicago Bulls","Boston Celtics",overUnder,0,1
+654,"February 22 2024","Denver Nuggets","Washington Wizards",spread,1,0
+655,"February 22 2024","Denver Nuggets","Washington Wizards",overUnder,1,1
+656,"February 23 2024","Cleveland Cavaliers","Philadelphia 76ers",overUnder,1,1
+657,"February 23 2024","Toronto Raptors","Atlanta Hawks",overUnder,1,1
+658,"February 23 2024","Memphis Grizzlies","Los Angeles Clippers",overUnder,0,1
+659,"February 23 2024","New Orleans Pelicans","Miami Heat",overUnder,0,1
+660,"February 23 2024","Phoenix Suns","Houston Rockets",overUnder,1,1
+661,"February 23 2024","Washington Wizards","Oklahoma City Thunder",overUnder,1,1
+662,"February 23 2024","Denver Nuggets","Portland Trail Blazers",overUnder,0,1
+663,"February 23 2024","Charlotte Hornets","Golden State Warriors",overUnder,0,1
+664,"February 23 2024","Milwaukee Bucks","Minnesota Timberwolves",overUnder,0,1
+665,"February 23 2024","San Antonio Spurs","Los Angeles Lakers",overUnder,1,1
+666,"February 24 2024","Detroit Pistons","Orlando Magic",spread,0,1
+667,"February 26 2024","Brooklyn Nets","Memphis Grizzlies",overUnder,0,1
+668,"February 27 2024","Cleveland Cavaliers","Dallas Mavericks",overUnder,1,1
+669,"February 27 2024","Brooklyn Nets","Orlando Magic",overUnder,0,1
+670,"February 27 2024","Golden State Warriors","Washington Wizards",overUnder,1,1
+671,"February 27 2024","Boston Celtics","Philadelphia 76ers",overUnder,1,1
+672,"February 27 2024","Utah Jazz","Atlanta Hawks",overUnder,0,1
+673,"February 27 2024","New York Knicks","New Orleans Pelicans",overUnder,0,1
+674,"February 27 2024","Minnesota Timberwolves","San Antonio Spurs",overUnder,0,1
+675,"February 27 2024","Milwaukee Bucks","Charlotte Hornets",overUnder,0,1
+676,"February 27 2024","Detroit Pistons","Chicago Bulls",overUnder,0,1
+677,"February 27 2024","Portland Trail Blazers","Miami Heat",overUnder,0,1
+678,"February 27 2024","Oklahoma City Thunder","Houston Rockets",overUnder,1,1
+679,"March 01 2024","Philadelphia 76ers","Charlotte Hornets",overUnder,1,1
+680,"March 01 2024","Cleveland Cavaliers","Detroit Pistons",spread,1,0
+681,"March 02 2024","Phoenix Suns","Houston Rockets",spread,0,1
+682,"March 04 2024","Brooklyn Nets","Memphis Grizzlies",overUnder,0,1
+683,"March 04 2024","Washington Wizards","Utah Jazz",overUnder,1,0
+684,"March 05 2024","Charlotte Hornets","Orlando Magic",overUnder,0,0
+685,"March 05 2024","Boston Celtics","Cleveland Cavaliers",overUnder,0,0
+686,"March 05 2024","New Orleans Pelicans","Toronto Raptors",overUnder,0,1
+687,"March 05 2024","Philadelphia 76ers","Brooklyn Nets",overUnder,0,1
+688,"March 05 2024","Indiana Pacers","Dallas Mavericks",overUnder,1,0
+689,"March 05 2024","Denver Nuggets","Phoenix Suns",overUnder,0,1
+690,"March 06 2024","Philadelphia 76ers","Memphis Grizzlies",spread,1,1
+691,"March 06 2024","Cleveland Cavaliers","Atlanta Hawks",spread,1,0
+692,"March 06 2024","Cleveland Cavaliers","Atlanta Hawks",overUnder,0,0
+693,"March 06 2024","Los Angeles Clippers","Houston Rockets",overUnder,0,1
+694,"March 06 2024","Milwaukee Bucks","Golden State Warriors",spread,1,0
+695,"March 06 2024","Milwaukee Bucks","Golden State Warriors",overUnder,0,0
+696,"March 06 2024","Portland Trail Blazers","Oklahoma City Thunder",spread,1,1
+697,"March 06 2024","Sacramento Kings","Los Angeles Lakers",spread,1,1
+698,"March 07 2024","Detroit Pistons","Brooklyn Nets",spread,1,1
+699,"March 07 2024","Indiana Pacers","Minnesota Timberwolves",spread,1,1
+700,"March 07 2024","Miami Heat","Dallas Mavericks",overUnder,0,0
+701,"March 07 2024","Toronto Raptors","Phoenix Suns",spread,1,1
+702,"March 07 2024","Chicago Bulls","Golden State Warriors",overUnder,0,1
+703,"March 07 2024","Sacramento Kings","San Antonio Spurs",overUnder,1,0
+704,"March 09 2024","Detroit Pistons","Dallas Mavericks",overUnder,0,NULL
+705,"March 09 2024","Boston Celtics","Phoenix Suns",overUnder,0,NULL
+706,"March 09 2024","Golden State Warriors","San Antonio Spurs",overUnder,0,NULL
+707,"March 09 2024","Denver Nuggets","Utah Jazz",overUnder,0,NULL

@@ -1,0 +1,21 @@
+id,date,team1,team2,category,rideCalculated,rideActual
+1,"January 30 2024","Chicago Bulls","Toronto Raptors",spread,1,NULL
+2,"January 30 2024","Chicago Bulls","Toronto Raptors",overUnder,0,NULL
+3,"February 29 2024","Oklahoma City Thunder","San Antonio Spurs",spread,1,1
+4,"February 29 2024","Oklahoma City Thunder","San Antonio Spurs",spread,1,1
+5,"February 29 2024","Washington Wizards","Los Angeles Lakers",overUnder,1,0
+6,"March 01 2024","Cleveland Cavaliers","Detroit Pistons",spread,1,0
+7,"March 01 2024","Portland Trail Blazers","Memphis Grizzlies",overUnder,0,1
+8,"March 02 2024","Phoenix Suns","Houston Rockets",overUnder,1,1
+9,"March 03 2024","Philadelphia 76ers","Dallas Mavericks",overUnder,0,1
+10,"March 03 2024","Cleveland Cavaliers","New York Knicks",overUnder,0,0
+11,"March 03 2024","Indiana Pacers","San Antonio Spurs",overUnder,1,1
+12,"March 05 2024","Charlotte Hornets","Orlando Magic",overUnder,0,0
+13,"March 05 2024","Atlanta Hawks","New York Knicks",overUnder,0,1
+14,"March 05 2024","Miami Heat","Detroit Pistons",overUnder,0,1
+15,"March 05 2024","Denver Nuggets","Phoenix Suns",overUnder,0,1
+16,"March 06 2024","Philadelphia 76ers","Memphis Grizzlies",spread,1,1
+17,"March 06 2024","Cleveland Cavaliers","Atlanta Hawks",spread,1,0
+18,"March 07 2024","Toronto Raptors","Phoenix Suns",spread,1,1
+19,"March 08 2024","Charlotte Hornets","Washington Wizards",spread,0,1
+20,"March 09 2024","Chicago Bulls","Los Angeles Clippers",overUnder,0,NULL

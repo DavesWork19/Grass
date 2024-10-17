@@ -1,17 +1,27 @@
+/* Text */
 @font-face {
   font-family: 'regularText';
   src: url('./../fonts/Haarlem\ Sans.ttf');
 }
-
 @font-face {
-  font-family: 'popWarner';
-  src: url('./../fonts/Pop\ Warner.ttf');
+  font-family: 'text';
+  src: url('../fonts/FallingSky-JKwK.ttf');
+}
+@font-face {
+  font-family: 'boldText';
+  src: url('../fonts/FallingSkyBold-zemL.ttf');
+}
+.regularText {
+  font-family: 'regularText';
+}
+.text {
+  font-family: 'text';
+}
+.boldText {
+  font-family: 'boldText';
 }
 
-@font-face {
-  font-family: 'nflSiteText';
-  src: url('../fonts/EASPORTS15.ttf');
-}
+/* Media queries for responsive views */
 @media (min-width: 851px) {
   .timeMobileText {
     font-size: 1.5rem;
@@ -22,15 +32,16 @@
     font-size: 1.1rem;
   }
 }
-
-@media (max-width: 550px) {
+@media (min-width: 550px) {
   .atSymbol {
-    padding-top: 10%;
+    width: 10%;
+    height: 70%;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 550px) {
   .atSymbol {
-    padding-top: 25%;
+    width: 30%;
+    height: 70%;
   }
 }
 @media (max-width: 550px) {
@@ -39,37 +50,72 @@
     border-color: white;
   }
 }
-
-.teamImgs {
-  min-width: 50px;
-  min-height: 50px;
+@media (max-width: 550px) {
+  .gamblingButton {
+    width: 50%;
+  }
+}
+@media (min-width: 550px) {
+  .gamblingButton {
+    width: 25%;
+  }
 }
 
-.nflSiteTextRaw {
-  font-family: 'nflSiteText';
-  font-weight: lighter;
+@media (min-width: 460px) {
+  .legalTeamNames {
+    width: 200px;
+  }
 }
-.nflSiteText {
-  font-family: 'nflSiteText';
-  color: black;
-  font-weight: lighter;
+@media (min-width: 770px) {
+  .cardWidth {
+    width: 47%;
+  }
+}
+@media (max-width: 770px) {
+  .cardWidth {
+    width: 87%;
+  }
+}
+
+/* Static CSS */
+.legalNFLTeamNames {
+  width: 800px;
 }
 .lightText {
   color: slategray;
 }
-.timeText {
-  font-family: 'popWarner';
-}
-
-.regularText {
-  font-family: 'regularText';
-}
-
 .smallText {
   font-size: xx-small;
 }
-
 .gamblingLogo {
   max-width: 160px;
   min-width: 16.67%;
+}
+.teamImgs {
+  min-width: 50px;
+  min-height: 50px;
+}
+.tableHeaderNormalWeight {
+  font-weight: 600;
+}
+.dataTableBuffer {
+  height: 24px;
+}
+table {
+  border-spacing: 0px;
+}
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border: none;
+}
+
+.slateGrayBackground {
+  background-color: lightslategray;
+}
+.gameDayCSS {
+  width: 29%;
 }

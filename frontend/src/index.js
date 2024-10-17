@@ -9,10 +9,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './index.css';
+import { secretCode, parlaySecretCode, parlaySecretCode2 } from './constants';
 import HomeScreen from './digitPages/HomeScreen';
 import NFLHomePage from './nflPages/HomePage';
 import NBAHomePage from './nbaPages/HomePage';
 import NBAGamePage from './nbaPages/NBAGamePage';
+import ParlayPage from './commonComps/ParlayPage';
+import BBBallParlayPage from './nbaPages/ParlayPage';
+import ParlayBufferPage from './commonComps/ParlayBufferPage';
 import GamblingHomePage from './gamblingPages/GamblingHomePage';
 import MatchupPage from './nflPages/MatchupPage';
 import GameContainer from './digitPages/GameContainer';
@@ -25,11 +29,33 @@ root.render(
     <Routes>
       <Route path='/' element={<HomeScreen />} />
       <Route path='/daGame' element={<GameContainer />} />
-      <Route path='/2332220' element={<GamblingHomePage />} />
-      <Route path='/2332220/Basketball' element={<NBAHomePage />} />
-      <Route path='/2332220/Basketball/:teams' element={<NBAGamePage />} />
-      <Route path='/2332220/Football' element={<NFLHomePage />} />
-      <Route path='/2332220/Football/:teams' element={<MatchupPage />} />
+      <Route path={`/${secretCode}`} element={<GamblingHomePage />} />
+      <Route path={`/${secretCode}/Football`} element={<NFLHomePage />} />
+      <Route path={`/${secretCode}/Basketball`} element={<NBAHomePage />} />
+      <Route
+        path={`/${secretCode}/Football/:teams`}
+        element={<MatchupPage />}
+      />
+      <Route
+        path={`/${secretCode}/Basketball/:teams`}
+        element={<NBAGamePage />}
+      />
+      <Route
+        path={`/${secretCode}/Football/${parlaySecretCode}`}
+        element={<ParlayBufferPage />}
+      />
+      <Route
+        path={`/${secretCode}/Basketball/${parlaySecretCode}`}
+        element={<ParlayBufferPage />}
+      />
+      <Route
+        path={`/${secretCode}/Football/${parlaySecretCode}/${parlaySecretCode2}`}
+        element={<ParlayPage sport={'Football'} />}
+      />
+      <Route
+        path={`/${secretCode}/Basketball/${parlaySecretCode}/${parlaySecretCode2}`}
+        element={<BBBallParlayPage sport={'Basketball'} />}
+      />
       <Route path='*' element={<NoPage />} />
     </Routes>
   </BrowserRouter>

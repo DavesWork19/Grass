@@ -61,12 +61,12 @@ const GameContainer = () => {
   ) : (
     <div className='vw-100'>
       <Header level={currentLevel.level} />
-      <main className={`text-center ${currentLevel.color} pb-5`}>
+      <main className={`text-center ${currentLevel.color} pb-5 vh-100`}>
         <Timer
           updateTimer={updateTimer}
           handleTimerUpdate={handleTimerUpdate}
         />
-        <TheGame level={currentLevel.level} changeLevel={handleChangeLevel} />
+        <TheGame level={currentLevel} changeLevel={handleChangeLevel} />
       </main>
     </div>
   );
