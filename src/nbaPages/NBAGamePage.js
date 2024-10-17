@@ -33,15 +33,10 @@ const NBAGamePage = () => {
       element.split(',')[1] === awayTeamName ||
       element.split(',')[2] === homeTeamName
   );
-  const [
-    gameTime,
-    awayTeamAgain,
-    homeTeamAgain,
-    homeTeamSpread,
-    homeTeamCover,
-    overUnder,
-    overUnderCover,
-  ] = results.split(',');
+  const [gameTime] = results.split(',')[0];
+  const [homeTeamSpread, homeTeamCover, overUnder, overUnderCover] = results
+    .split(',')
+    .splice(3);
   const hour = gameTime.split(':')[0];
 
   const homeCover = +homeTeamCover ? 'cover ' : 'not cover ';

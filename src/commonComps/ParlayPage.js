@@ -1,6 +1,6 @@
 import '../Fonts.css';
 import GamblingHeader from '../commonComps/GamblingHeader';
-import Parlays from '../commonComps/Parlays';
+// import Parlays from '../commonComps/Parlays';
 // import { smallParlay } from './smallParlay';
 // import { decentParlay } from './decentParlay';
 // import { largeParlay } from './largeParlay';
@@ -15,7 +15,7 @@ import {
   footerMessageParlayPage,
   footerParlayHitMessageParlay,
 } from '../constants';
-import ParlayHitsTable from '../commonComps/ParlayHitsTable';
+// import ParlayHitsTable from '../commonComps/ParlayHitsTable';
 
 const ParlayPage = (props) => {
   const sport = props.sport;
