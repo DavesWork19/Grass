@@ -1,7 +1,7 @@
 import '../Fonts.css';
 import percentages from './percentages.json';
 
-const PercentDataTable = (props) => {
+const PercentTeamDataTable = (props) => {
   const team = props.team;
   const homeTeam = props.homeTeam;
   const weekDay = props.weekDay.split(',')[0];
@@ -133,4 +133,4 @@ const PercentDataTable = (props) => {
   );
 };
 
-export default PercentDataTable;
+export default PercentTeamDataTable;

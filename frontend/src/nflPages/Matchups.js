@@ -41,6 +41,17 @@ const Matchups = (props) => {
         const homeCover = +selectedSpreadCall ? true : false;
         const homeSpreadCall = homeCover ? 'Cover' : null;
         const awaySpreadCall = homeCover ? null : 'Cover';
+        let awaySpread = '';
+        if (!homeCover) {
+          if (selectedSpread[0] === '+') {
+            awaySpread = '-';
+          } else {
+            awaySpread = '+';
+          }
+        }
+        const updatedSpread = homeCover
+          ? selectedSpread
+          : awaySpread + selectedSpread.slice(1);
         const overUnderCoverName = +selectedTotalCall ? 'Over' : 'Under';
 
         return (
@@ -79,7 +90,7 @@ const Matchups = (props) => {
                   <div className='col-4'>
                     {awaySpreadCall ?? `${overUnderCoverName} ${selectedTotal}`}
                   </div>
-                  <div className='col-4'>{selectedSpread}</div>
+                  <div className='col-4'>{updatedSpread}</div>
                   <div className='col-4'>
                     {homeSpreadCall ?? `${overUnderCoverName} ${selectedTotal}`}
                   </div>

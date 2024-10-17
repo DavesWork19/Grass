@@ -194,13 +194,18 @@ def updateCoveredValues():
         teamPoints = int(game['Tm'])
         oppTeamPoints = int(game['Opp'])
         spread = game['spread']
+        spreadCalculated = game['spreadCalculated']
         total = float(game['total'])
+        totalCalculated = game['totalCalculated']
         spreadSign = spread[0]
         spreadValue = None
 
         #OverUnder
-        if teamPoints + oppTeamPoints >= total:
+        if teamPoints + oppTeamPoints > total:
             mycursor.execute(f'UPDATE productionNFL SET totalCovered = 1 WHERE id = {id}')
+            mydb.commit()
+        elif teamPoints + oppTeamPoints == total:
+            mycursor.execute(f'UPDATE productionNFL SET totalCovered = {totalCalculated} WHERE id = {id}')
             mydb.commit()
         else:
             mycursor.execute(f'UPDATE productionNFL SET totalCovered = 0 WHERE id = {id}')
@@ -212,23 +217,32 @@ def updateCoveredValues():
             spreadValue = float(spread[1:])
 
         if spreadSign == '-':
-            if teamPoints - oppTeamPoints >= spreadValue:
+            if teamPoints - oppTeamPoints > spreadValue:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 1 WHERE id = {id}')
+                mydb.commit()
+            elif teamPoints - oppTeamPoints == spreadValue:
+                mycursor.execute(f'UPDATE productionNFL SET spreadCovered = {spreadCalculated} WHERE id = {id}')
                 mydb.commit()
             else:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 0 WHERE id = {id}')
                 mydb.commit()
 
         elif spreadSign == '+':
-            if -(teamPoints - oppTeamPoints) <= spreadValue:
+            if -(teamPoints - oppTeamPoints) < spreadValue:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 1 WHERE id = {id}')
+                mydb.commit()
+            elif -(teamPoints - oppTeamPoints) == spreadValue:
+                mycursor.execute(f'UPDATE productionNFL SET spreadCovered = {spreadCalculated} WHERE id = {id}')
                 mydb.commit()
             else:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 0 WHERE id = {id}')
                 mydb.commit()
         else:
-            if teamPoints - oppTeamPoints >= 0:
+            if teamPoints - oppTeamPoints > 0:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 1 WHERE id = {id}')
+                mydb.commit()
+            elif teamPoints - oppTeamPoints == 0:
+                mycursor.execute(f'UPDATE productionNFL SET spreadCovered = {spreadCalculated} WHERE id = {id}')
                 mydb.commit()
             else:
                 mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 0 WHERE id = {id}')

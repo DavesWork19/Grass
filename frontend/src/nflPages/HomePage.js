@@ -1,7 +1,6 @@
 import './HomePage.css';
 import '../Fonts.css';
 import Matchups from './Matchups';
-import WeeklyPercents from './WeeklyPercentages';
 import {
   footerMessage1,
   footerMessage2,
@@ -11,6 +10,7 @@ import {
 import { upcomingWeekData } from './upcomingWeekData.js';
 import GamblingHeader from '../commonComps/GamblingHeader';
 import { Link } from 'react-router-dom';
+import OverallPercents from './OverallPercentages';
 
 const NFLHomePage = () => {
   const upcomingWeekDataFormatted = upcomingWeekData
@@ -34,7 +34,7 @@ const NFLHomePage = () => {
 
       <div className='row'>
         <div className='col-12'>
-          <WeeklyPercents />
+          <OverallPercents />
         </div>
       </div>
 
