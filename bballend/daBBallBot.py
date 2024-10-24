@@ -36,7 +36,7 @@ sleepTimes = [17,23,27]
 
 def updateNBAGames():
     teams = getTeam(ALL_TEAMS)
-    year = 2024
+    seasonYear = 2025
 
     #Connect to mysql
     mydb = mysql.connector.connect(
@@ -52,21 +52,26 @@ def updateNBAGames():
         originalTeamNumber = getTeam(team)['number']
 
         #Get previous games from Database
-        mycursor.execute(f"SELECT id, gameNumber, isWin FROM nbaStats WHERE teamNumber = {originalTeamNumber} and year = {year};")
+        mycursor.execute(f"SELECT id, gameNumber, isWin FROM nbaStats WHERE teamNumber = {originalTeamNumber} and year = {seasonYear};")
 
         teamData = mycursor.fetchall()
         teamDF = pd.DataFrame(teamData, columns = ['id', 'gameNumber', 'isWin'])
-        lastSavedGame = teamDF['gameNumber'][teamDF['isWin'].notna()].values[-1]
-        unsavedGameDF = teamDF[['id','gameNumber']][teamDF['isWin'].isna()]
-
+        
+        
+        lastSavedGame = -1
+        unsavedGameDF = pd.DataFrame()
         unsavedGameID = -1
         unsavedGameNumber = -1
+        if (teamDF.empty == False) and (teamDF['gameNumber'][teamDF['isWin'].notna()].values.size != 0):
+            lastSavedGame = teamDF['gameNumber'][teamDF['isWin'].notna()].values[-1]
+            
+        unsavedGameDF = teamDF[['id','gameNumber']][teamDF['isWin'].isna()]
         if len(unsavedGameDF) != 0:
             unsavedGameID = int(unsavedGameDF['id'].values[0])
             unsavedGameNumber = int(unsavedGameDF['gameNumber'].values[0])
 
         #Update database with new season games
-        url = f'https://www.basketball-reference.com/teams/{team}/{year}_games.html'
+        url = f'https://www.basketball-reference.com/teams/{team}/{seasonYear}_games.html'
         HEADERS = {
             'User-Agent': 'Safari/537.36',
         }
@@ -100,7 +105,7 @@ def updateNBAGames():
                     gameOppTeam = row.find('td', attrs={'data-stat': 'opp_name'}).text
                     gameResult = row.find('td', attrs={'data-stat': 'game_result'}).text
                     inSeasonTournament = row.find('td', attrs={'data-stat': 'game_remarks'}).text
-                    primaryKey = int(f'{gameNumber}0{originalTeamNumber}{str(year)[-2:]}')
+                    primaryKey = int(f'{gameNumber}0{originalTeamNumber}{str(seasonYear)[-2:]}')
 
                     oppTeamNumber = getTeam(gameOppTeam)['number']
                     gameDayNumber = getDay(day)['dayNumber']
@@ -127,7 +132,7 @@ def updateNBAGames():
                         isOT = getIsOT(gameOT)
                         teamStreakCode = getTeamStreakCode(teamStreak)
                         
-
+                        print(gameNumber, unsavedGameNumber, primaryKey, lastSavedGame)
                         #Store data:
                         if int(gameNumber) == unsavedGameNumber:
                             #Update existing row
@@ -186,7 +191,7 @@ def updateNBAGames():
                                 f"{teamLosses},"
                                 f"{teamStreakCode},"
                                 f"{isInSeasonT},"
-                                f"{year},"
+                                f"{seasonYear},"
                                 f"'{date}'"
                                 f")"
                             )
@@ -221,7 +226,7 @@ def updateNBAGames():
                                 f"{gameDayNumber}, "
                                 f"{gameStartNumber}, "
                                 f"{isInSeasonT},"
-                                f"{year},"
+                                f"{seasonYear},"
                                 f"'{gameStart}',"
                                 f"'{date}'"
                                 f")"
@@ -237,8 +242,6 @@ def updateNBAGames():
 
 
 def getGamblingData():
-    year = 2024
-
     #Connect to MySQL
     mydb = mysql.connector.connect(
     host='127.0.0.1',
@@ -355,7 +358,7 @@ def runML():
     teams = getTeam(ALL_TEAMS)
     columnsToPredict = ['teamPoints','oppTeamPoints']
     columnsToRemove = ['isWin','isOT','teamWins','teamLosses','teamStreakCode','spread','spreadOdds','overUnder','overUnderOdds','moneyLine','gameTimeActual','date']
-    year = 2024
+    year = 2025
 
 
     #Open frontend file
@@ -1536,7 +1539,7 @@ def runParlays():
     columnsToPredict = ['spreadActual','overUnderActual']
     columnsToRemove = ['isWin','isOT','teamPoints','oppTeamPoints','teamWins','teamLosses','teamStreakCode','gameTimeActual','date']
     gamblingColumns = ['spread','spreadOdds','overUnder','overUnderOdds','moneyLine']
-    year = 2024
+    year = 2025
 
     df = updatePercentConstsForParlay()
 

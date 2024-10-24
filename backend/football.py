@@ -1195,7 +1195,7 @@ class getPredictions:
         mycursor.execute(f"SELECT * FROM productionNFL WHERE Team = '{teamName}' and Year > 2021 and WinLoss is not NULL")
         teamData = mycursor.fetchall()
         teamDF = pd.DataFrame(teamData, columns = ALL_COLUMNS)
-        teamDF = teamDF.drop(columns=['DateTime','spreadOdds','totalOdds','ML','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','spreadCalculated','totalCalculated'])
+        teamDF = teamDF.drop(columns=['DateTime','spreadOdds','totalOdds','ML','gameLine','minMaxLine','totalScoreLine','minMaxTotalScoreLine','spreadCalculated','totalCalculated','model2_spreadCalculated','model2_totalCalculated'])
  
         upcomingWeekData = [[self.year, self.week, day, at, oppTeamNumber, time, channel, temp, weather, wind, spread, total]]
         upcomingWeekColumns = ['Year','Week','Day', 'At', 'OppTeam', 'Time', 'Channel', 'Temp', 'Weather', 'Wind', 'spread', 'total']
@@ -1285,6 +1285,8 @@ class getPredictions:
                     matchUpHolder['AwaySpread'] = ['spreadCovered',day,at,oppTeam,team,time,channel,temp,weather,wind,spread,total]
                     matchUpHolder['AwayTotal'] = ['totalCovered',day,at,oppTeam,team,time,channel,temp,weather,wind,spread,total]
 
+
+                #Original Model Call
                 #Spread
                 homeSpreadOutcome = 1
                 awaySpreadOutcome = 1
@@ -1371,6 +1373,60 @@ class getPredictions:
                     mydb.commit()
                 
                 
+
+
+                #New (single) Model Call
+                #Spread
+                homeSpreadOutcome = 1
+                awaySpreadOutcome = 1
+
+                for i in range(1):
+                    homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService(matchUpHolder['HomeSpread'])
+                    awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService(matchUpHolder['AwaySpread'])
+                    
+                    homeSpreadOutcome = homeSpreadOutcome + (homePredictions1WL[0] * convertProbZero(homePredictions1WL[1])) + (homePredictions2WL[0] * convertProbZero(homePredictions2WL[1])) + (homePredictions3WL[0] * convertProbZero(homePredictions3WL[1]))
+                    awaySpreadOutcome = awaySpreadOutcome + (awayPredictions1WL[0] * convertProbZero(awayPredictions1WL[1])) + (awayPredictions2WL[0] * convertProbZero(awayPredictions2WL[1])) + (awayPredictions3WL[0] * convertProbZero(awayPredictions3WL[1]))
+                
+                if homeSpreadOutcome > awaySpreadOutcome:
+                    mycursor.execute(f'UPDATE productionNFL SET model2_spreadCalculated = 1 WHERE id = {homeTeamID}')
+                    mydb.commit()
+                    mycursor.execute(f'UPDATE productionNFL SET model2_spreadCalculated = 0 WHERE id = {awayTeamID}')
+                    mydb.commit()
+            
+
+                else:
+                    mycursor.execute(f'UPDATE productionNFL SET model2_spreadCalculated = 1 WHERE id = {awayTeamID}')
+                    mydb.commit()
+                    mycursor.execute(f'UPDATE productionNFL SET model2_spreadCalculated = 0 WHERE id = {homeTeamID}')
+                    mydb.commit()
+                
+                
+                #OverUnder
+                homeOverUnderOutcome = 0
+                awayOverUnderOutcome = 0
+
+                for i in range(1):
+                    homePredictions1WL, homePredictions2WL, homePredictions3WL = self.teamService(matchUpHolder['HomeTotal'])
+                    awayPredictions1WL, awayPredictions2WL, awayPredictions3WL = self.teamService(matchUpHolder['AwayTotal'])
+                    
+                    homeOverUnderOutcome = homeOverUnderOutcome + homePredictions1WL[0] + homePredictions2WL[0] + homePredictions3WL[0]
+                    awayOverUnderOutcome = awayOverUnderOutcome + awayPredictions1WL[0] + awayPredictions2WL[0] + awayPredictions3WL[0]
+
+                if homeOverUnderOutcome + awayOverUnderOutcome > 3:
+                    mycursor.execute(f'UPDATE productionNFL SET model2_totalCalculated = 1 WHERE id = {homeTeamID}')
+                    mydb.commit()
+                    mycursor.execute(f'UPDATE productionNFL SET model2_totalCalculated = 1 WHERE id = {awayTeamID}')
+                    mydb.commit()
+            
+
+                else:
+                    mycursor.execute(f'UPDATE productionNFL SET model2_totalCalculated = 0 WHERE id = {awayTeamID}')
+                    mydb.commit()
+                    mycursor.execute(f'UPDATE productionNFL SET model2_totalCalculated = 0 WHERE id = {homeTeamID}')
+                    mydb.commit()
+                
+
+
                 matchUpHolder = {}    
                 homeTeamID = -1
                 homeTeamName = ''
