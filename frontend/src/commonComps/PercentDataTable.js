@@ -14,7 +14,10 @@ const PercentDataTable = (props) => {
   const addPercentText = (text) => `${text}%`;
 
   const checkNA = (value) => {
-    return value === 'NA' ? value : value.toFixed(2);
+    if (value === 'NA' || value === undefined) {
+      return value;
+    }
+    return value.toFixed(2);
   };
 
   const spread = addPercentText(

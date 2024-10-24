@@ -41,7 +41,7 @@ const ParlayHitsTable = (props) => {
                 <div className='col-12 p-3'></div>
               </div>
               {parlayPercentages.map((data) => {
-                const [parlay, category, date, totalCalls] = data.split(',');
+                const [category, date, totalCalls] = data.split(',').slice(1);
 
                 const updatedCategory =
                   category === 'Overall' ? 'All' : category;

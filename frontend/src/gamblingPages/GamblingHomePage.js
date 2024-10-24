@@ -16,7 +16,7 @@ const GamblingHomePage = () => {
       </div>
       <div className='pt-5'>
         <Link to={`/${secretCode}/Basketball`} className='pt-5 text-end'>
-          <button className='boldText btn btn-outline-secondary gamblingButton'>
+          <button className='text-dark btn btn-outline-secondary btn-light gamblingButton'>
             {'BASKETBALL'}
           </button>
         </Link>
