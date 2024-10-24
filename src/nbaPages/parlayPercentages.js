@@ -82,4 +82,6 @@ export const parlay4Percentages = [
 'Parlay 4,Overall,March 24 2024,1',
 'Parlay 4,Over Unders,March 25 2024,3',
 'Parlay 4,Overall,March 25 2024,3',
+'Parlay 4,Over Unders,October 23 2024,2',
+'Parlay 4,Overall,October 23 2024,2',
 ];
