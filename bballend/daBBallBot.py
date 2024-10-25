@@ -132,7 +132,6 @@ def updateNBAGames():
                         isOT = getIsOT(gameOT)
                         teamStreakCode = getTeamStreakCode(teamStreak)
                         
-                        print(gameNumber, unsavedGameNumber, primaryKey, lastSavedGame)
                         #Store data:
                         if int(gameNumber) == unsavedGameNumber:
                             #Update existing row
