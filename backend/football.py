@@ -383,7 +383,6 @@ class getUpcomingWeekData:
                         f"{wind}"
                         f")"
                 )
-            print(insertHomeData)
             mycursor.execute(insertHomeData)
             mydb.commit()
 
@@ -501,17 +500,15 @@ class getUpcomingWeekData:
                 weekday, month, day = originalDateList
                 day = day[:-2]
 
-                updatedDate = datetime.strptime(f'{month}/{day}', '%b/%d')
+                updatedDate = datetime.strptime(f'{month}/{day}/{self.year}', '%b/%d/%Y')
 
                 start, end = ALL_WEEKS[self.week]
                 startMonth, startDay = start.split('/')
-                startMonth = int(startMonth)
-                startDay = int(startDay)
+                startDate = datetime.strptime(f'{startMonth}/{startDay}/{self.year}', '%m/%d/%Y')
                 endMonth, endDay = end.split('/')
-                endMonth = int(endMonth)
-                endDay = int(endDay)
+                endDate = datetime.strptime(f'{endMonth}/{endDay}/{self.year}', '%m/%d/%Y')
 
-                if (startMonth <= updatedDate.month) and (endMonth >= updatedDate.month) and (startDay <= updatedDate.day) and (endDay >= updatedDate.day):
+                if (startDate <= updatedDate) and (endDate >= updatedDate):
                     thisWeek = True
 
             elif (originalDateList[0] == 'Tomorrow') or (originalDateList[0] == 'Today'):
@@ -1948,16 +1945,16 @@ table = 'productionNFL'
 
 print(f'Start Time : {time.localtime()}')
 
-# 1/4
-#Store old game data
-storeDataObj = storeTeamData(table, week, year)
-storeDataObj.storeAllTeamsData()
-updateCoveredValues()
+# # 1/4
+# #Store old game data
+# storeDataObj = storeTeamData(table, week, year)
+# storeDataObj.storeAllTeamsData()
+# updateCoveredValues()
 
-# 2/4
-#Store new game data
+# # 2/4
+# #Store new game data
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
-storeUpcomingWeekData.getWeatherByWeek()
+# storeUpcomingWeekData.getWeatherByWeek()
 storeUpcomingWeekData.getGamblingData()
 
 # 3/4

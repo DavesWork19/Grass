@@ -75,18 +75,26 @@ from constants import *
 #         else:
 #             mycursor.execute(f'UPDATE productionNFL SET spreadCovered = 0 WHERE id = {id}')
 #             mydb.commit()
+thisWeek = False
+month = 'Oct'
+day = 31
+updatedDate = datetime.strptime(f'{month}/{day}/2024', '%b/%d/%Y')
+
+start, end = ALL_WEEKS[9]
+startMonth, startDay = start.split('/')
+startDate = datetime.strptime(f'{startMonth}/{startDay}/2024', '%m/%d/%Y')
+endMonth, endDay = end.split('/')
+endDate = datetime.strptime(f'{endMonth}/{endDay}/2024', '%m/%d/%Y')
+
+print(startDate, endDate)
+
+if (startDate <= updatedDate) and (endDate >= updatedDate):
+    thisWeek = True
 
 
-week = 2
 
 
-d = {'f':1,'e':2}
-
-print(len(d))
-
-
-
-
+print(thisWeek)
 
 
 
