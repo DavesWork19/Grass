@@ -1945,16 +1945,16 @@ table = 'productionNFL'
 
 print(f'Start Time : {time.localtime()}')
 
-# # 1/4
-# #Store old game data
-# storeDataObj = storeTeamData(table, week, year)
-# storeDataObj.storeAllTeamsData()
-# updateCoveredValues()
+# 1/4
+#Store old game data
+storeDataObj = storeTeamData(table, week, year)
+storeDataObj.storeAllTeamsData()
+updateCoveredValues()
 
-# # 2/4
-# #Store new game data
+# 2/4
+#Store new game data
 storeUpcomingWeekData = getUpcomingWeekData(week, year)
-# storeUpcomingWeekData.getWeatherByWeek()
+storeUpcomingWeekData.getWeatherByWeek()
 storeUpcomingWeekData.getGamblingData()
 
 # 3/4
