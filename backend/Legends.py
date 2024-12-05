@@ -367,7 +367,7 @@ def getWeather(weather):
         return 4
     elif ('Rain' in weather) or ('Drizzle' in weather) or ('Thunderstorms' in weather):
         return 5
-    elif ('Snow' in weather) or ('Flurries' in weather) or ('Sleet' in weather):
+    elif ('Snow' in weather) or ('Flurries' in weather) or ('Sleet' in weather) or ('Frost' in weather):
         return 6
     else:
         return weather
