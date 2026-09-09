@@ -1,0 +1,101 @@
+Ticker,Company,Change %,Price,Volume,Rel Volume,Market cap,P/E,EPS dil TTM,EPS dil growth TTM YoY,Div yield % TTM,Sector,Analyst Rating
+HBIO,Harvard Bioscience Inc.,+945.41%,4.95 USD,155.47 K,0.34,21.17 M USD,—,−1.28 USD,−350.42%,0.00%,Health technology,Buy
+ULY,Urgent.ly Inc.,+164.29%,5.37 USD,1.85 M,17.60,4.45 M USD,—,−14.79 USD,+62.44%,0.00%,Technology services,No rating
+WNW,Meiwu Technology Company Limited,+131.61%,4.17 USD,148.58 M,"5,738.02",28.16 M USD,0.37,11.15 USD,—,0.00%,Retail trade,No rating
+CTMX,CytomX Therapeutics Inc.,+67.31%,7.83 USD,100.87 M,34.65,1.33 B USD,18.72,0.42 USD,+146.43%,0.00%,Health technology,Strong buy
+AIRS,AirSculpt Technologies Inc.,+49.72%,2.77 USD,70.33 M,69.82,172.94 M USD,—,−0.30 USD,−116.68%,0.00%,Health technology,Neutral
+LNZA,LanzaTech Global Inc.,+36.94%,15.05 USD,43.92 K,8.28,34.92 M USD,—,−37.54 USD,+42.72%,0.00%,Industrial services,Neutral
+DSGR,Distribution Solutions Group Inc.,+34.33%,25.94 USD,1.03 M,4.80,1.2 B USD,147.89,0.18 USD,—,0.00%,Distribution services,Buy
+ACXP,Acurx Pharmaceuticals Inc.,+32.42%,5.14 USD,8.6 M,0.53,14.67 M USD,—,−5.93 USD,+66.28%,0.00%,Health technology,Strong buy
+PLAG,Planet Green Holdings Corp.,+25.12%,2.64 USD,364.4 K,2.76,24.77 M USD,—,−2.34 USD,−68.25%,0.00%,Consumer non-durables,No rating
+SKYQ,Sky Quarry Inc.,+24.65%,3.59 USD,472.8 K,0.79,9.2 M USD,—,−0.65 USD,"−4,116.99%",0.00%,Energy minerals,No rating
+CING,Cingulate Inc.,+22.67%,10.66 USD,1.77 M,4.12,82.49 M USD,—,−5.29 USD,+93.84%,0.00%,Health technology,Strong buy
+ARTL,Artelo Biosciences Inc.,+22.61%,4.61 USD,103.39 K,2.53,3.27 M USD,—,−47.93 USD,+12.62%,0.00%,Health technology,No rating
+FOFO,Hang Feng Technology Innovation Co. Ltd.,+21.92%,5.50 USD,20.23 K,0.80,37.83 M USD,—,—,—,—,Commercial services,No rating
+TOI,The Oncology Institute Inc.,+20.07%,3.41 USD,4.28 M,1.81,337.04 M USD,—,−0.56 USD,+20.34%,0.00%,Health services,Strong buy
+CVGI,Commercial Vehicle Group Inc.,+20.00%,3.48 USD,1.74 M,0.32,127.5 M USD,—,−0.67 USD,+19.07%,0.00%,Producer manufacturing,Strong buy
+OPAL,OPAL Fuels Inc.,+19.16%,2.55 USD,675.17 K,3.73,442.16 M USD,121.43,0.02 USD,−87.97%,0.00%,Process industries,Buy
+ATGL,Alpha Technology Group Limited,+17.41%,19.49 USD,4.2 K,1.12,320.85 M USD,—,−0.55 USD,"−1,098.04%",0.00%,Technology services,No rating
+BIOA,BioAge Labs Inc.,+17.36%,21.97 USD,492.24 K,0.92,917.3 M USD,—,−2.11 USD,−1.89%,0.00%,Health technology,Buy
+XBIO,Xenetic Biosciences Inc.,+17.18%,3.29 USD,78.15 K,2.95,7.54 M USD,—,−1.62 USD,+37.12%,0.00%,Health technology,No rating
+LCUT,Lifetime Brands Inc.,+17.06%,4.46 USD,274.61 K,0.41,101.04 M USD,—,−1.25 USD,−75.41%,4.46%,Consumer durables,Buy
+RFIL,RF Industries Ltd.,+16.80%,11.93 USD,573.74 K,2.59,127.76 M USD,"1,987.50",0.01 USD,—,0.00%,Electronic technology,Neutral
+AXR,AMREP Corporation,+16.17%,28.38 USD,38.64 K,11.53,150.56 M USD,11.79,2.41 USD,−0.51%,0.00%,Finance,Strong buy
+BOLT,Bolt Biotherapeutics Inc.,+16.11%,4.54 USD,31.67 K,1.86,8.72 M USD,—,−17.78 USD,+46.20%,0.00%,Health technology,Strong buy
+VTVT,vTv Therapeutics Inc.,+16.11%,38.64 USD,39.49 K,0.42,161.48 M USD,—,−3.35 USD,+1.93%,0.00%,Health technology,Strong buy
+CLIK,Click Holdings Limited,+15.68%,3.61 USD,3.84 M,19.53,11.76 M USD,—,—,—,0.00%,Commercial services,No rating
+NBIS,Nebius Group N.V.,+15.21%,130.13 USD,26.86 M,2.04,32.76 B USD,255.31,0.51 USD,—,0.00%,Technology services,Buy
+DXST,Decent Holding Inc.,+14.59%,6.56 USD,577.51 K,0.06,9.25 M USD,—,−0.02 USD,−115.30%,0.00%,Industrial services,No rating
+GSIT,GSI Technology Inc.,+14.22%,9.72 USD,1.69 M,2.39,351.73 M USD,—,−0.36 USD,+27.27%,0.00%,Electronic technology,No rating
+SAGT,SAGTEC GLOBAL LIMITED,+13.84%,2.55 USD,195.31 K,0.44,32 M USD,3.21,0.79 USD,−10.25%,0.00%,Technology services,No rating
+BMNR,BitMine Immersion Technologies Inc.,+13.05%,23.22 USD,48.74 M,1.05,10.56 B USD,—,−0.87 USD,+66.60%,0.05%,Finance,Strong buy
+FPS,Forgent Power Solutions Inc.,+12.98%,34.99 USD,3.45 M,1.29,10.65 B USD,—,—,—,0.00%,Producer manufacturing,Strong buy
+WULF,TeraWulf Inc.,+12.85%,16.56 USD,31.85 M,1.13,7.02 B USD,—,−1.66 USD,−719.03%,0.00%,Technology services,Strong buy
+GRNQ,Greenpro Capital Corp.,+12.72%,2.26 USD,45.77 K,1.97,18.93 M USD,—,−0.17 USD,+81.08%,0.00%,Finance,No rating
+ASST,Strive Inc.,+12.49%,10.72 USD,3.93 M,0.98,668.63 M USD,—,−16.65 USD,+57.51%,0.00%,Miscellaneous,Strong buy
+NUAI,New Era Energy & Digital Inc.,+12.45%,5.65 USD,4.23 M,1.67,320.5 M USD,—,−0.96 USD,+10.83%,0.00%,Finance,No rating
+PURR,Hyperliquid Strategies Inc,+12.22%,5.97 USD,5.06 M,0.85,740.09 M USD,—,—,—,0.00%,Finance,Strong buy
+DTIL,Precision BioSciences Inc.,+12.17%,6.36 USD,504.75 K,1.74,157.26 M USD,—,−5.18 USD,−373.45%,0.00%,Health technology,Strong buy
+PCSA,Processa Pharmaceuticals Inc.,+11.86%,3.30 USD,40.98 K,1.07,7.48 M USD,—,−34.02 USD,+72.88%,0.00%,Health technology,No rating
+TTEC,TTEC Holdings Inc.,+11.83%,3.36 USD,1.25 M,1.39,162.94 M USD,—,−3.97 USD,+41.22%,0.00%,Technology services,Neutral
+FWDI,Forward Industries Inc.,+11.68%,5.26 USD,718.31 K,0.71,437.31 M USD,—,−9.90 USD,−362.75%,0.00%,Consumer durables,Strong buy
+OLMA,Olema Pharmaceuticals Inc.,+11.66%,16.43 USD,1.28 M,0.45,1.29 B USD,—,−1.81 USD,+17.23%,0.00%,Health technology,Strong buy
+NRXP,NRX Pharmaceuticals Inc.,+11.56%,2.08 USD,1.56 M,2.86,66.14 M USD,—,−2.35 USD,−9.32%,0.00%,Health technology,Strong buy
+BOF,BranchOut Food Inc.,+11.31%,4.09 USD,61.28 K,0.88,54.78 M USD,—,−0.59 USD,+42.64%,0.00%,Consumer non-durables,No rating
+FBYD,Falcons Beyond Global Inc.,+11.18%,7.56 USD,34.67 K,0.37,415.48 M USD,—,−0.11 USD,−108.36%,0.00%,Industrial services,No rating
+TSEM,Tower Semiconductor Ltd.,+11.15%,138.62 USD,2.71 M,1.19,15.49 B USD,71.49,1.94 USD,+4.75%,0.00%,Electronic technology,Buy
+WATT,Energous Corporation,+11.08%,13.53 USD,442.06 K,1.43,29.43 M USD,—,−16.33 USD,+82.47%,0.00%,Electronic technology,Strong buy
+TYGO,Tigo Energy Inc.,+11.08%,3.81 USD,200.38 K,0.52,287.82 M USD,—,−0.06 USD,+94.45%,0.00%,Electronic technology,Strong buy
+LFMD,LifeMD Inc.,+11.06%,4.42 USD,2.11 M,1.13,212.04 M USD,—,−0.20 USD,+63.12%,0.00%,Health services,Strong buy
+ESPR,Esperion Therapeutics Inc.,+10.86%,2.71 USD,3.74 M,0.56,694.67 M USD,—,−0.21 USD,+21.45%,0.00%,Health technology,Buy
+BCRX,BioCryst Pharmaceuticals Inc.,+10.58%,9.09 USD,13.86 M,2.80,2.28 B USD,7.55,1.20 USD,—,0.00%,Health technology,Strong buy
+AURA,Aura Biosciences Inc.,+10.52%,6.57 USD,183.37 K,0.64,416.9 M USD,—,−1.93 USD,−11.41%,0.00%,Health technology,Strong buy
+WOLF,Wolfspeed Inc.,+10.36%,18.43 USD,1.29 M,0.74,830.98 M USD,—,−16.06 USD,−109.06%,0.00%,Electronic technology,Buy
+ANVS,Annovis Bio Inc.,+10.32%,2.78 USD,457.16 K,1.58,73.68 M USD,—,−1.40 USD,+29.76%,0.00%,Health technology,Strong buy
+GLXG,Galaxy Payroll Group Limited,+10.32%,2.23 USD,3.72 K,0.26,12.84 M USD,—,−0.25 USD,−568.45%,0.00%,Commercial services,No rating
+SENS,Senseonics Holdings Inc.,+10.28%,6.22 USD,531.98 K,0.76,259.81 M USD,—,−1.69 USD,+34.00%,0.00%,Electronic technology,Buy
+CPNG,Coupang Inc.,+10.24%,20.34 USD,26.73 M,1.10,37.19 B USD,181.45,0.11 USD,+35.22%,0.00%,Retail trade,Buy
+OPTX,Syntec Optics Holdings Inc.,+10.23%,7.33 USD,366.21 K,0.48,270.63 M USD,—,−0.08 USD,−296.14%,0.00%,Electronic technology,No rating
+PELI,Pelican Acquisition Corporation,+10.22%,10.40 USD,265.54 K,0.96,124.84 M USD,—,—,—,0.00%,Finance,No rating
+LASR,nLIGHT Inc.,+10.13%,68.94 USD,1.88 M,0.75,3.85 B USD,—,−0.47 USD,+62.85%,0.00%,Electronic technology,Strong buy
+IOTR,iOThree Limited,+10.10%,2.18 USD,51.69 K,2.39,5.59 M USD,—,−0.12 USD,—,0.00%,Technology services,No rating
+BW,Babcock & Wilcox Enterprises Inc.,+10.09%,11.57 USD,5.35 M,0.69,1.29 B USD,—,−0.70 USD,+51.22%,0.00%,Electronic technology,Strong buy
+LONA,LeonaBio Inc.,+10.08%,8.43 USD,80.73 K,1.73,78.72 M USD,—,−9.66 USD,+66.10%,0.00%,Health technology,Strong buy
+SYRE,Spyre Therapeutics Inc.,+10.05%,43.90 USD,717.27 K,0.99,3.45 B USD,—,−2.08 USD,+34.23%,0.00%,Health technology,Strong buy
+MANE,Veradermics Incorporated,+9.90%,58.03 USD,179.72 K,0.69,2.17 B USD,—,—,—,0.00%,Health technology,Strong buy
+TAOX,Tao Synergies Inc.,+9.75%,6.19 USD,325.78 K,2.27,46.11 M USD,—,−16.94 USD,−127.30%,0.00%,Technology services,No rating
+RHLD,Resolute Holdings Management,+9.65%,121.82 USD,100.77 K,0.33,1.03 B USD,—,−0.70 USD,—,0.00%,Commercial services,No rating
+XCUR,Exicure Inc.,+9.64%,4.61 USD,45.76 K,3.02,29.35 M USD,—,−1.51 USD,+33.40%,0.00%,Health technology,No rating
+SIF,SIFCO Industries Inc.,+9.61%,14.25 USD,61.55 K,0.99,88.56 M USD,25.51,0.56 USD,—,0.00%,Electronic technology,No rating
+ANRO,Alto Neuroscience Inc.,+9.48%,24.37 USD,535.37 K,2.15,757.09 M USD,—,−2.30 USD,−7.87%,0.00%,Health technology,Strong buy
+WYY,WidePoint Corporation,+9.46%,4.88 USD,15.9 K,0.78,48.29 M USD,—,−0.24 USD,+26.59%,0.00%,Technology services,Strong buy
+BTDR,Bitdeer Technologies Group,+9.27%,8.20 USD,4.5 M,0.62,1.98 B USD,—,—,—,0.00%,Technology services,Strong buy
+DHX,DHI Group Inc.,+9.23%,2.42 USD,243.6 K,0.75,109.05 M USD,—,−0.29 USD,"−6,522.22%",0.00%,Commercial services,Buy
+EVMN,Evommune Inc.,+9.23%,24.02 USD,130.59 K,0.51,865.16 M USD,—,−2.23 USD,—,0.00%,Health technology,Strong buy
+ZDAI,DirectBooking Technology Co. Ltd.,+9.20%,4.37 USD,5.79 K,1.18,35.14 M USD,—,—,—,0.00%,Transportation,No rating
+DOCN,DigitalOcean Holdings Inc.,+9.14%,74.90 USD,2.47 M,0.87,6.89 B USD,29.81,2.51 USD,+189.00%,0.00%,Technology services,Buy
+ULH,Universal Logistics Holdings Inc.,+9.05%,15.79 USD,42.58 K,0.82,416.07 M USD,—,−3.79 USD,−176.93%,2.90%,Transportation,Neutral
+ZDGE,Zedge Inc.,+9.02%,2.90 USD,114.61 K,1.69,37.73 M USD,—,−0.15 USD,−4.29%,1.20%,Technology services,Strong buy
+XLO,Xilio Therapeutics Inc.,+9.00%,7.78 USD,90.55 K,2.58,37.47 M USD,—,−0.66 USD,+61.76%,0.00%,Health technology,No rating
+AMPG,Amplitech Group Inc.,+8.98%,2.79 USD,495.51 K,1.28,70.26 M USD,—,−0.51 USD,+37.19%,0.00%,Electronic technology,Strong buy
+GRDX,GridAI Technologies Corp.,+8.85%,2.46 USD,51.2 K,0.44,8.27 M USD,—,−10.06 USD,+50.22%,0.00%,Health technology,No rating
+MSGM,Motorsport Games Inc.,+8.82%,4.44 USD,193.84 K,0.69,25.66 M USD,3.08,1.44 USD,—,0.00%,Technology services,No rating
+SBET,Sharplink Inc.,+8.76%,8.19 USD,3.39 M,0.49,1.61 B USD,—,−9.22 USD,+35.15%,0.00%,Commercial services,Strong buy
+PODC,PodcastOne Inc.,+8.73%,2.49 USD,58.98 K,0.96,67.63 M USD,—,−0.15 USD,+37.40%,0.00%,Technology services,Strong buy
+MIND,MIND Technology Inc.,+8.73%,8.65 USD,153.35 K,0.75,78.22 M USD,22.56,0.38 USD,−15.60%,0.00%,Industrial services,Strong buy
+PHOE,Phoenix Asia Holdings Limited,+8.73%,16.63 USD,12.36 K,0.64,359.21 M USD,—,—,—,0.00%,Industrial services,No rating
+VMD,Viemed Healthcare Inc.,+8.70%,10.00 USD,482.62 K,1.14,386.03 M USD,26.67,0.38 USD,+36.51%,0.00%,Health services,Strong buy
+FGNX,FG Nexus Inc.,+8.69%,7.45 USD,27.31 K,0.32,48.76 M USD,—,−53.29 USD,−797.12%,0.00%,Finance,Strong buy
+AGEN,Agenus Inc.,+8.55%,3.37 USD,608.87 K,1.24,114.44 M USD,—,−2.13 USD,+80.65%,0.00%,Health technology,Buy
+EMPD,Empery Digital Inc.,+8.43%,4.76 USD,701.15 K,0.63,173.38 M USD,—,−81.96 USD,+99.81%,0.00%,Consumer durables,No rating
+HURA,TuHURA Biosciences Inc.,+8.35%,2.06 USD,565.43 K,0.65,125 M USD,—,−0.65 USD,+99.21%,0.00%,Health technology,Strong buy
+FOA,Finance of America Companies Inc.,+8.28%,17.65 USD,143.38 K,1.33,179.11 M USD,—,−0.23 USD,+93.07%,0.00%,Finance,No rating
+BRBR,BellRing Brands Inc.,+8.20%,18.21 USD,2.74 M,0.88,2.14 B USD,12.51,1.46 USD,−31.36%,0.00%,Health technology,Buy
+CRCL,Circle Internet Group Inc.,+8.20%,124.84 USD,12.9 M,0.59,30.81 B USD,—,−0.54 USD,−327.63%,0.00%,Technology services,Buy
+SERV,Serve Robotics Inc.,+8.17%,9.87 USD,3.91 M,0.77,746.68 M USD,—,−1.60 USD,−54.47%,0.00%,Producer manufacturing,Strong buy
+ODYS,Odysight.ai Inc.,+8.07%,6.16 USD,20.24 K,0.92,100.76 M USD,—,−1.09 USD,−25.27%,0.00%,Consumer durables,No rating
+ATRO,Astronics Corporation,+8.01%,69.05 USD,539.65 K,0.72,2.47 B USD,95.44,0.72 USD,—,0.00%,Electronic technology,Strong buy
+EEX,Emerald Holding Inc.,+7.99%,4.39 USD,19.42 K,0.67,869.36 M USD,—,−0.16 USD,−167.18%,1.47%,Commercial services,Strong buy
+INAB,IN8bio Inc.,+7.94%,2.04 USD,70.68 K,1.73,19.92 M USD,—,−4.59 USD,+75.49%,0.00%,Health technology,Strong buy
+ALZN,Alzamend Neuro Inc.,+7.84%,2.20 USD,678.29 K,12.83,8.37 M USD,—,−4.38 USD,+84.12%,0.00%,Health technology,Strong buy
+SNDK,Sandisk Corporation,+7.78%,713.08 USD,13.51 M,0.77,105.25 B USD,—,−7.59 USD,−338.20%,0.00%,Electronic technology,Buy
