@@ -182,9 +182,14 @@ def store_nfl_data(
     temp_f,
     wind_mph,
     game_channel,
+    game_day_code=None,
 ):
     """
     Store one team's weekly NFL prediction-input row into Postgres.
+
+    game_day_code is the game's day within its NFL week (0=Wed ... 6=Tue, see
+    legends.getDay) - the frontend groups a week's games by actual calendar
+    day, so this is what lets updateFrontendGames rebuild that day per game.
 
     Returns:
         int: ID of inserted record
@@ -269,6 +274,8 @@ def store_nfl_data(
     )
     """
     cur.execute(create_table_query)
+    # NFL1 predates this column - add it for tables created before this change.
+    cur.execute("ALTER TABLE NFL1 ADD COLUMN IF NOT EXISTS game_day_code SMALLINT")
 
     insert_query = f"""
     INSERT INTO NFL1 (
@@ -281,7 +288,7 @@ def store_nfl_data(
         all_pass_yards, all_rush_yards, all_sacks_allowed, all_turnovers, team_avg_points_for,
         is_home, last_game_in_season, next_game_in_season, team_name, last_opp_team_name,
         next_opp_team_name, season_year, home_spread, spread, over_under, home_money_line,
-        away_money_line, money_line, weather_code, temp_f, wind_mph, game_channel, created_at
+        away_money_line, money_line, weather_code, temp_f, wind_mph, game_channel, game_day_code, created_at
     ) VALUES (
         {weeks_since_last_game}, {last_game_was_win}, {curr_streak},
         {home_games_win_percent}, {away_games_win_percent},
@@ -292,7 +299,8 @@ def store_nfl_data(
         {all_pass_yards}, {all_rush_yards}, {all_sacks_allowed}, {all_turnovers}, {team_avg_points_for},
         {is_home}, {last_game_in_season if last_game_in_season is not None else 'NULL'}, {next_game_in_season}, '{team_name}', '{last_opp_team_name}',
         '{next_opp_team_name}', {season_year}, '{home_spread}', '{spread}', {over_under}, '{home_money_line}',
-        '{away_money_line}', '{money_line}', {weather_code}, {temp_f}, {wind_mph}, {game_channel}, '{today}'
+        '{away_money_line}', '{money_line}', {weather_code}, {temp_f}, {wind_mph}, {game_channel},
+        {game_day_code if game_day_code is not None else 'NULL'}, '{today}'
     ) RETURNING id
     """
 
@@ -351,6 +359,27 @@ def _find_weather_row(weather_df, away_team_number, home_team_number):
     return None
 
 
+def _clear_existing_week(week, season_year):
+    """Make saveData safe to re-run for a week it already inserted (crash
+    recovery, or just running it twice) - without this, every rerun would
+    duplicate that week's rows instead of replacing them."""
+    conn = psycopg2.connect(**DB_CONFIG)
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            "DELETE FROM NFL1 WHERE next_game_in_season = %s AND season_year = %s",
+            (week, season_year),
+        )
+        if cur.rowcount:
+            print(f'Cleared {cur.rowcount} existing rows for week {week}, {season_year} before reinserting.')
+        conn.commit()
+    except psycopg2.errors.UndefinedTable:
+        conn.rollback()  # first run ever - table doesn't exist yet
+    finally:
+        cur.close()
+        conn.close()
+
+
 def saveData(week=None):
     today = date.today()
 
@@ -359,6 +388,8 @@ def saveData(week=None):
         if week is None:
             print('No active NFL week found for today - nothing to save.')
             return
+
+    _clear_existing_week(week, SEASON_YEAR)
 
     gambling_data = scrape_weekly_gambling_data(week, SEASON_YEAR, WEEK_DATE_RANGES)
     weather_data = scrape_weekly_weather_and_schedule(SEASON_YEAR, week)
@@ -379,6 +410,7 @@ def saveData(week=None):
             temp_f = int(weather_row['temp_f'])
             wind_mph = int(weather_row['wind_mph'])
             game_channel = int(weather_row['channel_code'])
+            game_day_code = int(weather_row['day_code'])
         else:
             full_game_start_time = ''
             game_start_time = 0
@@ -386,6 +418,7 @@ def saveData(week=None):
             temp_f = 70
             wind_mph = 0
             game_channel = 0
+            game_day_code = None
 
         for team_number, is_home, opp_team_number in (
             (away_team_number, 0, home_team_number),
@@ -459,6 +492,7 @@ def saveData(week=None):
                 temp_f,
                 wind_mph,
                 game_channel,
+                game_day_code,
             )
 
             print(f"Record inserted with ID: {record_id}")

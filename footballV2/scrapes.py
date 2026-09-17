@@ -392,6 +392,7 @@ def scrape_weekly_gambling_data(week, year, week_date_ranges):
 
     data_rows = []
     seen = set()
+    seen_teams = set()
 
     for block in soup.find_all('div', class_='cb-static-parlay__content--inner'):
         template = block.find(
@@ -434,6 +435,15 @@ def scrape_weekly_gambling_data(week, year, week_date_ranges):
         key = (away_team, home_team)
         if key in seen or not away_team or not home_team:
             continue
+
+        # The widget lists the upcoming slate's games followed immediately by
+        # the week after that (no header/date separates them). Each team
+        # plays once a week, so the first repeated team marks the boundary -
+        # stop there rather than blending two weeks' games together.
+        if away_team in seen_teams or home_team in seen_teams:
+            break
+        seen_teams.add(away_team)
+        seen_teams.add(home_team)
         seen.add(key)
 
         data_rows.append({

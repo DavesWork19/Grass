@@ -1,11 +1,25 @@
 import psycopg2
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
-from constants import NFL_TEAMS, SEASON_YEAR
+from constants import NFL_TEAMS, SEASON_YEAR, WEEK_DATE_RANGES
 from saveNFLData import DB_CONFIG
 
 ACRONYM_TO_TEAM_NAME = {team["acronym"]: team["name"] for team in NFL_TEAMS}
+
+# The default day (Sunday, the main NFL slate) used for a game whose day
+# couldn't be scraped - keeps it grouped somewhere reasonable rather than
+# crashing the header logic.
+_DEFAULT_DAY_CODE = 4  # Wed=0 ... Sun=4 ... Tue=6, see legends.getDay
+
+
+def _week_start_date(week, season_year, week_date_ranges):
+    """First (Wednesday) date of `week` in `season_year`'s season - weeks past
+    the turn of the year (late-season weeks) roll into season_year + 1."""
+    start_str, _ = week_date_ranges[week]
+    start_month, start_day = (int(x) for x in start_str.split('/'))
+    start_year = season_year if start_month >= 8 else season_year + 1
+    return date(start_year, start_month, start_day)
 
 
 def updateFrontendGames(week):
@@ -22,23 +36,43 @@ def updateFrontendGames(week):
     cur.close()
     conn.close()
 
-    today = datetime.now().date()
+    week_start = _week_start_date(week, SEASON_YEAR, WEEK_DATE_RANGES)
 
     team_exists = []
+    games = []
+    for index, game in df.iterrows():
+        team_name = game['team_name']
+        opp_team_name = game['next_opp_team_name']
+        if (opp_team_name in team_exists) or (team_name in team_exists):
+            continue
+        team_exists.append(team_name)
+        team_exists.append(opp_team_name)
+
+        day_code = game['game_day_code']
+        day_code = int(day_code) if pd.notna(day_code) else _DEFAULT_DAY_CODE
+        game_date = week_start + timedelta(days=day_code)
+
+        if game['is_home']:
+            away, home = opp_team_name, team_name
+        else:
+            away, home = team_name, opp_team_name
+
+        row = f"{game['full_game_start_time']},{ACRONYM_TO_TEAM_NAME[away]},{ACRONYM_TO_TEAM_NAME[home]},{game['home_spread']},{int(bool(game['home_calculated_spread_test']))},{game['over_under']},{int(bool(game['calculated_over_under_test']))},{game['away_money_line']},{game['home_money_line']},{int(bool(game['home_calculated_money_line_test']))}"
+        games.append((game_date, game['game_start_time'], row))
+
+    games.sort(key=lambda g: (g[0], g[1]))
+
     with open('../../../Health App/health-app/app/commonComps/todaysGamesFootball.js', 'w') as f:
         f.write('export const todaysGamesFootball = [\n')
-        f.write(f"'{today.strftime('%A')}',\n")
-        f.write(f"'{today.strftime('%B %d, %Y')}',\n")
-        for index, game in df.iterrows():
-            team_name = game['team_name']
-            opp_team_name = game['next_opp_team_name']
-            if (opp_team_name not in team_exists) and (team_name not in team_exists):
-                team_exists.append(team_name)
-                team_exists.append(opp_team_name)
-                if game['is_home']:
-                    f.write(f"'{game['full_game_start_time']},{ACRONYM_TO_TEAM_NAME[opp_team_name]},{ACRONYM_TO_TEAM_NAME[team_name]},{game['home_spread']},{int(bool(game['home_calculated_spread_test']))},{game['over_under']},{int(bool(game['calculated_over_under_test']))},{game['away_money_line']},{game['home_money_line']},{int(bool(game['home_calculated_money_line_test']))}',\n")
-                else:
-                    f.write(f"'{game['full_game_start_time']},{ACRONYM_TO_TEAM_NAME[team_name]},{ACRONYM_TO_TEAM_NAME[opp_team_name]},{game['home_spread']},{int(bool(game['home_calculated_spread_test']))},{game['over_under']},{int(bool(game['calculated_over_under_test']))},{game['away_money_line']},{game['home_money_line']},{int(bool(game['home_calculated_money_line_test']))}',\n")
+        if not games:
+            today = datetime.now().date()
+            f.write(f"'{today.strftime('%A')}|{today.strftime('%B %d, %Y')}',\n")
+        last_date = None
+        for game_date, _, row in games:
+            if game_date != last_date:
+                f.write(f"'{game_date.strftime('%A')}|{game_date.strftime('%B %d, %Y')}',\n")
+                last_date = game_date
+            f.write(f"'{row}',\n")
         f.write("];")
 
 

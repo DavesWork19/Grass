@@ -322,6 +322,17 @@ def runDaParlays(confidenceScores, percentTotals):
             home_team_df = all_data_df[(all_data_df['team_name'] == homeTeam) & (all_data_df['home_calculated_spread_test'].notna())]
             away_team_df = all_data_df[(all_data_df['team_name'] == awayTeam) & (all_data_df['home_calculated_spread_test'].notna())]
 
+            # Nothing to predict if this matchup's game has already been graded
+            # (e.g. the pipeline is being re-run after the week concluded) -
+            # skip it rather than handing StandardScaler an empty row.
+            no_pending_game = any(
+                team_df[team_df['actual_spread'].isna()].empty
+                for team_df in (home_team_df, away_team_df)
+            )
+            if no_pending_game:
+                print(f'  skipping {awayTeam} @ {homeTeam} - no pending (ungraded) game to predict')
+                continue
+
             for team_index, team_df in enumerate([home_team_df, away_team_df]):
                 team_updated_df = _build_team_feature_dict(team_df, class_columns=class_columns_to_predict)
                 team_updated_df = team_updated_df.drop(columns=['season'])
