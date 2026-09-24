@@ -23,13 +23,38 @@ PFR_CODE_TO_NAME = {team['pfr']: team['name'] for team in NFL_TEAMS}
 _driver = None
 
 
+def _installed_chrome_major_version():
+    """undetected-chromedriver's own auto-detection has picked a chromedriver
+    for the wrong major version before (e.g. grabbing 154 while the installed
+    Chrome.app auto-updated to 153) - pin version_main from the actual binary
+    instead of trusting it."""
+    import subprocess
+
+    for path in (
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
+    ):
+        try:
+            out = subprocess.check_output([path, '--version'], text=True)
+            match = re.search(r'(\d+)\.', out)
+            if match:
+                return int(match.group(1))
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            continue
+    return None
+
+
 def _new_driver():
     import undetected_chromedriver as uc
 
     opts = uc.ChromeOptions()
     opts.add_argument('--window-size=1366,900')
     opts.page_load_strategy = 'eager'
-    drv = uc.Chrome(options=opts, use_subprocess=True)
+    drv = uc.Chrome(
+        options=opts,
+        version_main=_installed_chrome_major_version(),
+        use_subprocess=True,
+    )
     drv.set_page_load_timeout(35)
     return drv
 
