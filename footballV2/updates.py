@@ -1,10 +1,11 @@
 import psycopg2
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from constants import NFL_TEAMS, SEASON_YEAR
+from constants import NFL_TEAMS, SEASON_YEAR, WEEK_DATE_RANGES
 from saveNFLData import DB_CONFIG, _clean_game_log, TEAM_NUMBER_TO_PFR
 from scrapes import scrape_all_game_data_by_team
+from frontend import _week_start_date, _DEFAULT_DAY_CODE
 
 team_names = [team["acronym"] for team in NFL_TEAMS]
 ACRONYM_TO_PFR = {team["acronym"]: team["pfr"] for team in NFL_TEAMS}
@@ -110,6 +111,16 @@ def getTotals(df, totals, name):
     return totals
 
 
+def _played_date(row):
+    """Calendar date the game was actually played, derived the same way as the
+    frontend's game-day headers (week start + day-of-week offset) - created_at
+    is just when the row was scraped/inserted and doesn't track game day."""
+    week_start = _week_start_date(int(row['next_game_in_season']), int(row['season_year']), WEEK_DATE_RANGES)
+    day_code = row['game_day_code']
+    day_code = int(day_code) if pd.notna(day_code) else _DEFAULT_DAY_CODE
+    return week_start + timedelta(days=day_code)
+
+
 def getPreviousPercentages():
     conn = psycopg2.connect(**DB_CONFIG)
     cur = conn.cursor()
@@ -126,11 +137,12 @@ def getPreviousPercentages():
 
     totals = {}
 
-    last_games = sorted(df['created_at'].unique())[:4:-1]
+    df['game_date'] = df.apply(_played_date, axis=1)
+    last_games = sorted(df['game_date'].unique())[:4:-1]
 
     totals = getTotals(df, totals, 'overall')
     for i in range(min(5, len(last_games))):
-        totals = getTotals(df[df['created_at'] == last_games[i]], totals, f'overall_prev_{i + 1}')
+        totals = getTotals(df[df['game_date'] == last_games[i]], totals, f'overall_prev_{i + 1}')
 
     for team in team_names:
         updated_df = df[df['team_name'] == team]
