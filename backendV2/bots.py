@@ -14,15 +14,95 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 from datetime import datetime, timedelta
 import pandas as pd
-from constants import NBA_TEAMS
+from constants import NBA_TEAMS, current_season_year
 import warnings
 warnings.filterwarnings('ignore')
 
 team_names = [team["acronym"] for team in NBA_TEAMS]
-year = 2026
+year = current_season_year()
 columns_to_drop = ['id','full_game_start_time','team_name','last_opp_team_name', 'next_opp_team_name', 'season_year','home_spread', 'spread', 'over_under', 'home_money_line','away_money_line', 'money_line', 'actual_spread', 'actual_over_under', 'actual_money_line', 'calculated_spread', 'calculated_over_under','calculated_money_line', 'created_at', 'home_calculated_spread','home_calculated_money_line','parlay1_spread','parlay1_over_under','parlay1_money_line','parlay2_spread','parlay2_over_under','parlay2_money_line','parlay3_spread','parlay3_over_under','parlay3_money_line']
 reg_columns_to_predict = ['points_for','points_against']
 class_columns_to_predict = ['actual_spread','actual_over_under','actual_money_line']
+MIN_TRAINING_ROWS = 8
+
+
+def _build_team_feature_df(team_df, include_class_columns=False):
+    """
+    Per-team, per-game feature rows shared by runDaBot (points regression) and
+    runDaParlays (bet-outcome classification).
+
+    Rows are ordered chronologically across seasons. A game's actual points
+    live on the team's next row (as last_game_point_for/against), but only
+    when that row is the same season and links straight back to this game -
+    otherwise points stay -1 (unplayed, a scrape gap, or a season boundary).
+    Keying on next_game_in_season alone would collide game N of this season
+    with game N of last season.
+
+    `row_id` is the BBALL7 id, kept so callers can pick today's row; drop it
+    before modeling.
+    """
+    team_df = (team_df.sort_values(['season_year', 'next_game_in_season', 'id'])
+               .drop_duplicates(['season_year', 'next_game_in_season'], keep='last')
+               .reset_index(drop=True))
+    team_updated_dict = {}
+
+    for index in range(len(team_df)):
+        current = team_df.iloc[index]
+        game = current['next_game_in_season']
+
+        points_for = points_against = -1
+        if index + 1 < len(team_df):
+            nxt = team_df.iloc[index + 1]
+            if nxt['season_year'] == current['season_year'] and nxt['last_game_in_season'] == game:
+                points_for = nxt['last_game_point_for']
+                points_against = nxt['last_game_point_against']
+
+        row = { 'days_since_last_game': current['days_since_last_game'],
+                'last_game_was_win': current['last_game_was_win'],
+                'curr_streak': current['curr_streak'],
+                'home_games_win_percent': current['home_games_win_percent']*100,
+                'away_games_win_percent': current['away_games_win_percent']*100,
+                'league_avg_pace': current['league_avg_pace'],
+                'team_off_rank': current['team_off_rank'],
+                'league_avg_off_rank': current['league_avg_off_rank'],
+                'team_def_rank': current['team_def_rank'],
+                'league_avg_def_rank': current['league_avg_def_rank'],
+                'team_mov': current['team_mov'],
+                'team_mov_pos': current['team_mov_pos'],
+                'league_avg_mov': current['league_avg_mov'],
+                'team_srs': current['team_srs'],
+                'team_srs_pos': current['team_srs_pos'],
+                'league_avg_srs': current['league_avg_srs'],
+                'game_start_time': current['game_start_time'],
+                'points_for': points_for,
+                'points_against': points_against,
+                'last_game_field_goal_attempts': current['last_game_field_goal_attempts'],
+                'last_game_field_goal': current['last_game_field_goal'],
+                'last_game_turnovers': current['last_game_turnovers'],
+                'last_game_rebounds': current['last_game_rebounds'],
+                'all_field_goal_attempts': current['all_field_goal_attempts'],
+                'all_field_goal': current['all_field_goal'],
+                'all_rebounds': current['all_rebounds'],
+                'all_turnovers': current['all_turnovers'],
+                'team_avg_points_for': current['team_avg_points_for'],
+                'team_avg_points_against': current['team_avg_points_against'],
+                'is_home': current['is_home'],
+                'game_in_season': game,
+                'row_id': current['id'],
+                }
+
+        if include_class_columns:
+            for column in ['calculated_spread_test', 'calculated_over_under_test', 'calculated_money_line_test'] + class_columns_to_predict:
+                row[column] = current[column]
+
+        team_updated_dict[index] = row
+
+    return pd.DataFrame.from_dict(team_updated_dict, orient='index')
+
+
+def _todays_rows(all_data_df):
+    today = datetime.now().date()
+    return all_data_df[(pd.to_datetime(all_data_df['created_at']).dt.date == today) & (all_data_df['season_year'] == year)]
 
 
 def runDaBot():
@@ -44,86 +124,45 @@ def runDaBot():
     colnames = [desc[0] for desc in cur.description]
     all_data_df = pd.DataFrame(all_data, columns=colnames)
 
-    today = datetime.now().date()
-    todays_games = all_data_df[all_data_df['created_at'] == str(today)]
+    todays_games = _todays_rows(all_data_df)
 
-    list_of_games = todays_games[todays_games['is_home'] == 1][['team_name', 'next_opp_team_name']].values.tolist()
-    # Structure: hometeam pos 0 , awayteam pos 1 [['CHO', 'SAS'], ['IND', 'ATL'], ['PHI', 'NOP'], ['MEM', 'MIN'], ['MIA', 'CHI'], ['HOU', 'DAL']]
+    list_of_games = todays_games[todays_games['is_home'] == 1][['team_name', 'next_opp_team_name', 'id']].values.tolist()
+    # Structure: hometeam pos 0 , awayteam pos 1 [['CHO', 'SAS', id], ['IND', 'ATL', id], ...]
     both_team_errors = {}
 
 
     for game in list_of_games:
         home_team = game[0]
         away_team = game[1]
+        home_team_current_game_id = game[2]
 
-        #Get relevant data for each team using all_data_df (all previous matchups with next_opp_team as matchup, and then )
-       
+        away_today = todays_games[todays_games['team_name'] == away_team]
+        if away_today.empty:
+            print(f'Skipping {away_team} @ {home_team}: no row saved today for {away_team}')
+            continue
+        away_team_current_game_id = away_today['id'].values[0]
+
         all_home_team_df = all_data_df[all_data_df['team_name'] == home_team]
         all_away_team_df = all_data_df[all_data_df['team_name'] == away_team]
 
-        home_team_df = all_home_team_df.drop(columns=columns_to_drop)
-        away_team_df = all_away_team_df.drop(columns=columns_to_drop)
-
-        both_team_errors[f'{away_team}_{home_team}'] = 0
         both_team_predictions = {f'{home_team}_points_for': 0, f'{home_team}_points_against': 0,f'{away_team}_points_for': 0,f'{away_team}_points_against': 0}
+        game_error = 0
+        insufficient_history = False
 
-        for team_index, team_df in enumerate([home_team_df, away_team_df]):
-            team_updated_dict = {}
+        for team_index, (team_df, current_id) in enumerate([(all_home_team_df, home_team_current_game_id), (all_away_team_df, away_team_current_game_id)]):
+            team_updated_df = _build_team_feature_df(team_df)
+            team_data_to_predict = team_updated_df[team_updated_df['row_id'] == current_id].drop(columns=reg_columns_to_predict + ['row_id'])
+            team_updated_df = team_updated_df[(team_updated_df['points_for'] != -1) & (team_updated_df['row_id'] != current_id)].drop(columns=['row_id'])
 
-            team_games_in_current_season = team_df['next_game_in_season'].unique().tolist()
-
-            for index, game in enumerate(team_games_in_current_season):
-                current_game_df = team_df[team_df['next_game_in_season'] == game]
-                next_game_df = team_df[team_df['last_game_in_season'] == game]
-                points_for = next_game_df['last_game_point_for'].values[0] if len(next_game_df['last_game_point_for']) > 0 else -1
-                points_against = next_game_df['last_game_point_against'].values[0] if len(next_game_df['last_game_point_against']) > 0 else -1
-
-                team_updated_dict[index] = { 'days_since_last_game': current_game_df['days_since_last_game'].values[0], 
-                                                    'last_game_was_win': current_game_df['last_game_was_win'].values[0], 
-                                                    'curr_streak': current_game_df['curr_streak'].values[0],
-                                                    'home_games_win_percent': current_game_df['home_games_win_percent'].values[0]*100,
-                                                    'away_games_win_percent': current_game_df['away_games_win_percent'].values[0]*100,
-                                                    'league_avg_pace': current_game_df['league_avg_pace'].values[0], 
-                                                    'team_off_rank': current_game_df['team_off_rank'].values[0], 
-                                                    'league_avg_off_rank': current_game_df['league_avg_off_rank'].values[0],
-                                                    'team_def_rank': current_game_df['team_def_rank'].values[0], 
-                                                    'league_avg_def_rank': current_game_df['league_avg_def_rank'].values[0], 
-                                                    'team_mov': current_game_df['team_mov'].values[0], 
-                                                    'team_mov_pos': current_game_df['team_mov_pos'].values[0],
-                                                    'league_avg_mov': current_game_df['league_avg_mov'].values[0], 
-                                                    'team_srs': current_game_df['team_srs'].values[0], 
-                                                    'team_srs_pos': current_game_df['team_srs_pos'].values[0], 
-                                                    'league_avg_srs': current_game_df['league_avg_srs'].values[0],
-                                                    'game_start_time': current_game_df['game_start_time'].values[0], 
-                                                    'points_for': points_for, 
-                                                    'points_against': points_against,
-                                                    'last_game_field_goal_attempts': current_game_df['last_game_field_goal_attempts'].values[0], 
-                                                    'last_game_field_goal': current_game_df['last_game_field_goal'].values[0],
-                                                    'last_game_turnovers': current_game_df['last_game_turnovers'].values[0], 
-                                                    'last_game_rebounds': current_game_df['last_game_rebounds'].values[0], 
-                                                    'all_field_goal_attempts': current_game_df['all_field_goal_attempts'].values[0],
-                                                    'all_field_goal': current_game_df['all_field_goal'].values[0], 
-                                                    'all_rebounds': current_game_df['all_rebounds'].values[0], 
-                                                    'all_turnovers': current_game_df['all_turnovers'].values[0],
-                                                    'team_avg_points_for': current_game_df['team_avg_points_for'].values[0], 
-                                                    'team_avg_points_against': current_game_df['team_avg_points_against'].values[0], 
-                                                    'is_home': current_game_df['is_home'].values[0],
-                                                    'game_in_season': game
-                                                    }
-
-            team_updated_df = pd.DataFrame.from_dict(team_updated_dict, orient='index')
-            team_data_to_predict = team_updated_df[team_updated_df['points_for'] == -1]
-            team_data_to_predict = team_data_to_predict.drop(columns=reg_columns_to_predict)
-            team_updated_df = team_updated_df[team_updated_df['points_for'] != -1]
+            if len(team_updated_df) < MIN_TRAINING_ROWS:
+                insufficient_history = True
+                break
 
             for column in reg_columns_to_predict:
                 y = team_updated_df[column]
                 X = team_updated_df.drop(columns=reg_columns_to_predict)
 
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.19, random_state = 19)
-
-                if len(X_train) == 1:
-                    break
 
                 #Scale training and testing data
                 scalar = StandardScaler()
@@ -182,7 +221,7 @@ def runDaBot():
 
                 result = int(bestModel.predict(updated_team_data_to_predict)[0])
 
-                both_team_errors[f'{away_team}_{home_team}'] = both_team_errors[f'{away_team}_{home_team}'] + allScores[bestScore]
+                game_error = game_error + allScores[bestScore]
 
                 if team_index == 0:
                     if column == 'points_for':
@@ -195,12 +234,13 @@ def runDaBot():
                     else:
                         both_team_predictions[f'{away_team}_points_against'] = result
 
+        if insufficient_history:
+            print(f'Skipping {away_team} @ {home_team}: fewer than {MIN_TRAINING_ROWS} trainable games')
+            continue
 
-        home_team_current_game = all_home_team_df[all_home_team_df['actual_spread'].isnull()]
-        away_team_current_game = all_away_team_df[all_away_team_df['actual_spread'].isnull()]
+        both_team_errors[f'{away_team}_{home_team}'] = game_error
 
-        home_team_current_game_id = home_team_current_game['id'].values[0]
-        away_team_current_game_id = away_team_current_game['id'].values[0]
+        home_team_current_game = all_home_team_df[all_home_team_df['id'] == home_team_current_game_id]
         home_team_spread = home_team_current_game['spread'].values[0]
         home_team_over_under = home_team_current_game['over_under'].values[0]
 
@@ -255,11 +295,11 @@ def runDaBot():
                     
         conn.commit()
 
-    sorted_teams_by_errors = sorted(both_team_errors.items(), key=lambda item: item[1])
-    return sorted_teams_by_errors
-    # print(sorted_teams_by_errors[:3])
     cur.close()
     conn.close()
+
+    sorted_teams_by_errors = sorted(both_team_errors.items(), key=lambda item: item[1])
+    return sorted_teams_by_errors
 
             
 
@@ -299,70 +339,26 @@ def runDaParlays(confidenceScores, percentTotals):
             teamIds = {'home': -1, 'away': -1}
 
             #Get all data needed for each team to use reallyRunEm
-            
+            todays_games = _todays_rows(all_data_df)
+            home_today = todays_games[todays_games['team_name'] == homeTeam]
+            away_today = todays_games[todays_games['team_name'] == awayTeam]
+            if home_today.empty or away_today.empty:
+                print(f'Skipping {awayTeam} @ {homeTeam}: no row saved today')
+                continue
+            teamIds['home'] = home_today['id'].values[0]
+            teamIds['away'] = away_today['id'].values[0]
+
             home_team_df = all_data_df[(all_data_df['team_name'] == homeTeam) & (all_data_df['home_calculated_spread_test'].notna())]
             away_team_df = all_data_df[(all_data_df['team_name'] == awayTeam) & (all_data_df['home_calculated_spread_test'].notna())]
                 
-            for team_index, team_df in enumerate([home_team_df, away_team_df]):
-                team_updated_dict = {}
+            for team_index, (team_df, current_id) in enumerate([(home_team_df, teamIds['home']), (away_team_df, teamIds['away'])]):
+                team_updated_df = _build_team_feature_df(team_df, include_class_columns=True)
+                team_data_to_predict = team_updated_df[team_updated_df['row_id'] == current_id].drop(columns=['row_id'])
+                team_updated_df = team_updated_df[team_updated_df['actual_spread'].notna() & (team_updated_df['row_id'] != current_id)].drop(columns=['row_id'])
 
-                team_games_in_current_season = team_df['next_game_in_season'].unique().tolist()
-
-
-                for index, game in enumerate(team_games_in_current_season):
-                    current_game_df = team_df[team_df['next_game_in_season'] == game]
-                    next_game_df = team_df[team_df['last_game_in_season'] == game]
-                    points_for = next_game_df['last_game_point_for'].values[0] if len(next_game_df['last_game_point_for']) > 0 else -1
-                    points_against = next_game_df['last_game_point_against'].values[0] if len(next_game_df['last_game_point_against']) > 0 else -1
-
-                    team_updated_dict[index] = { 'days_since_last_game': current_game_df['days_since_last_game'].values[0], 
-                                                        'last_game_was_win': current_game_df['last_game_was_win'].values[0], 
-                                                        'curr_streak': current_game_df['curr_streak'].values[0],
-                                                        'home_games_win_percent': current_game_df['home_games_win_percent'].values[0]*100,
-                                                        'away_games_win_percent': current_game_df['away_games_win_percent'].values[0]*100,
-                                                        'league_avg_pace': current_game_df['league_avg_pace'].values[0], 
-                                                        'team_off_rank': current_game_df['team_off_rank'].values[0], 
-                                                        'league_avg_off_rank': current_game_df['league_avg_off_rank'].values[0],
-                                                        'team_def_rank': current_game_df['team_def_rank'].values[0], 
-                                                        'league_avg_def_rank': current_game_df['league_avg_def_rank'].values[0], 
-                                                        'team_mov': current_game_df['team_mov'].values[0], 
-                                                        'team_mov_pos': current_game_df['team_mov_pos'].values[0],
-                                                        'league_avg_mov': current_game_df['league_avg_mov'].values[0], 
-                                                        'team_srs': current_game_df['team_srs'].values[0], 
-                                                        'team_srs_pos': current_game_df['team_srs_pos'].values[0], 
-                                                        'league_avg_srs': current_game_df['league_avg_srs'].values[0],
-                                                        'game_start_time': current_game_df['game_start_time'].values[0], 
-                                                        'points_for': points_for, 
-                                                        'points_against': points_against,
-                                                        'last_game_field_goal_attempts': current_game_df['last_game_field_goal_attempts'].values[0], 
-                                                        'last_game_field_goal': current_game_df['last_game_field_goal'].values[0],
-                                                        'last_game_turnovers': current_game_df['last_game_turnovers'].values[0], 
-                                                        'last_game_rebounds': current_game_df['last_game_rebounds'].values[0], 
-                                                        'all_field_goal_attempts': current_game_df['all_field_goal_attempts'].values[0],
-                                                        'all_field_goal': current_game_df['all_field_goal'].values[0], 
-                                                        'all_rebounds': current_game_df['all_rebounds'].values[0], 
-                                                        'all_turnovers': current_game_df['all_turnovers'].values[0],
-                                                        'team_avg_points_for': current_game_df['team_avg_points_for'].values[0], 
-                                                        'team_avg_points_against': current_game_df['team_avg_points_against'].values[0], 
-                                                        'is_home': current_game_df['is_home'].values[0],
-                                                        'game_in_season': game,
-                                                        'calculated_spread_test': current_game_df['calculated_spread_test'].values[0],
-                                                        'calculated_over_under_test': current_game_df['calculated_over_under_test'].values[0],
-                                                        'calculated_money_line_test': current_game_df['calculated_money_line_test'].values[0],
-                                                        'actual_spread': current_game_df['actual_spread'].values[0],
-                                                        'actual_over_under': current_game_df['actual_over_under'].values[0],
-                                                        'actual_money_line': current_game_df['actual_money_line'].values[0]
-                                                        }
-
-                team_updated_df = pd.DataFrame.from_dict(team_updated_dict, orient='index')
-                team_data_to_predict = team_updated_df[team_updated_df['actual_spread'].isna()]
-                team_data_to_predict = team_data_to_predict.iloc[[-1]] if len(team_data_to_predict) > 1 else team_data_to_predict
-                team_updated_df = team_updated_df[team_updated_df['actual_spread'].notna()]
-                
-                if team_index == 0:
-                    teamIds['home'] = team_df.iloc[[-1]]['id'].values[0]
-                elif team_index == 1:
-                    teamIds['away'] = team_df.iloc[[-1]]['id'].values[0]
+                if team_data_to_predict.empty:
+                    # Game already graded, or runDaBot skipped it.
+                    break
 
                 for column in class_columns_to_predict:
                     y = team_updated_df[column]
@@ -399,7 +395,7 @@ def runDaParlays(confidenceScores, percentTotals):
                     SVCModel = SVC(probability=True, random_state=19)
                     KNN = KNeighborsClassifier()
                     LogReg = LogisticRegression(max_iter=7000, random_state=19)
-                    SGDCModel = SGDClassifier(loss='log', max_iter=7000, tol=1e-3, random_state=19)
+                    SGDCModel = SGDClassifier(loss='log_loss', max_iter=7000, tol=1e-3, random_state=19)
 
                     SVCGS3 = GridSearchCV(SVCModel, CParams, cv=3)
                     SVCGS3.fit(X_train, y_train)
@@ -415,7 +411,7 @@ def runDaParlays(confidenceScores, percentTotals):
                     #Stochastic Gradient Descent 
                     SGDCGS3 = GridSearchCV(SGDCModel, alphaParams, cv=3)
                     SGDCGS3.fit(X_train, y_train)
-                    bestSGDC3 = SGDClassifier(loss='log', alpha = SGDCGS3.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
+                    bestSGDC3 = SGDClassifier(loss='log_loss', alpha = SGDCGS3.best_params_['alpha'], max_iter=1000, tol=1e-3, random_state=19)
 
                     bestSVC3.fit(X_train, y_train)
                     bestSVC3Score = accuracy_score(y_test, bestSVC3.predict(X_test))
@@ -435,7 +431,7 @@ def runDaParlays(confidenceScores, percentTotals):
                     updated_team_data_to_predict = scalar.transform(X_to_predict)                                       
                     
                     if column == 'actual_spread':
-                        teamSpread = int(X_to_predict['calculated_spread_test'])
+                        teamSpread = int(X_to_predict['calculated_spread_test'].iloc[0])
                         prediction = bestModel.predict(updated_team_data_to_predict)[0]
                         prediction_prob = bestModel.predict_proba(updated_team_data_to_predict)[0]
 
@@ -447,7 +443,7 @@ def runDaParlays(confidenceScores, percentTotals):
                                 teamsScores['spread'] = teamsScores['spread'] + prediction_prob[1]
     
                     elif column == 'actual_over_under':
-                        teamOverUnder = int(X_to_predict['calculated_over_under_test'])
+                        teamOverUnder = int(X_to_predict['calculated_over_under_test'].iloc[0])
                         prediction = bestModel.predict(updated_team_data_to_predict)[0]
                         prediction_prob = bestModel.predict_proba(updated_team_data_to_predict)[0]
 
@@ -459,7 +455,7 @@ def runDaParlays(confidenceScores, percentTotals):
                                 teamsScores['overUnder'] = teamsScores['overUnder'] + prediction_prob[1]
 
                     elif column == 'actual_money_line':
-                            teamMoneyLine = int(X_to_predict['calculated_money_line_test'])
+                            teamMoneyLine = int(X_to_predict['calculated_money_line_test'].iloc[0])
                             prediction = bestModel.predict(updated_team_data_to_predict)[0]
                             prediction_prob = bestModel.predict_proba(updated_team_data_to_predict)[0]
 

@@ -1,3 +1,5 @@
+import os
+
 from saveBBallData import saveData
 from updates import updateDBActuals, getPreviousPercentages
 from bots import runDaBot, runDaParlays
@@ -6,6 +8,9 @@ from frontend import updateFrontendGames, updateFrontendParlays
 
 
 if __name__ == "__main__":
+    # Frontend files are written relative to backendV2/.
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     #Stage 1 - get new data for new day and for the previous game for all teams
     print('Starting... 0 / 7')
     saveData()

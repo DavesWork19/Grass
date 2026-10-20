@@ -42,6 +42,8 @@ def updateFrontendGames():
         for index, game in df.iterrows():
             team_name = game['team_name']
             opp_team_name = game['next_opp_team_name']
+            if pd.isna(game['home_calculated_spread_test']) or pd.isna(game['calculated_over_under_test']):
+                continue  # runDaBot skipped this matchup
             if (opp_team_name not in team_exists) and (team_name not in team_exists):
                 team_exists.append(team_name)
                 team_exists.append(opp_team_name)

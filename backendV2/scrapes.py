@@ -143,65 +143,82 @@ def scrape_all_game_data_by_team(url):
     return pd.DataFrame(data_rows, columns=columns)
 
 
+def _normalize_odds(text):
+    """DraftKings renders minus signs as the unicode figure dash (U+2212); the
+    frontend parseFloat()s spreads and updates.py parses a leading ASCII '-'."""
+    return text.replace('\u2212', '-').replace('\u2013', '-').strip()
+
+
 def scrape_todays_gambling_data():
-    sleepTimes = [17, 23, 27]
+    """
+    Scrapes DraftKings' NBA page for the spread, over/under and moneyline of
+    every listed game. Each game is a `cb-static-parlay__content--inner` block
+    with a fixed 6-button grid: away spread, over, away ML, home spread, under,
+    home ML. Blocks lazy-render on scroll, so we page down before parsing.
+
+    The board can run past today into tomorrow's games - saveData drops any
+    team whose next Basketball Reference game isn't today.
+    """
+    sleepTimes = [5, 9, 13]
 
     driver = webdriver.Chrome()
     driver.get("https://sportsbook.draftkings.com/leagues/basketball/nba")
     time.sleep(random.choice(sleepTimes))
 
-    container = driver.find_element(By.CLASS_NAME, 'cms-market-selector-static__event-wrapper')
+    driver.find_element(By.CLASS_NAME, 'cb-static-parlay__event-wrapper')
+    for y in range(0, 9000, 600):
+        driver.execute_script(f'window.scrollTo(0, {y});')
+        time.sleep(0.4)
     time.sleep(random.choice(sleepTimes))
 
-    todaysGames = driver.find_element(By.CLASS_NAME, 'cb-static-parlay__event-wrapper')
-    time.sleep(random.choice(sleepTimes))
-
-    todayGamesTableHTML = todaysGames.get_attribute('innerHTML')
-    soup = BeautifulSoup(todayGamesTableHTML, 'html.parser')
-    time.sleep(random.choice(sleepTimes))
-
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
 
     data_rows = []
+    seen_teams = set()
 
-    allDivs = soup.find_all('div', {'class': 'cb-static-parlay__content--inner'})
-    for div in allDivs:
+    for div in soup.find_all('div', {'class': 'cb-static-parlay__content--inner'}):
         nextDiv = div.find('div', {'class': 'cb-market__template cb-market__template--2-columns'})
-        if nextDiv:
-            leftData = nextDiv.find('div', {'class': 'cb-side-column__left'})
-            rightData = nextDiv.find('div', {'class': 'cb-side-column__right cb-side-column__right--vertical'})
-            teamNames = leftData.find_all('div', {'class': 'cb-market__label-wrapper'})
-            gamblingDataButtons = rightData.find_all('button')
-            
-            awayTeam = teamNames[0].text 
-            homeTeam = teamNames[1].text 
+        if not nextDiv:
+            continue
+        leftData = nextDiv.find('div', {'class': 'cb-side-column__left'})
+        rightData = nextDiv.find('div', {'class': 'cb-side-column__right cb-side-column__right--vertical'})
+        if not leftData or not rightData:
+            continue
+        teamNames = leftData.find_all('div', {'class': 'cb-market__label-wrapper'})
+        gamblingDataButtons = rightData.find_all('button')
+        if len(teamNames) < 2 or len(gamblingDataButtons) < 6:
+            continue
 
-            gamblingDataList = []
+        awayTeam = teamNames[0].get_text(strip=True)
+        homeTeam = teamNames[1].get_text(strip=True)
 
-            for gamblingData in gamblingDataButtons:
-                
-                allGamblingData = gamblingData.find('div',{'class':'cb-market__button-text-container'})
-                allGamblingDataOdds = gamblingData.find('span', {'class':'cb-market__button-odds'})
-                if ('U' in allGamblingData.text) or ('O' in allGamblingData.text):
-                    gamblingDataList.append(allGamblingData.text[1:])
-                    gamblingDataList.append(allGamblingDataOdds.text.strip())
-                else:
-                    gamblingDataList.append(allGamblingData.text)
-                    gamblingDataList.append(allGamblingDataOdds.text.strip())
-                        
-            data_rows.append({
-                    'awayTeam': awayTeam,
-                    'homeTeam': homeTeam,
-                    'awaySpread': gamblingDataList[0],
-                    'overUnder': gamblingDataList[2],
-                    'awayMoneyLine': gamblingDataList[5],
-                    'homeSpread': gamblingDataList[6],
-                    'homeMoneyLine': gamblingDataList[11]
-                    })
+        # A team plays at most once a day; a repeat means the board has moved
+        # on to a later day's slate.
+        if awayTeam in seen_teams or homeTeam in seen_teams:
+            break
+        seen_teams.update([awayTeam, homeTeam])
 
-    df = pd.DataFrame(data_rows)
-    driver.quit()
-    
-    return df
+        vals = []
+        for gamblingData in gamblingDataButtons:
+            points = gamblingData.find('div', {'class': 'cb-market__button-text-container'})
+            odds = gamblingData.find('span', {'class': 'cb-market__button-odds'})
+            vals.append((
+                _normalize_odds(points.get_text(strip=True)) if points else '',
+                _normalize_odds(odds.get_text(strip=True)) if odds else '',
+            ))
+
+        data_rows.append({
+                'awayTeam': awayTeam,
+                'homeTeam': homeTeam,
+                'awaySpread': vals[0][0],
+                'overUnder': vals[1][0].lstrip('OoUu').strip(),
+                'awayMoneyLine': vals[2][1],
+                'homeSpread': vals[3][0],
+                'homeMoneyLine': vals[5][1]
+                })
+
+    return pd.DataFrame(data_rows)
 
 
 

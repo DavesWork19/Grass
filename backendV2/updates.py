@@ -3,11 +3,11 @@ import pandas as pd
 from datetime import datetime, timedelta
 import random
 import time
-from constants import NBA_TEAMS
+from constants import NBA_TEAMS, current_season_year
 from scrapes import scrape_upcoming_game_by_team
 
 team_names = [team["acronym"] for team in NBA_TEAMS]
-season_year = 2026
+season_year = current_season_year()
 
 
 def updateDBActuals():
@@ -22,27 +22,35 @@ def updateDBActuals():
     # Connect to PostgreSQL
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    cur.execute(f"SELECT * FROM BBALL7 WHERE actual_spread is NULL;")
+    cur.execute(f"SELECT * FROM BBALL7 WHERE actual_spread is NULL and season_year = {season_year};")
     all_data = cur.fetchall()
 
     # Get column names
     colnames = [desc[0] for desc in cur.description]
     df = pd.DataFrame(all_data, columns=colnames)
 
+    schedules = {}
+
     for index, row in df.iterrows():
         team_name = row['team_name']
         current_game_in_season = row['next_game_in_season']
 
-        upcoming_game_url = f'https://www.basketball-reference.com/teams/{team_name}/2026_games.html'
-        upcoimng_game_df = scrape_upcoming_game_by_team(upcoming_game_url)
-        last_game_from_upcoming_df = upcoimng_game_df[upcoimng_game_df['game_result'] != ''].iloc[-1]
+        try:
+            if team_name not in schedules:
+                upcoming_game_url = f'https://www.basketball-reference.com/teams/{team_name}/{season_year}_games.html'
+                schedules[team_name] = scrape_upcoming_game_by_team(upcoming_game_url)
+                time.sleep(random.uniform(1.5, 3.5))
+            schedule_df = schedules[team_name]
 
-        initial_delay = random.uniform(1.5, 3.5)
-        time.sleep(initial_delay)
+            # Grade by this row's own game number, so a day the pipeline didn't
+            # run doesn't leave the row ungraded forever.
+            game_rows = schedule_df[(schedule_df['g'] == str(current_game_in_season)) & (schedule_df['game_result'] != '')]
+            if game_rows.empty:
+                continue
+            game_row = game_rows.iloc[0]
 
-        if int(last_game_from_upcoming_df['g']) == current_game_in_season:
-            points_for = int(last_game_from_upcoming_df['pts'])
-            points_against = int(last_game_from_upcoming_df['opp_pts'])
+            points_for = int(game_row['pts'])
+            points_against = int(game_row['opp_pts'])
 
             given_spread = row['spread']
             given_over_under = row['over_under']
@@ -50,7 +58,6 @@ def updateDBActuals():
                 given_spread = float(given_spread[1:])
             elif given_spread[0] == '+':
                 given_spread = float(given_spread[1:]) * -1
-            
 
             spread = points_for - points_against
             actual_spread = True if spread >= given_spread else False
@@ -58,21 +65,18 @@ def updateDBActuals():
             actual_over_under = True if over_under >= float(given_over_under) else False
             actual_money_line = True if points_for > points_against else False
 
+            insert_query = f"""
+            UPDATE BBALL7
+            SET actual_spread = {actual_spread}, actual_over_under = {actual_over_under}, actual_money_line = {actual_money_line}
+            WHERE id = {row['id']};"""
 
-            try:
-                # Insert data
-                insert_query = f"""
-                UPDATE BBALL7
-                SET actual_spread = {actual_spread}, actual_over_under = {actual_over_under}, actual_money_line = {actual_money_line}
-                WHERE team_name = '{team_name}' and next_game_in_season = {current_game_in_season} and season_year = {season_year};"""
+            cur.execute(insert_query)
+            conn.commit()
 
-                cur.execute(insert_query)   
-                conn.commit()
-                
-                print(f'Saved {team_name} for game number: {current_game_in_season}')
-            except:
-                print(f"Couldn't save row for team: {team_name}, next_game_in_season: {current_game_in_season}, year: {season_year}")
-
+            print(f'Saved {team_name} for game number: {current_game_in_season}')
+        except Exception as e:
+            conn.rollback()
+            print(f"Couldn't save row for team: {team_name}, next_game_in_season: {current_game_in_season}, year: {season_year} ({e!r})")
 
 
     cur.close()
@@ -128,7 +132,7 @@ def getPreviousPercentages():
     # Connect to PostgreSQL
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    cur.execute(f"SELECT * FROM BBALL7 WHERE actual_spread is not NULL and calculated_spread_test is not NULL and season_year = {season_year};")
+    cur.execute(f"SELECT * FROM BBALL7 WHERE actual_spread is not NULL and calculated_spread_test is not NULL and season_year <= {season_year};")
     all_data = cur.fetchall()
 
     # Get column names
