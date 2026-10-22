@@ -35,8 +35,10 @@ a quick look first.
 2. **Run the pipeline** from `footballV2/`:
    ```
    cd /Users/davidcarney/Desktop/NFL_WORKING/Grass/footballV2
-   python3 -u main.py 2>&1
+   /usr/local/bin/python3 -u main.py 2>&1
    ```
+   - Use `/usr/local/bin/python3` explicitly - the `python3` first on PATH is anaconda's,
+     which lacks psycopg2/undetected-chromedriver and has too old an sklearn.
    - No week argument needed - `main.py` calls `get_current_week(date.today(),
      WEEK_DATE_RANGES)` and figures out the right week itself.
    - Use `-u` (unbuffered) and run in the background via the Bash tool's
