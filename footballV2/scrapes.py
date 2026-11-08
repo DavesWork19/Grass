@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
+from urllib3.exceptions import TimeoutError as HTTPTimeoutError
 from bs4 import BeautifulSoup
 import re
 import time
@@ -21,6 +22,7 @@ _PFR_HREF_RE = re.compile(r'/teams/([a-z]{3})/')
 PFR_CODE_TO_NAME = {team['pfr']: team['name'] for team in NFL_TEAMS}
 
 _driver = None
+_DRIVER_COMMAND_TIMEOUT = 30
 
 
 def _installed_chrome_major_version():
@@ -56,6 +58,11 @@ def _new_driver():
         use_subprocess=True,
     )
     drv.set_page_load_timeout(35)
+    # page_load_timeout only covers driver.get(). When Chrome's renderer wedges,
+    # page_source/title/execute_script block on chromedriver forever (Selenium's
+    # HTTP client has no timeout by default) - cap every command so a hang
+    # raises and _fetch_soup can restart the browser.
+    drv.command_executor._client_config.timeout = _DRIVER_COMMAND_TIMEOUT
     return drv
 
 
@@ -88,6 +95,9 @@ def _human_pause(a=1.5, b=4.0):
 def _page_source(driver):
     try:
         return driver.page_source
+    except HTTPTimeoutError:
+        # wedged browser - let _fetch_soup restart it rather than polling a dead session
+        raise
     except Exception:
         return ''
 
@@ -99,6 +109,8 @@ def _settled_soup(driver, max_wait):
     while time.time() < deadline:
         try:
             title = (driver.title or '').lower()
+        except HTTPTimeoutError:
+            raise
         except Exception:
             title = ''
         if html and 'just a moment' not in html.lower() and 'moment' not in title:
@@ -110,6 +122,8 @@ def _settled_soup(driver, max_wait):
         for _ in range(random.randint(2, 4)):
             driver.execute_script(f'window.scrollBy(0, {random.randint(200, 700)});')
             _human_pause(0.4, 1.1)
+    except HTTPTimeoutError:
+        raise
     except Exception:
         pass
 
