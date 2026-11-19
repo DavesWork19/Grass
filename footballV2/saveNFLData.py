@@ -403,6 +403,12 @@ def saveData(week=None):
             continue
 
         weather_row = _find_weather_row(weather_data, away_team_number, home_team_number)
+        # DK's slate runs straight into next week's games, and its repeated-team
+        # cutoff can't catch a game between two teams on bye this week. When
+        # nflweather has this week's schedule, treat it as authoritative.
+        if weather_row is None and not weather_data.empty:
+            print(f"Skipping {matchup['awayTeam']} @ {matchup['homeTeam']} - not on week {week}'s schedule")
+            continue
         if weather_row is not None:
             full_game_start_time = f"{weather_row['time_code']}:00"
             game_start_time = int(weather_row['time_code']) * 6
