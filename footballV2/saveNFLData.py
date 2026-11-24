@@ -389,10 +389,25 @@ def saveData(week=None):
             print('No active NFL week found for today - nothing to save.')
             return
 
-    _clear_existing_week(week, SEASON_YEAR)
-
     gambling_data = scrape_weekly_gambling_data(week, SEASON_YEAR, WEEK_DATE_RANGES)
     weather_data = scrape_weekly_weather_and_schedule(SEASON_YEAR, week)
+
+    # Don't wipe the week's existing rows unless there's something to replace
+    # them with - otherwise running against the wrong week (e.g. one whose
+    # games are already over and gone from DK) silently destroys its
+    # predictions before updateDBActuals can grade them.
+    on_schedule = [
+        m for _, m in gambling_data.iterrows()
+        if weather_data.empty
+        or _find_weather_row(weather_data, getTeamNumber(m['awayTeam']), getTeamNumber(m['homeTeam'])) is not None
+    ]
+    if not on_schedule:
+        raise RuntimeError(
+            f"None of DraftKings' {len(gambling_data)} games are on week {week}'s schedule - "
+            f"refusing to clear week {week}'s existing rows. Is {week} the right week?"
+        )
+
+    _clear_existing_week(week, SEASON_YEAR)
 
     for _, matchup in gambling_data.iterrows():
         away_team_number = getTeamNumber(matchup['awayTeam'])

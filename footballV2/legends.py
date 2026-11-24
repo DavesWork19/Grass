@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from constants import NFL_TEAMS
 
@@ -394,6 +394,11 @@ def get_current_week(today, week_ranges):
     Returns:
         int week number, or None if today falls outside every window (offseason)
     """
+    # The last day of each Wed-Tue window is a Tuesday, after that week's
+    # Monday night game - its games are done and DK has moved on to the next
+    # slate, so treat it as the upcoming week. Without this a Tuesday run
+    # targets the finished week and finds none of its games on DK.
+    today = today + timedelta(days=1)
     year = today.year
     for week, (start, end) in week_ranges.items():
         start_month, start_day = (int(x) for x in start.split('/'))
