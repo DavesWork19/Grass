@@ -49,7 +49,17 @@ a quick look first.
      `saveData` for the new week, once in `updateDBActuals` to backfill last week's
      results - plus the DraftKings odds scrape and model training). That's normal.
    - **It's safe to just rerun `main.py <week>`** if something fails partway - `saveData`
-     clears that week's existing rows before reinserting, so reruns don't duplicate data.
+     replaces only the matchups it's re-inserting (copying the old rows into
+     `nfl1_archive` first), never touches already-graded rows, and refuses to run if none
+     of DK's games are on that week's schedule. `runDaBot` also won't overwrite picks for
+     graded games. So reruns don't duplicate data and can't silently lose it.
+   - A Tuesday run targets the *upcoming* week (Monday night is done by then) - that's
+     intentional, see `get_current_week` in `legends.py`.
+   - **If a past week's rows are ever lost**, rebuild them from the frontend commit that
+     published that week: `/usr/local/bin/python3 -u rebuild_week.py <week> <health-app
+     commit>`. It restores the published lines and picks, re-scrapes features cut off
+     at that week, grades it, and refreshes `newPercentsFootball.js`. Check
+     `nfl1_archive` first - replaced rows land there.
 
 3. **Known non-fatal noise** - don't stop or "fix" these, they're expected and self-heal:
    - `Gamelog table not found for <code> (2026)!` - a PFR fetch came back empty. Happens

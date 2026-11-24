@@ -359,28 +359,59 @@ def _find_weather_row(weather_df, away_team_number, home_team_number):
     return None
 
 
-def _clear_existing_week(week, season_year):
-    """Make saveData safe to re-run for a week it already inserted (crash
-    recovery, or just running it twice) - without this, every rerun would
-    duplicate that week's rows instead of replacing them."""
+ARCHIVE_TABLE = 'nfl1_archive'
+
+
+def _replace_existing_matchup(week, season_year, acronyms, reason):
+    """
+    Make saveData safe to re-run (crash recovery, mid-week line refresh)
+    without duplicating rows - and without ever losing data:
+
+    - Only this matchup's rows are touched, never the whole week, so a game
+      DK has stopped listing (already kicked off) keeps its prediction.
+    - Rows that are already graded are left alone and the matchup is skipped.
+    - Anything replaced is copied into nfl1_archive first, in the same
+      transaction as the delete.
+
+    Returns True if the caller should insert fresh rows for this matchup.
+    """
     conn = psycopg2.connect(**DB_CONFIG)
     cur = conn.cursor()
     try:
-        cur.execute(
-            "DELETE FROM NFL1 WHERE next_game_in_season = %s AND season_year = %s",
-            (week, season_year),
-        )
-        if cur.rowcount:
-            print(f'Cleared {cur.rowcount} existing rows for week {week}, {season_year} before reinserting.')
+        where = "next_game_in_season = %s AND season_year = %s AND team_name = ANY(%s)"
+        params = (week, season_year, list(acronyms))
+        try:
+            cur.execute(f"SELECT count(*), count(actual_spread) FROM NFL1 WHERE {where}", params)
+        except psycopg2.errors.UndefinedTable:
+            conn.rollback()  # first run ever - table doesn't exist yet
+            return True
+        existing, graded = cur.fetchone()
+        if graded:
+            print(f"Keeping {'/'.join(acronyms)} week {week} - already graded, not replacing.")
+            return False
+        if existing:
+            cur.execute(f"CREATE TABLE IF NOT EXISTS {ARCHIVE_TABLE} (LIKE NFL1)")
+            cur.execute(f"ALTER TABLE {ARCHIVE_TABLE} ADD COLUMN IF NOT EXISTS archived_at timestamptz DEFAULT now()")
+            cur.execute(f"ALTER TABLE {ARCHIVE_TABLE} ADD COLUMN IF NOT EXISTS archive_reason text")
+            cur.execute(f"INSERT INTO {ARCHIVE_TABLE} SELECT n.*, now(), %s FROM NFL1 n WHERE {where}", (reason,) + params)
+            cur.execute(f"DELETE FROM NFL1 WHERE {where}", params)
+            print(f"Replacing {existing} existing rows for {'/'.join(acronyms)} week {week} (archived to {ARCHIVE_TABLE}).")
         conn.commit()
-    except psycopg2.errors.UndefinedTable:
-        conn.rollback()  # first run ever - table doesn't exist yet
+        return True
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         cur.close()
         conn.close()
 
 
-def saveData(week=None):
+def saveData(week=None, gambling_data=None, weather_data=None):
+    """
+    Scrape and insert this week's matchups. gambling_data / weather_data can be
+    passed in to rebuild a past week from saved lines (see rebuild_week.py)
+    instead of scraping DK/nflweather, which only list upcoming games.
+    """
     today = date.today()
 
     if week is None:
@@ -389,13 +420,13 @@ def saveData(week=None):
             print('No active NFL week found for today - nothing to save.')
             return
 
-    gambling_data = scrape_weekly_gambling_data(week, SEASON_YEAR, WEEK_DATE_RANGES)
-    weather_data = scrape_weekly_weather_and_schedule(SEASON_YEAR, week)
+    if gambling_data is None:
+        gambling_data = scrape_weekly_gambling_data(week, SEASON_YEAR, WEEK_DATE_RANGES)
+    if weather_data is None:
+        weather_data = scrape_weekly_weather_and_schedule(SEASON_YEAR, week)
 
-    # Don't wipe the week's existing rows unless there's something to replace
-    # them with - otherwise running against the wrong week (e.g. one whose
-    # games are already over and gone from DK) silently destroys its
-    # predictions before updateDBActuals can grade them.
+    # Running against the wrong week (e.g. one whose games are already over
+    # and gone from DK) almost always means a bug - fail loudly.
     on_schedule = [
         m for _, m in gambling_data.iterrows()
         if weather_data.empty
@@ -404,10 +435,8 @@ def saveData(week=None):
     if not on_schedule:
         raise RuntimeError(
             f"None of DraftKings' {len(gambling_data)} games are on week {week}'s schedule - "
-            f"refusing to clear week {week}'s existing rows. Is {week} the right week?"
+            f"nothing to save. Is {week} the right week?"
         )
-
-    _clear_existing_week(week, SEASON_YEAR)
 
     for _, matchup in gambling_data.iterrows():
         away_team_number = getTeamNumber(matchup['awayTeam'])
@@ -441,15 +470,25 @@ def saveData(week=None):
             game_channel = 0
             game_day_code = None
 
+        # Scrape both teams before touching the DB, and only use games played
+        # before this week (matters when rebuilding a week after the fact).
+        game_logs = {}
+        for team_number in (away_team_number, home_team_number):
+            log = _clean_game_log(scrape_all_game_data_by_team(TEAM_NUMBER_TO_PFR[team_number], SEASON_YEAR))
+            game_logs[team_number] = log[log['week'] < week]
+
+        matchup_acronyms = (TEAM_NUMBER_TO_ACRONYM[away_team_number], TEAM_NUMBER_TO_ACRONYM[home_team_number])
+        if not _replace_existing_matchup(week, SEASON_YEAR, matchup_acronyms, reason=f'saveData rerun {today}'):
+            continue
+
         for team_number, is_home, opp_team_number in (
             (away_team_number, 0, home_team_number),
             (home_team_number, 1, away_team_number),
         ):
-            pfr_code = TEAM_NUMBER_TO_PFR[team_number]
             acronym = TEAM_NUMBER_TO_ACRONYM[team_number]
             opp_acronym = TEAM_NUMBER_TO_ACRONYM[opp_team_number]
 
-            game_log = _clean_game_log(scrape_all_game_data_by_team(pfr_code, SEASON_YEAR))
+            game_log = game_logs[team_number]
             features = _team_season_features(game_log)
 
             last_game_in_season = features['last_game_in_season']

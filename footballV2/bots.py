@@ -130,6 +130,13 @@ def runDaBot(week, season=None):
         home_team = game[0]
         away_team = game[1]
 
+        # Never overwrite the picks of a game that's already been graded -
+        # those are the published predictions the model record is scored on.
+        matchup_rows = weeks_games[weeks_games['team_name'].isin([home_team, away_team])]
+        if matchup_rows['actual_spread'].notna().any():
+            print(f"  keeping existing picks for {away_team} @ {home_team} (week {week}) - already graded")
+            continue
+
         all_home_team_df = all_data_df[all_data_df['team_name'] == home_team]
         all_away_team_df = all_data_df[all_data_df['team_name'] == away_team]
 
